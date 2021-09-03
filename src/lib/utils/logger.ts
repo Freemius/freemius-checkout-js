@@ -14,4 +14,9 @@ export const Logger = {
 			console.warn(...args);
 		}
 	},
+	Debug(...args: any[]) {
+		if (console && console.debug) {
+			console.debug(...args);
+		}
+	},
 };

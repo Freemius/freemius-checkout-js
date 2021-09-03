@@ -14,5 +14,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
+	"exclude": ["./src/checkout.org.js"]
 }
