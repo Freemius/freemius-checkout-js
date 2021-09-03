@@ -1,4 +1,4 @@
-import Checkout from './lib/checkout';
+import Checkout, { CheckoutOptions } from './lib/checkout';
 
 import './style.css';
 
@@ -15,11 +15,38 @@ const fsCheckout = new Checkout({
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+	function getLicensesAndFrequency() {
+		let licenses = 1;
+		const siteSelect = document.querySelector('#site');
+		if (siteSelect) {
+			licenses = Number.parseInt((siteSelect as HTMLSelectElement).value, 10);
+		}
+		let billing_cycle: CheckoutOptions['billing_cycle'] = 'annual';
+		const freqSelect = document.querySelector('#frequency');
+		if (freqSelect) {
+			billing_cycle = (freqSelect as HTMLSelectElement).value as any;
+		}
+		return { licenses, billing_cycle };
+	}
 	document.querySelector('#plan-1')?.addEventListener('click', e => {
 		e.preventDefault();
 		fsCheckout.open({
-			plan_id: 5714,
-			billing_cycle: 'monthly',
+			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_ONE as string, 10),
+			...getLicensesAndFrequency(),
+		});
+	});
+	document.querySelector('#plan-2')?.addEventListener('click', e => {
+		e.preventDefault();
+		fsCheckout.open({
+			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_TWO as string, 10),
+			...getLicensesAndFrequency(),
+		});
+	});
+	document.querySelector('#plan-3')?.addEventListener('click', e => {
+		e.preventDefault();
+		fsCheckout.open({
+			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_THREE as string, 10),
+			...getLicensesAndFrequency(),
 		});
 	});
 });

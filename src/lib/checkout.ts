@@ -314,7 +314,7 @@ body.${this.bodyClassOpen} {
 }
 		`;
 		this.style!.setAttribute('type', 'text/css');
-		this.style!.innerText = styleContent;
+		this.style!.textContent = styleContent;
 		document.head.appendChild(this.style!);
 	}
 

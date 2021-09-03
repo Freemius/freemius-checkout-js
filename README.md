@@ -1,3 +1,20 @@
+# FREEMIUS CHECKOUT JAVASCRIPT CLIENT
+
+Without jQuery or any other external dependency. (Still alpha and not yet
+released).
+
+## Testing
+
+Close the repository. Copy `.env.sample` to `.env.local` and enter plugin id and
+public key as specified in the file. Run the command
+
+```bash
+yarn dev
+```
+
+and it should spin up the server. Make sure to change the ID of plans in the
+`.env.local` file.
+
 ## Testing with Sandbox
 
 To get the sandbox token and ctx, follow the steps:
