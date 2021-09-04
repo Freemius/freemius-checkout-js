@@ -8,6 +8,15 @@ import {
 } from './utils/ops';
 import { Logger } from './utils/logger';
 
+export {
+	buildFreemiusQueryFromOptions,
+	generateUID,
+	getIsFlashingBrowser,
+	isExitAttempt,
+	MAX_ZINDEX,
+	Logger,
+};
+
 export interface CheckoutOptions {
 	/**
 	 * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
