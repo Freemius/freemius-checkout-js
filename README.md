@@ -360,6 +360,68 @@ fsCheckout.open({
 
 **NOTE**: The class is available under `FSCheckout.FSCheckout`.
 
+## Use with React
+
+We will make a small react hook. Here we assume the `plugin_id` and `public_key`
+are available in
+[some environment variable](https://create-react-app.dev/docs/adding-custom-environment-variables/).
+
+**checkout.ts**
+
+```tsx
+import { FSCheckout, CheckoutOptions } from 'freemius-checkout-js';
+import { useState, useEffect } from 'react';
+export const checkoutConfig: CheckoutOptions = {
+	plugin_id: process.env.REACT_APP_PLUGIN_ID as string,
+	public_key: process.env.REACT_APP_PUBLIC_KEY as string,
+};
+export function useFsCheckout() {
+	// create a FSCheckout instance once
+	const [fsCheckout] = useState<FSCheckout>(
+		() => new FSCheckout(checkoutConfig)
+	);
+	useEffect(() => {
+		// close and destroy the DOM related stuff on unmount
+		return () => {
+			fsCheckout.close();
+			fsCheckout.destroy();
+		};
+	}, [fsCheckout]);
+	return fsCheckout;
+}
+```
+
+Now we use in our component.
+
+**App.tsx**
+
+```tsx
+import React from 'react';
+import { useFsCheckout } from './checkout.ts';
+
+export default function App() {
+	const fsCheckout = useFsCheckout();
+
+	return (
+		<button
+			onClick={e => {
+				e.preventDefault();
+				fsCheckout.open({
+					plan_id: 1234,
+					licenses: 1,
+					billing_cycle: 'annual',
+					success: data => {
+						console.log(data);
+					},
+				});
+			}}
+		>
+			Buy Plan
+		</button>
+	);
+}
+```
+
 ## Setup Local Development Environment
 
 Close the repository. Copy `.env.sample` to `.env.local` and enter plugin id and
