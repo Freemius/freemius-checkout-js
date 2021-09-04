@@ -1,8 +1,8 @@
-import Checkout, { CheckoutOptions } from './lib/checkout';
+import { FSCheckout, CheckoutOptions } from './lib/checkout';
 
 import './style.css';
 
-const fsCheckout = new Checkout({
+const fsCheckout = new FSCheckout({
 	plugin_id: Number.parseInt(
 		(import.meta.env.VITE_PLUGIN_ID as string) ?? '0',
 		10

@@ -1,4 +1,4 @@
-import { postman, PostmanEvents } from './utils/postman';
+import { postman } from './utils/postman';
 import {
 	buildFreemiusQueryFromOptions,
 	generateUID,
@@ -15,7 +15,10 @@ export {
 	isExitAttempt,
 	MAX_ZINDEX,
 	Logger,
+	postman,
 };
+import type { PostmanEvents } from './utils/postman';
+export type { PostmanEvents };
 
 export interface CheckoutOptions {
 	/**
@@ -228,7 +231,7 @@ export interface CheckoutOptions {
 	onExitIntent?: () => void;
 }
 
-export default class FSCheckout {
+export class FSCheckout {
 	private options: CheckoutOptions = { plugin_id: 0, public_key: '' };
 
 	private iFrame: HTMLIFrameElement | null = null;

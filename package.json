@@ -5,7 +5,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "build:types": "tsc -m amd -t ESNext -d --isolatedModules false  --moduleResolution node --esModuleInterop --outFile dist/index.js src/lib/checkout.ts && rm -rf dist/index.js"
+		"lint": "eslint ./src",
+    "build:lib": "tsup",
+		"deploysite": "yarn build && netlify deploy --dir=dist --prod"
   },
   "devDependencies": {
     "@wpackio/eslint-config": "^6.4.0",
