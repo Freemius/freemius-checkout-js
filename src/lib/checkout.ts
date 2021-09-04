@@ -24,7 +24,7 @@ export interface CheckoutOptions {
 	/**
 	 * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
 	 */
-	plugin_id: number;
+	plugin_id: number | string;
 	/**
 	 * Require product public key.
 	 */
@@ -71,7 +71,7 @@ export interface CheckoutOptions {
 	 *
 	 * @default "1st paid plan"
 	 */
-	plan_id?: number;
+	plan_id?: number | string;
 	/**
 	 * A multi-site licenses prices that will load immediately with the checkout.
 	 * A developer-friendly param that can be used instead of the pricing_id.
@@ -94,7 +94,7 @@ export interface CheckoutOptions {
 	 *
 	 * @default "plan’s single-site prices ID"
 	 */
-	pricing_id?: number;
+	pricing_id?: number | string;
 	/**
 	 * An optional billing cycle that will be auto selected when the checkout is opened.
 	 * Can be one of the following values: 'monthly', 'annual', 'lifetime'.
