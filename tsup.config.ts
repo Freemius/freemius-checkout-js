@@ -5,6 +5,6 @@ export const tsup: Options = {
 	format: ['esm', 'cjs', 'iife'],
 	globalName: 'FSCheckout',
 	dts: true,
-	minify: false,
+	minify: true,
 	outDir: 'lib',
 };

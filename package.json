@@ -1,13 +1,15 @@
 {
   "name": "freemius-checkout-js",
-  "version": "0.0.0",
+	"description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
 		"lint": "eslint ./src",
     "build:lib": "tsup",
-		"deploysite": "yarn build && netlify deploy --dir=dist --prod"
+		"deploysite": "yarn build && netlify deploy --dir=dist --prod",
+		"prepublish": "yarn build:lib"
   },
   "devDependencies": {
     "@wpackio/eslint-config": "^6.4.0",
@@ -17,5 +19,27 @@
     "typescript": "^4.3.2",
     "vite": "^2.5.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+	"files": ["lib", "README.md", "LICENSE"],
+	"main": "./lib/checkout.js",
+	"module": "./lib/checkout.mjs",
+	"exports": {
+		".": {
+			"import": "./lib/checkout.mjs",
+			"require": "./lib/checkout.js"
+		}
+	},
+	"types": "./lib/checkout.d.ts",
+	"author": {
+		"name": "Swashata Ghosh",
+		"email": "swashata4u@gmail.com",
+		"url": "https://www.wpeform.io"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/swashata/freemius-checkout-js.git"
+	},
+	"keywords": ["freemius", "wordpress", "checkout"],
+	"homepage": "https://fs-checkout-js.netlify.app/",
+	"bugs": "https://github.com/swashata/freemius-checkout-js/issues"
 }

@@ -44,3 +44,10 @@ const config = {
 
 **NOTICE**: Use this only during development and never publish the token and
 context. In this repository we use the `.env` file for storing sandbox data.
+
+## DISCLAIMER
+
+This project is not directly associated with [Freemius](https://freemius.com/).
+I needed a JavaScript library for the checkout without jQuery dependency, hence
+I made this. This is used in my website [WPEForm.io](https://www.wpeform.io)
+which is a No-Code WordPress Form Builder plugin.
