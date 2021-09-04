@@ -546,6 +546,8 @@ body.${this.bodyClassOpen} {
 				Logger.Error(e);
 			}
 		}
+
+		this.isOpen = false;
 	}
 
 	constructor(options: CheckoutOptions) {
@@ -613,6 +615,9 @@ body.${this.bodyClassOpen} {
 		this.isOpen = true;
 	}
 
+	/**
+	 * Programmatically close the checkout popup.
+	 */
 	public close() {
 		if (this.isSsr()) {
 			return;
