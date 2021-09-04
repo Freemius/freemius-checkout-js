@@ -430,6 +430,7 @@ body.${this.bodyClassOpen} {
 				} catch (e) {
 					Logger.Error(e);
 				}
+				this.closeCheckoutPopup();
 			},
 			true
 		);
@@ -452,11 +453,7 @@ body.${this.bodyClassOpen} {
 				} catch (e) {
 					Logger.Error(e);
 				}
-				// remove the iFrame
-				this.iFramePostman?.destroy();
-				this.iFrame?.remove();
-				this.closeIFramePopup();
-				this.removeExitIntent();
+				this.closeCheckoutPopup();
 			},
 			true
 		);
@@ -560,6 +557,14 @@ body.${this.bodyClassOpen} {
 		}
 
 		this.isOpen = false;
+	}
+
+	private closeCheckoutPopup() {
+		// remove the iFrame
+		this.iFramePostman?.destroy();
+		this.iFrame?.remove();
+		this.closeIFramePopup();
+		this.removeExitIntent();
 	}
 
 	constructor(options: CheckoutOptions) {
