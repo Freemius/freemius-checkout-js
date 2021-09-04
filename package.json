@@ -1,26 +1,30 @@
 {
-  "name": "freemius-checkout-js",
+	"name": "freemius-checkout-js",
 	"description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "serve": "vite preview",
+	"version": "0.0.2",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"serve": "vite preview",
 		"lint": "eslint ./src",
-    "build:lib": "tsup",
+		"build:lib": "tsup",
 		"deploysite": "yarn build && netlify deploy --dir=dist --prod",
 		"prepublish": "yarn build:lib"
-  },
-  "devDependencies": {
-    "@wpackio/eslint-config": "^6.4.0",
-    "eslint": "^7.32.0",
-    "prettier": "^2.3.2",
-    "tsup": "^4.14.0",
-    "typescript": "^4.3.2",
-    "vite": "^2.5.2"
-  },
-  "license": "MIT",
-	"files": ["lib", "README.md", "LICENSE"],
+	},
+	"devDependencies": {
+		"@wpackio/eslint-config": "^6.4.0",
+		"eslint": "^7.32.0",
+		"prettier": "^2.3.2",
+		"tsup": "^4.14.0",
+		"typescript": "^4.3.2",
+		"vite": "^2.5.2"
+	},
+	"license": "MIT",
+	"files": [
+		"lib",
+		"README.md",
+		"LICENSE"
+	],
 	"main": "./lib/checkout.js",
 	"module": "./lib/checkout.mjs",
 	"exports": {
@@ -39,7 +43,11 @@
 		"type": "git",
 		"url": "https://github.com/swashata/freemius-checkout-js.git"
 	},
-	"keywords": ["freemius", "wordpress", "checkout"],
+	"keywords": [
+		"freemius",
+		"wordpress",
+		"checkout"
+	],
 	"homepage": "https://fs-checkout-js.netlify.app/",
 	"bugs": "https://github.com/swashata/freemius-checkout-js/issues"
 }
