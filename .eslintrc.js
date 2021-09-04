@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
 	extends: ['@wpackio/eslint-config/ts'],
 	parserOptions: {
@@ -51,6 +49,7 @@ module.exports = {
 				json: 'always',
 			},
 		],
+		'jest/no-deprecated-functions': 'off',
 	},
 	overrides: [
 		{
@@ -61,6 +60,14 @@ module.exports = {
 			],
 			rules: {
 				'import/no-extraneous-dependencies': 'off',
+			},
+		},
+		{
+			files: ['**/*.js'],
+			extends: '@wpackio/eslint-config',
+			rules: {
+				'jest/no-deprecated-functions': 'off',
+				'@typescript-eslint/no-var-requires': 'off',
 			},
 		},
 	],

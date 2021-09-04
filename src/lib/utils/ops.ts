@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /**
  * Max value of z-index CSS property.
  *
@@ -19,31 +20,31 @@ export function generateUID() {
 	// to ensure the random number provide enough bits.
 	const firstPart = (Math.random() * 46656) | 0;
 	const secondPart = (Math.random() * 46656) | 0;
-	const firstPartStr = ('000' + firstPart.toString(36)).slice(-3);
-	const secondPartStr = ('000' + secondPart.toString(36)).slice(-3);
+	const firstPartStr = `000${firstPart.toString(36)}`.slice(-3);
+	const secondPartStr = `000${secondPart.toString(36)}`.slice(-3);
 	return firstPartStr + secondPartStr;
 }
 
 export function getIsFlashingBrowser(): boolean {
-	let _isFlashingBrowser = false;
+	let isFlashingBrowser = false;
 
 	try {
 		const ua = navigator.userAgent.toLowerCase();
 
 		if (/edge\/|trident\/|msie /.test(ua)) {
-			_isFlashingBrowser = true; // IE
-		} else if (ua.indexOf('safari') != -1) {
+			isFlashingBrowser = true; // IE
+		} else if (ua.indexOf('safari') !== -1) {
 			if (ua.indexOf('chrome') > -1) {
 				// Chrome
 			} else {
-				_isFlashingBrowser = true; // Safari
+				isFlashingBrowser = true; // Safari
 			}
 		}
 	} catch (e) {
 		// do nothing
 	}
 
-	return _isFlashingBrowser;
+	return isFlashingBrowser;
 }
 
 export function getQueryValueFromItem(item: any): string | null {
@@ -73,7 +74,7 @@ export function getQueryValueFromItem(item: any): string | null {
 }
 
 export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
-	let query: string[] = [];
+	const query: string[] = [];
 	Object.keys(options).forEach(key => {
 		const item = options[key];
 		const value = getQueryValueFromItem(item);

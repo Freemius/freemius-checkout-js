@@ -100,7 +100,7 @@ export function postman(
 		post(type, data) {
 			target.postMessage(
 				JSON.stringify({ type, data }),
-				targetUrl.replace(/([^:]+:\/\/[^\/]+).*/, '$1')
+				targetUrl.replace(/([^:]+:\/\/[^/]+).*/, '$1')
 			);
 		},
 	};

@@ -601,7 +601,7 @@ body.${this.bodyClassOpen} {
 		}
 		// override options
 		if (options) {
-			this.options = Object.assign({}, this.options, options);
+			this.options = { ...this.options, ...options };
 		}
 
 		// show the loader
