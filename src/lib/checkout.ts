@@ -165,6 +165,10 @@ export interface CheckoutOptions {
 	 */
 	track?: (event: string, data: Record<string, any> | null) => void;
 	/**
+	 * Optional callback to execute when the iFrame opens.
+	 */
+	afterOpen?: () => void;
+	/**
 	 * An optional callback to execute when the iFrame closes.
 	 */
 	afterClose?: () => void;
@@ -458,6 +462,12 @@ body.${this.bodyClassOpen} {
 							this.iFrame?.classList.add('show');
 						});
 					}
+				}
+				// call the afterOpen handler
+				try {
+					this.options.afterOpen?.();
+				} catch (e) {
+					Logger.Error(e);
 				}
 			},
 			true

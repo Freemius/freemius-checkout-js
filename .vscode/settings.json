@@ -17,5 +17,6 @@
 		"javascript",
 		"typescript",
 		"typescriptreact"
-	]
+	],
+	"licenser.author": "Swashata Ghosh <swashata@wpquark.com>"
 }
