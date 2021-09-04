@@ -573,8 +573,19 @@ body.${this.bodyClassOpen} {
 		}
 	}
 
+	/**
+	 * Open the Checkout Popup. You can pass additional options to the function
+	 * and it will override the previously set options.
+	 */
 	public open(options?: Omit<CheckoutOptions, 'plugin_id' | 'public_key'>) {
 		if (this.isSsr()) {
+			return;
+		}
+		// if this is already open, then cancel
+		if (this.isOpen) {
+			Logger.Warn(
+				'Checkout popup already open. Please close it first before opening it again.'
+			);
 			return;
 		}
 		// override options

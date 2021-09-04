@@ -28,32 +28,58 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		return { licenses, billing_cycle };
 	}
+	function getEventLoggers(): Pick<
+		CheckoutOptions,
+		| 'cancel'
+		| 'purchaseCompleted'
+		| 'success'
+		| 'track'
+		| 'afterOpen'
+		| 'afterClose'
+		| 'onExitIntent'
+	> {
+		const log = (event: string, ...args: any[]) => {
+			console.log(
+				`%c FSCheckout %c :: %c ${event} %c`,
+				'background: #C62828; color: white;',
+				'background: transparent;',
+				'background: #283593; color: white;',
+				'background: transparent;'
+			);
+			if (args.length) {
+				console.log(...args);
+			}
+		};
+		return {
+			cancel() {
+				log('cancel');
+			},
+			purchaseCompleted(data) {
+				log('purchaseCompleted', data);
+			},
+			success(data) {
+				log('success', data);
+			},
+			track(event, data) {
+				log('track', event, data);
+			},
+			afterOpen() {
+				log('afterOpen');
+			},
+			afterClose() {
+				log('afterClose');
+			},
+			onExitIntent() {
+				log('exitIntent');
+			},
+		};
+	}
 	document.querySelector('#plan-1')?.addEventListener('click', e => {
 		e.preventDefault();
 		fsCheckout.open({
 			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_ONE as string, 10),
 			...getLicensesAndFrequency(),
-			cancel() {
-				console.log('cancel');
-			},
-			purchaseCompleted(data) {
-				console.log('purchaseCompleted', data);
-			},
-			success(data) {
-				console.log('success', data);
-			},
-			track(event, data) {
-				console.log('track', event, data);
-			},
-			afterOpen() {
-				console.log('afterOpen');
-			},
-			afterClose() {
-				console.log('afterClose');
-			},
-			onExitIntent() {
-				console.log('exitIntent');
-			},
+			...getEventLoggers(),
 		});
 	});
 	document.querySelector('#plan-2')?.addEventListener('click', e => {
@@ -61,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		fsCheckout.open({
 			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_TWO as string, 10),
 			...getLicensesAndFrequency(),
+			...getEventLoggers(),
 		});
 	});
 	document.querySelector('#plan-3')?.addEventListener('click', e => {
@@ -68,12 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		fsCheckout.open({
 			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_THREE as string, 10),
 			...getLicensesAndFrequency(),
+			...getEventLoggers(),
 		});
 	});
 	console.log(
 		'%cCheckout API available as %cfsCheckout%c global variable',
 		'font-size: 20px; ',
-		'font-size: 20px; background-color: red; color: white;',
+		'font-size: 20px; background-color: #B71C1C; color: white;',
 		'font-size: 20px; background-color: transparent; '
 	);
 	(window as any).fsCheckout = fsCheckout;
