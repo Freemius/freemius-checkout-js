@@ -3,6 +3,7 @@ import {
 	buildFreemiusQueryFromOptions,
 	generateUID,
 	getIsFlashingBrowser,
+	isExitAttempt,
 	MAX_ZINDEX,
 } from './utils/ops';
 import { Logger } from './utils/logger';
@@ -135,11 +136,50 @@ export interface CheckoutOptions {
 	 */
 	trial?: boolean | 'free' | 'paid';
 	/**
+	 * An optional param to pre-populate a license key for license renewal,
+	 * license extension and more.
+	 */
+	license_key?: string;
+	/**
+	 * An optional param to load the checkout for a payment method update.
+	 * When set to `true`, the license_key param must be set and associated with
+	 * a non-canceled subscription.
+	 *
+	 * @default false
+	 */
+	is_payment_method_update?: boolean;
+	/**
+	 * An optional string to prefill the buyer’s email address.
+	 */
+	user_email?: string;
+	/**
+	 * An optional string to prefill the buyer’s first name.
+	 */
+	user_firstname?: string;
+	/**
+	 * An optional string to prefill the buyer’s last name.
+	 */
+	user_lastname?: string;
+	/**
+	 * An optional user ID to associate purchases generated through the checkout
+	 * with their affiliate account.
+	 */
+	affiliate_user_id?: number;
+	// SANDBOX
+	/**
+	 * If you would like the dialog to open in sandbox mode,
+	 */
+	sandbox?: {
+		ctx: string;
+		token: string;
+	};
+	// EVENT HANDLERS
+	/**
 	 * A callback handler that will execute once a user closes the checkout by
 	 * clicking the close icon. This handler only executes when the checkout is
 	 * running in a dialog mode.
 	 */
-	cancel?: (data: Record<string, any> | null) => void;
+	cancel?: () => void;
 	/**
 	 * An after successful purchase/subscription completion callback handler.
 	 *
@@ -173,42 +213,10 @@ export interface CheckoutOptions {
 	 */
 	afterClose?: () => void;
 	/**
-	 * An optional param to pre-populate a license key for license renewal,
-	 * license extension and more.
+	 * Optional callback to trigger on exit intent. This is called only when the
+	 * checkout iFrame is shown, not on global exit intent.
 	 */
-	license_key?: string;
-	/**
-	 * An optional param to load the checkout for a payment method update.
-	 * When set to `true`, the license_key param must be set and associated with
-	 * a non-canceled subscription.
-	 *
-	 * @default false
-	 */
-	is_payment_method_update?: boolean;
-	/**
-	 * An optional string to prefill the buyer’s email address.
-	 */
-	user_email?: string;
-	/**
-	 * An optional string to prefill the buyer’s first name.
-	 */
-	user_firstname?: string;
-	/**
-	 * An optional string to prefill the buyer’s last name.
-	 */
-	user_lastname?: string;
-	/**
-	 * An optional user ID to associate purchases generated through the checkout
-	 * with their affiliate account.
-	 */
-	affiliate_user_id?: number;
-	/**
-	 * If you would like the dialog to open in sandbox mode,
-	 */
-	sandbox?: {
-		ctx: string;
-		token: string;
-	};
+	onExitIntent?: () => void;
 }
 
 export default class FSCheckout {
@@ -241,6 +249,8 @@ export default class FSCheckout {
 	private iFramePostman: PostmanEvents | null = null;
 
 	private isOpen: boolean = false;
+
+	private clearExitIntentListener: (() => void) | null = null;
 
 	private prepareLoader() {
 		this.loader!.id = this.loaderId;
@@ -397,11 +407,6 @@ body.${this.bodyClassOpen} {
 		this.iFrame.setAttribute('frameborder', '0');
 		document.body.appendChild(this.iFrame);
 		this.iFramePostman = postman(this.iFrame, this.baseUrl);
-
-		// add the exitIntent Div
-		this.exitIntentDiv = document.createElement('div');
-		this.exitIntentDiv.id = this.exitIntentId;
-		document.body.appendChild(this.exitIntentDiv);
 	}
 
 	private attachPostMessageListeners() {
@@ -429,9 +434,9 @@ body.${this.bodyClassOpen} {
 		);
 		this.iFramePostman?.one(
 			'canceled',
-			data => {
+			() => {
 				try {
-					this.options.cancel?.(data as any);
+					this.options.cancel?.();
 				} catch (e) {
 					Logger.Error(e);
 				}
@@ -439,6 +444,7 @@ body.${this.bodyClassOpen} {
 				this.iFramePostman?.destroy();
 				this.iFrame?.remove();
 				this.closeIFramePopup();
+				this.removeExitIntent();
 			},
 			true
 		);
@@ -472,6 +478,53 @@ body.${this.bodyClassOpen} {
 			},
 			true
 		);
+	}
+
+	private initExitIntent() {
+		// add the exitIntent Div
+		this.exitIntentDiv = document.createElement('div');
+		this.exitIntentDiv.id = this.exitIntentId;
+		document.body.appendChild(this.exitIntentDiv);
+
+		const html = document.documentElement;
+		let delayTimer: number | null = null;
+		const delay = 300;
+
+		const mouseLeaveHandler = (event: MouseEvent) => {
+			if (!isExitAttempt(event)) {
+				return;
+			}
+			delayTimer = setTimeout(() => {
+				this.iFramePostman?.post('exit_intent', null);
+				try {
+					this.options.onExitIntent?.();
+				} catch (e) {
+					Logger.Error(e);
+				}
+			}, delay);
+		};
+		const mouseEnterHandler = () => {
+			if (delayTimer) {
+				clearTimeout(delayTimer);
+				delayTimer = null;
+			}
+		};
+		html.addEventListener('mouseleave', mouseLeaveHandler);
+		html.addEventListener('mouseenter', mouseEnterHandler);
+		this.clearExitIntentListener = () => {
+			if (delayTimer) {
+				clearTimeout(delayTimer);
+				delayTimer = null;
+			}
+			html.removeEventListener('mouseleave', mouseLeaveHandler);
+			html.removeEventListener('mouseenter', mouseEnterHandler);
+		};
+	}
+
+	private removeExitIntent() {
+		this.exitIntentDiv?.remove();
+		this.exitIntentDiv = null;
+		this.clearExitIntentListener?.();
 	}
 
 	private closeIFramePopup() {
@@ -543,6 +596,8 @@ body.${this.bodyClassOpen} {
 		this.prepareIFrame();
 		// attach postMessage receiver to the iFrame
 		this.attachPostMessageListeners();
+		// init exit intent
+		this.initExitIntent();
 
 		this.isOpen = true;
 	}

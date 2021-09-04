@@ -84,3 +84,11 @@ export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
 
 	return query.join('&');
 }
+
+export function isExitAttempt(event: MouseEvent) {
+	if (event.pageY > 20) {
+		return false;
+	}
+
+	return true;
+}

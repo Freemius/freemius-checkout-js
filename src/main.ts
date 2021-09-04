@@ -33,6 +33,27 @@ document.addEventListener('DOMContentLoaded', () => {
 		fsCheckout.open({
 			plan_id: Number.parseInt(import.meta.env.VITE_PLAN_ONE as string, 10),
 			...getLicensesAndFrequency(),
+			cancel() {
+				console.log('cancel');
+			},
+			purchaseCompleted(data) {
+				console.log('purchaseCompleted', data);
+			},
+			success(data) {
+				console.log('success', data);
+			},
+			track(event, data) {
+				console.log('track', event, data);
+			},
+			afterOpen() {
+				console.log('afterOpen');
+			},
+			afterClose() {
+				console.log('afterClose');
+			},
+			onExitIntent() {
+				console.log('exitIntent');
+			},
 		});
 	});
 	document.querySelector('#plan-2')?.addEventListener('click', e => {
@@ -49,4 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			...getLicensesAndFrequency(),
 		});
 	});
+	console.log(
+		'%cCheckout API available as %cfsCheckout%c global variable',
+		'font-size: 20px; ',
+		'font-size: 20px; background-color: red; color: white;',
+		'font-size: 20px; background-color: transparent; '
+	);
+	(window as any).fsCheckout = fsCheckout;
 });
