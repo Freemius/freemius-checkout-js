@@ -331,11 +331,12 @@ fsCheckout.close();
 
 ## Using without NPM
 
-Use the unpkg CDN or download the file.
+Use the unpkg CDN or
+[download the file](https://unpkg.com/freemius-checkout-js@latest/lib/checkout.global.js).
 
 ```html
 <script
-	src="https://unpkg.com/freemius-checkout-js@0.0.2/lib/checkout.global.js"
+	src="https://unpkg.com/freemius-checkout-js@latest/lib/checkout.global.js"
 	type="text/javascript"
 ></script>
 ```
