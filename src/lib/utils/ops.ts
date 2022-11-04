@@ -16,80 +16,90 @@ export const MAX_ZINDEX = 2147483647;
  * @returns A random UID.
  */
 export function generateUID() {
-	// I generate the UID from two parts here
-	// to ensure the random number provide enough bits.
-	const firstPart = (Math.random() * 46656) | 0;
-	const secondPart = (Math.random() * 46656) | 0;
-	const firstPartStr = `000${firstPart.toString(36)}`.slice(-3);
-	const secondPartStr = `000${secondPart.toString(36)}`.slice(-3);
-	return firstPartStr + secondPartStr;
+  // I generate the UID from two parts here
+  // to ensure the random number provide enough bits.
+  const firstPart = (Math.random() * 46656) | 0;
+  const firstPartStr = `000${firstPart.toString(36)}`.slice(-3);
+
+  const secondPart = (Math.random() * 46656) | 0;
+  const secondPartStr = `000${secondPart.toString(36)}`.slice(-3);
+
+  return firstPartStr + secondPartStr;
 }
 
 export function getIsFlashingBrowser(): boolean {
-	let isFlashingBrowser = false;
+  let isFlashingBrowser = false;
 
-	try {
-		const ua = navigator.userAgent.toLowerCase();
+  try {
+    const ua = navigator.userAgent.toLowerCase();
 
-		if (/edge\/|trident\/|msie /.test(ua)) {
-			isFlashingBrowser = true; // IE
-		} else if (ua.indexOf('safari') !== -1) {
-			if (ua.indexOf('chrome') > -1) {
-				// Chrome
-			} else {
-				isFlashingBrowser = true; // Safari
-			}
-		}
-	} catch (e) {
-		// do nothing
-	}
+    if (/edge\/|trident\/|msie /.test(ua)) {
+      isFlashingBrowser = true; // IE
+    } else if (ua.indexOf('safari') !== -1) {
+      if (ua.indexOf('chrome') > -1) {
+        // Chrome
+      } else {
+        isFlashingBrowser = true; // Safari
+      }
+    }
+  } catch (e) {
+    // do nothing
+  }
 
-	return isFlashingBrowser;
+  return isFlashingBrowser;
 }
 
 export function getQueryValueFromItem(item: any): string | null {
-	if (
-		typeof item === 'undefined' ||
-		typeof item === 'function' ||
-		(typeof item === 'object' && item !== null)
-	) {
-		return null;
-	}
-	if (item === null) {
-		return 'null';
-	}
-	if (item === true) {
-		return '1';
-	}
-	if (item === false) {
-		return '0';
-	}
-	return encodeURIComponent(item)
-		.replace(/!/g, '%21')
-		.replace(/'/g, '%27')
-		.replace(/\(/g, '%28')
-		.replace(/\)/g, '%29')
-		.replace(/\*/g, '%2A')
-		.replace(/%20/g, '+');
+  if (
+    typeof item === 'undefined' ||
+    typeof item === 'function' ||
+    (typeof item === 'object' && item !== null)
+  ) {
+    return null;
+  }
+  if (item === null) {
+    return 'null';
+  }
+  if (item === true) {
+    return '1';
+  }
+  if (item === false) {
+    return '0';
+  }
+  return encodeURIComponent(item)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/%20/g, '+');
 }
 
 export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
-	const query: string[] = [];
-	Object.keys(options).forEach(key => {
-		const item = options[key];
-		const value = getQueryValueFromItem(item);
-		if (value !== null) {
-			query.push(`${key}=${value}`);
-		}
-	});
+  const query: string[] = [];
 
-	return query.join('&');
+  Object.keys(options).forEach((key) => {
+    const item = options[key];
+    const value = getQueryValueFromItem(item);
+    if (value !== null) {
+      query.push(`${key}=${value}`);
+    }
+  });
+
+  return query.join('&');
 }
 
 export function isExitAttempt(event: MouseEvent) {
-	if (event.pageY > 20) {
-		return false;
-	}
+  if (event.pageY > 20) {
+    return false;
+  }
 
-	return true;
+  return true;
+}
+
+/**
+ * Determines whether the current environment is not a browser, rather a server.
+ */
+export function isSsr(): boolean {
+  return typeof window === 'undefined';
 }
