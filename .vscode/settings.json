@@ -18,5 +18,6 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"licenser.author": "Swashata Ghosh <swashata@wpquark.com>"
+	"licenser.author": "Swashata Ghosh <swashata@wpquark.com>",
+	"typescript.tsdk": "node_modules/typescript/lib"
 }
