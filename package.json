@@ -1,7 +1,7 @@
 {
 	"name": "freemius-checkout-js",
 	"description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
@@ -13,11 +13,11 @@
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.14.0",
-    "@typescript-eslint/parser": "^5.14.0",
+		"@typescript-eslint/parser": "^5.14.0",
 		"eslint": "^8.10.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-react": "^7.29.3",
-    "eslint-plugin-react-hooks": "^4.3.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-react": "^7.29.3",
+		"eslint-plugin-react-hooks": "^4.3.0",
 		"prettier": "^2.7.1",
 		"tsup": "^6.4.0",
 		"typescript": "^4.8.4",
