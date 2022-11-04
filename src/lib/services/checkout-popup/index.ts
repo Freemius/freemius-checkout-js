@@ -142,13 +142,7 @@ export class CheckoutPopup implements ICheckoutPopup {
         // hide the loader
         this.loader.hide();
 
-        if (iFrame?.contentWindow?.document.readyState === 'complete') {
-          iFrame.classList.add('show');
-        } else {
-          iFrame?.addEventListener('load', () => {
-            iFrame?.classList.add('show');
-          });
-        }
+        iFrame?.classList.add('show');
 
         // call the afterOpen handler
         try {
