@@ -36,8 +36,6 @@ export class Loader implements ILoader {
     this.loaderElement.classList.add('show');
     document.body.appendChild(this.loaderElement);
 
-    this.style.disableBodyScroll();
-
     this.isOpen = true;
 
     return this;
@@ -50,8 +48,6 @@ export class Loader implements ILoader {
 
     this.loaderElement.classList.remove('show');
     document.body.removeChild(this.loaderElement);
-
-    this.style.enableBodyScroll();
 
     this.isOpen = false;
 

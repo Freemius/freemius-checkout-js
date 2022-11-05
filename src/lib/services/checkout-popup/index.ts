@@ -55,6 +55,7 @@ export class CheckoutPopup implements ICheckoutPopup {
       y: document.documentElement.scrollLeft,
     };
 
+    this.style.disableBodyScroll();
     this.loader.show();
 
     const iFrame = this.getNewIframe(overrideOptions);
@@ -171,9 +172,11 @@ export class CheckoutPopup implements ICheckoutPopup {
     this.attachedIFrame = null;
 
     this.loader.hide();
-    const { afterClose } = { ...this.options, ...overrideOptions };
+    this.style.enableBodyScroll();
+    this.exitIntent.detach();
 
     try {
+      const { afterClose } = { ...this.options, ...overrideOptions };
       afterClose?.();
     } catch (e) {
       Logger.Error(e);
@@ -252,10 +255,14 @@ export class CheckoutPopup implements ICheckoutPopup {
 
     const iFrame = document.createElement('iframe');
     iFrame.id = this.iFrameId;
+    iFrame.setAttribute('allowTransparency', 'true');
     iFrame.src = src;
     iFrame.setAttribute('width', '100%');
     iFrame.setAttribute('height', '100%');
-    iFrame.setAttribute('allowtransparency', 'true');
+    iFrame.setAttribute(
+      'style',
+      'background: rgba(0,0,0,0.003); border: 0 none transparent;'
+    );
     iFrame.setAttribute('frameborder', '0');
 
     return iFrame;
