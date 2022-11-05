@@ -1,4 +1,5 @@
 import { getIsFlashingBrowser } from '../../checkout';
+import { isSsr } from '../../utils/ops';
 
 export interface IStyle {
   readonly isFlashingBrowser: boolean;
@@ -21,11 +22,14 @@ export class Style implements IStyle {
   readonly isFlashingBrowser: boolean;
 
   constructor(public readonly guid: string) {
-    this.styleElement = document.createElement('style');
-    this.styleElement.textContent += this.getBasicStyle();
     this.bodyScrollDisableClassName = `is-fs-checkout-open-${this.guid}`;
 
-    this.isFlashingBrowser = getIsFlashingBrowser();
+    this.styleElement = document.createElement('style');
+    this.styleElement.textContent += this.getBasicStyle();
+
+    this.isFlashingBrowser =
+      getIsFlashingBrowser() ||
+      (!isSsr() && !!document.querySelector('#___gatsby'));
   }
 
   addStyle(style: string): void {
@@ -54,7 +58,7 @@ export class Style implements IStyle {
 
   private getBasicStyle(): string {
     return `body.${this.bodyScrollDisableClassName} {
-			overflow: hidden;
+			overflow: hidden !important;
 		}`;
   }
 }
