@@ -34,21 +34,13 @@ export class FSCheckout {
 
   private baseUrl: string = 'https://checkout.freemius.com';
 
-  readonly loaderId: string;
+  public style?: IStyle;
 
-  readonly exitIntentId: string;
+  private loader?: ILoader;
 
-  readonly iFrameId: string;
+  private checkoupPopup?: ICheckoutPopup;
 
-  readonly bodyClassOpen: string;
-
-  public style: IStyle;
-
-  private loader: ILoader;
-
-  private checkoupPopup: ICheckoutPopup;
-
-  private exitIntent: IExitIntent;
+  private exitIntent?: IExitIntent;
 
   constructor(options: CheckoutOptions) {
     if (!options.plugin_id) {
@@ -61,10 +53,9 @@ export class FSCheckout {
     this.options = options;
     this.guid = generateUID();
 
-    this.loaderId = `fs-loader-${this.guid}`;
-    this.bodyClassOpen = `is-fs-checkout-open-${this.guid}`;
-    this.exitIntentId = `fs-exit-intent-${this.guid}`;
-    this.iFrameId = `fs-checkout-page-${this.guid}`;
+    if (isSsr()) {
+      return;
+    }
 
     this.style = new Style(this.guid);
 
@@ -84,10 +75,6 @@ export class FSCheckout {
       this.options
     );
 
-    if (isSsr()) {
-      return;
-    }
-
     this.style.attach();
   }
 
@@ -103,7 +90,7 @@ export class FSCheckout {
     }
 
     // if this is already open, then cancel
-    if (this.checkoupPopup.isOpen()) {
+    if (this.checkoupPopup?.isOpen()) {
       Logger.Warn(
         'Checkout popup already open. Please close it first before opening it again.'
       );
@@ -111,7 +98,7 @@ export class FSCheckout {
     }
 
     // Open the checkout popup.
-    this.checkoupPopup.open(options);
+    this.checkoupPopup?.open(options);
   }
 
   /**
@@ -122,7 +109,7 @@ export class FSCheckout {
       return;
     }
 
-    this.checkoupPopup.close();
+    this.checkoupPopup?.close();
   }
 
   public destroy() {
@@ -133,7 +120,7 @@ export class FSCheckout {
     this.close();
 
     // remove style
-    this.style.remove();
+    this.style?.remove();
   }
 
   public getGuid() {
