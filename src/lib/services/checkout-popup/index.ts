@@ -213,6 +213,9 @@ export class CheckoutPopup implements ICheckoutPopup {
       user_email,
       user_firstname,
       user_lastname,
+      language,
+      locale,
+      user_token,
     } = { ...this.options, ...overrideOptions };
 
     const queryParams: Record<string, any> = {
@@ -239,6 +242,9 @@ export class CheckoutPopup implements ICheckoutPopup {
       user_email,
       user_firstname,
       user_lastname,
+      language,
+      locale,
+      user_token,
       mode: 'dialog',
       guid: this.guid,
     };

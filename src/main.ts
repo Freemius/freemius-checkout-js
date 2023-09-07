@@ -3,17 +3,22 @@ import { FSCheckout, CheckoutOptions } from './lib/checkout';
 
 import './style.css';
 
-const fsCheckout = new FSCheckout({
-  plugin_id: Number.parseInt(
-    (import.meta.env.VITE_PLUGIN_ID as string) ?? '0',
-    10
-  ),
-  public_key: import.meta.env.VITE_PUBLIC_KEY as string,
-  sandbox: {
-    ctx: import.meta.env.VITE_SANDBOX_CTX as string,
-    token: import.meta.env.VITE_SANDBOX_TOKEN as string,
+const fsCheckout = new FSCheckout(
+  {
+    plugin_id: Number.parseInt(
+      (import.meta.env.VITE_PLUGIN_ID as string) ?? '0',
+      10
+    ),
+    public_key: import.meta.env.VITE_PUBLIC_KEY as string,
+    sandbox: {
+      ctx: import.meta.env.VITE_SANDBOX_CTX as string,
+      token: import.meta.env.VITE_SANDBOX_TOKEN as string,
+    },
+    language: 'auto-beta',
+    user_token: import.meta.env.VITE_USER_TOKEN as string,
   },
-});
+  import.meta.env.VITE_CHECKOUT_BASE_URL ?? undefined
+);
 
 document.addEventListener('DOMContentLoaded', () => {
   function getLicensesAndFrequency() {
