@@ -28,6 +28,10 @@ export class CheckoutPopup implements ICheckoutPopup {
 
   private readonly guid: string;
 
+  private metaColorSchemeValue: string | null = null;
+
+  private metaColorSchemeElement: HTMLMetaElement | null = null;
+
   constructor(
     private readonly style: IStyle,
     private readonly exitIntent: IExitIntent,
@@ -37,6 +41,9 @@ export class CheckoutPopup implements ICheckoutPopup {
   ) {
     this.guid = this.style.guid;
     this.iFrameId = `fs-checkout-page-${this.style.guid}`;
+    this.metaColorSchemeElement = document.head.querySelector(
+      'meta[name="color-scheme"]'
+    );
 
     this.style.addStyle(this.getStyle());
   }
@@ -57,6 +64,13 @@ export class CheckoutPopup implements ICheckoutPopup {
 
     this.style.disableBodyScroll();
     this.loader.show();
+
+    // Backup the current meta color scheme value.
+    if (this.metaColorSchemeElement) {
+      this.metaColorSchemeValue =
+        this.metaColorSchemeElement.getAttribute('content');
+      this.metaColorSchemeElement.setAttribute('content', 'light');
+    }
 
     const iFrame = this.getNewIframe(overrideOptions);
     document.body.appendChild(iFrame);
@@ -175,6 +189,15 @@ export class CheckoutPopup implements ICheckoutPopup {
     this.style.enableBodyScroll();
     this.exitIntent.detach();
 
+    // Restore the meta color scheme value.
+    if (this.metaColorSchemeElement && this.metaColorSchemeValue) {
+      this.metaColorSchemeElement.setAttribute(
+        'content',
+        this.metaColorSchemeValue
+      );
+      this.metaColorSchemeValue = null;
+    }
+
     try {
       const { afterClose } = { ...this.options, ...overrideOptions };
       afterClose?.();
@@ -213,6 +236,9 @@ export class CheckoutPopup implements ICheckoutPopup {
       user_email,
       user_firstname,
       user_lastname,
+      language,
+      locale,
+      user_token,
     } = { ...this.options, ...overrideOptions };
 
     const queryParams: Record<string, any> = {
@@ -239,6 +265,9 @@ export class CheckoutPopup implements ICheckoutPopup {
       user_email,
       user_firstname,
       user_lastname,
+      language,
+      locale,
+      user_token,
       mode: 'dialog',
       guid: this.guid,
     };

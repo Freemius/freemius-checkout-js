@@ -1,3 +1,12 @@
+/**
+ * Supported "locale" option for the checkout.
+ * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/
+ * 1. `auto` - The system will try to guess the language of your user by looking into the browser and then the geo-location respectively. However, this won’t select languages that are marked as AI-translated or beta for the time being.
+ * 2. `auto-beta` - Same as above, but will also select a language marked as beta. When a language marked as beta is selected, the UI will also show a “BETA” tag near it.
+ * 3. Full locale code (for eg - `en_US`, `de_DE`, `fr_FR`, etc.)
+ */
+export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
+
 export interface CheckoutPopupOptions {
   //#region URL Query Parameters
 
@@ -157,6 +166,22 @@ export interface CheckoutPopupOptions {
    * with their affiliate account.
    */
   affiliate_user_id?: number;
+  /**
+   * An optional locale to override the checkout’s language.
+   */
+  language?: CheckoutLocaleValue;
+  /**
+   * An optional locale to override the checkout’s language.
+   *
+   * @see `language`
+   */
+  locale?: CheckoutLocaleValue;
+  /**
+   * An optional token which if present, would pre-populate the checkout with user’s personal and billing data (for example, the name, email, country, vat ID etc).
+   *
+   * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/#user_token_in_checkout_new
+   */
+  user_token?: string;
   // SANDBOX
   /**
    * If you would like the dialog to open in sandbox mode,

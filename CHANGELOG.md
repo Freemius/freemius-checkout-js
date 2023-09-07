@@ -1,3 +1,8 @@
+# 1.2.1
+
+- Fix: SSR issue where `document` and `window` aren't available.
+- Fix: Remove unneeded code from previous refactoring.
+
 # 1.2.0
 
 - Fix: Hiding body scroll when checkout is loaded.
