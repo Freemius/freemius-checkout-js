@@ -7,298 +7,298 @@ import { IExitIntent } from '../exit-intent';
 import { IStyle } from '../style';
 
 export interface ICheckoutPopup {
-  open(
-    overrideOptions?: Partial<
-      Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-    >
-  ): ICheckoutPopup;
-  isOpen(): boolean;
-  close(): ICheckoutPopup;
+    open(
+        overrideOptions?: Partial<
+            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+        >
+    ): ICheckoutPopup;
+    isOpen(): boolean;
+    close(): ICheckoutPopup;
 }
 
 export class CheckoutPopup implements ICheckoutPopup {
-  private attachedIFrame: {
-    iFrame: HTMLIFrameElement;
-    postmanEvent: PostmanEvents | null;
-  } | null = null;
+    private attachedIFrame: {
+        iFrame: HTMLIFrameElement;
+        postmanEvent: PostmanEvents | null;
+    } | null = null;
 
-  private overflow: { x: number; y: number } = { x: 0, y: 0 };
+    private overflow: { x: number; y: number } = { x: 0, y: 0 };
 
-  private readonly iFrameId: string;
+    private readonly iFrameId: string;
 
-  private readonly guid: string;
+    private readonly guid: string;
 
-  private metaColorSchemeValue: string | null = null;
+    private metaColorSchemeValue: string | null = null;
 
-  private metaColorSchemeElement: HTMLMetaElement | null = null;
+    private metaColorSchemeElement: HTMLMetaElement | null = null;
 
-  constructor(
-    private readonly style: IStyle,
-    private readonly exitIntent: IExitIntent,
-    private readonly loader: ILoader,
-    private readonly baseUrl: string,
-    private readonly options: CheckoutPopupOptions
-  ) {
-    this.guid = this.style.guid;
-    this.iFrameId = `fs-checkout-page-${this.style.guid}`;
-    this.metaColorSchemeElement = document.head.querySelector(
-      'meta[name="color-scheme"]'
-    );
+    constructor(
+        private readonly style: IStyle,
+        private readonly exitIntent: IExitIntent,
+        private readonly loader: ILoader,
+        private readonly baseUrl: string,
+        private readonly options: CheckoutPopupOptions
+    ) {
+        this.guid = this.style.guid;
+        this.iFrameId = `fs-checkout-page-${this.style.guid}`;
+        this.metaColorSchemeElement = document.head.querySelector(
+            'meta[name="color-scheme"]'
+        );
 
-    this.style.addStyle(this.getStyle());
-  }
-
-  public isOpen(): boolean {
-    return this.attachedIFrame !== null;
-  }
-
-  public open(
-    overrideOptions?: Partial<
-      Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-    >
-  ): ICheckoutPopup {
-    this.overflow = {
-      x: document.documentElement.scrollTop,
-      y: document.documentElement.scrollLeft,
-    };
-
-    this.style.disableBodyScroll();
-    this.loader.show();
-
-    // Backup the current meta color scheme value.
-    if (this.metaColorSchemeElement) {
-      this.metaColorSchemeValue =
-        this.metaColorSchemeElement.getAttribute('content');
-      this.metaColorSchemeElement.setAttribute('content', 'light');
+        this.style.addStyle(this.getStyle());
     }
 
-    const iFrame = this.getNewIframe(overrideOptions);
-    document.body.appendChild(iFrame);
+    public isOpen(): boolean {
+        return this.attachedIFrame !== null;
+    }
 
-    const postmanEvent = this.attachPostmanEvents(iFrame, overrideOptions);
+    public open(
+        overrideOptions?: Partial<
+            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+        >
+    ): ICheckoutPopup {
+        this.overflow = {
+            x: document.documentElement.scrollTop,
+            y: document.documentElement.scrollLeft,
+        };
 
-    this.attachedIFrame = { iFrame, postmanEvent };
+        this.style.disableBodyScroll();
+        this.loader.show();
 
-    this.exitIntent.attach(() => {
-      postmanEvent?.post('exit_intent', null);
-      this.options.onExitIntent?.();
-    });
-
-    return this;
-  }
-
-  public close(): ICheckoutPopup {
-    // Send the close signal to the checkout popup, Freemium might do some things like showing FOMO etc.
-    this.attachedIFrame?.postmanEvent?.post('close', null);
-
-    return this;
-  }
-
-  private attachPostmanEvents(
-    iFrame: HTMLIFrameElement,
-    overrideOptions?: Partial<
-      Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-    >
-  ): PostmanEvents | null {
-    const iFramePostman = postman(iFrame, this.baseUrl);
-
-    const { success, purchaseCompleted, cancel, track, afterOpen } = {
-      ...this.options,
-      ...overrideOptions,
-    };
-
-    iFramePostman?.one(
-      'upgraded',
-      (data) => {
-        try {
-          success?.(data as any);
-        } catch (e) {
-          Logger.Error(e);
+        // Backup the current meta color scheme value.
+        if (this.metaColorSchemeElement) {
+            this.metaColorSchemeValue =
+                this.metaColorSchemeElement.getAttribute('content');
+            this.metaColorSchemeElement.setAttribute('content', 'light');
         }
 
-        this.closeCheckoutPopup(overrideOptions);
-      },
-      true
-    );
-    iFramePostman?.one(
-      'purchaseCompleted',
-      (data) => {
-        try {
-          purchaseCompleted?.(data as any);
-        } catch (e) {
-          Logger.Error(e);
-        }
-      },
-      true
-    );
-    iFramePostman?.one(
-      'canceled',
-      () => {
-        try {
-          cancel?.();
-        } catch (e) {
-          Logger.Error(e);
-        }
+        const iFrame = this.getNewIframe(overrideOptions);
+        document.body.appendChild(iFrame);
 
-        this.closeCheckoutPopup(overrideOptions);
-      },
-      true
-    );
-    iFramePostman?.on('track', (data) => {
-      try {
-        track?.((data as any).event, data as any);
-      } catch (e) {
-        Logger.Error(e);
-      }
-    });
-    iFramePostman?.one(
-      'loaded',
-      () => {
-        // hide the loader
+        const postmanEvent = this.attachPostmanEvents(iFrame, overrideOptions);
+
+        this.attachedIFrame = { iFrame, postmanEvent };
+
+        this.exitIntent.attach(() => {
+            postmanEvent?.post('exit_intent', null);
+            this.options.onExitIntent?.();
+        });
+
+        return this;
+    }
+
+    public close(): ICheckoutPopup {
+        // Send the close signal to the checkout popup, Freemium might do some things like showing FOMO etc.
+        this.attachedIFrame?.postmanEvent?.post('close', null);
+
+        return this;
+    }
+
+    private attachPostmanEvents(
+        iFrame: HTMLIFrameElement,
+        overrideOptions?: Partial<
+            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+        >
+    ): PostmanEvents | null {
+        const iFramePostman = postman(iFrame, this.baseUrl);
+
+        const { success, purchaseCompleted, cancel, track, afterOpen } = {
+            ...this.options,
+            ...overrideOptions,
+        };
+
+        iFramePostman?.one(
+            'upgraded',
+            (data) => {
+                try {
+                    success?.(data as any);
+                } catch (e) {
+                    Logger.Error(e);
+                }
+
+                this.closeCheckoutPopup(overrideOptions);
+            },
+            true
+        );
+        iFramePostman?.one(
+            'purchaseCompleted',
+            (data) => {
+                try {
+                    purchaseCompleted?.(data as any);
+                } catch (e) {
+                    Logger.Error(e);
+                }
+            },
+            true
+        );
+        iFramePostman?.one(
+            'canceled',
+            () => {
+                try {
+                    cancel?.();
+                } catch (e) {
+                    Logger.Error(e);
+                }
+
+                this.closeCheckoutPopup(overrideOptions);
+            },
+            true
+        );
+        iFramePostman?.on('track', (data) => {
+            try {
+                track?.((data as any).event, data as any);
+            } catch (e) {
+                Logger.Error(e);
+            }
+        });
+        iFramePostman?.one(
+            'loaded',
+            () => {
+                // hide the loader
+                this.loader.hide();
+
+                iFrame?.classList.add('show');
+
+                // call the afterOpen handler
+                try {
+                    afterOpen?.();
+                } catch (e) {
+                    Logger.Error(e);
+                }
+            },
+            true
+        );
+
+        return iFramePostman;
+    }
+
+    private closeCheckoutPopup(
+        overrideOptions?: Partial<
+            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+        >
+    ) {
+        // restore document overflow
+        document.documentElement.scrollTop = this.overflow.x;
+        document.documentElement.scrollLeft = this.overflow.y;
+
+        this.attachedIFrame?.postmanEvent?.destroy();
+        this.attachedIFrame?.iFrame.remove();
+        this.attachedIFrame = null;
+
         this.loader.hide();
+        this.style.enableBodyScroll();
+        this.exitIntent.detach();
 
-        iFrame?.classList.add('show');
-
-        // call the afterOpen handler
-        try {
-          afterOpen?.();
-        } catch (e) {
-          Logger.Error(e);
+        // Restore the meta color scheme value.
+        if (this.metaColorSchemeElement && this.metaColorSchemeValue) {
+            this.metaColorSchemeElement.setAttribute(
+                'content',
+                this.metaColorSchemeValue
+            );
+            this.metaColorSchemeValue = null;
         }
-      },
-      true
-    );
 
-    return iFramePostman;
-  }
-
-  private closeCheckoutPopup(
-    overrideOptions?: Partial<
-      Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-    >
-  ) {
-    // restore document overflow
-    document.documentElement.scrollTop = this.overflow.x;
-    document.documentElement.scrollLeft = this.overflow.y;
-
-    this.attachedIFrame?.postmanEvent?.destroy();
-    this.attachedIFrame?.iFrame.remove();
-    this.attachedIFrame = null;
-
-    this.loader.hide();
-    this.style.enableBodyScroll();
-    this.exitIntent.detach();
-
-    // Restore the meta color scheme value.
-    if (this.metaColorSchemeElement && this.metaColorSchemeValue) {
-      this.metaColorSchemeElement.setAttribute(
-        'content',
-        this.metaColorSchemeValue
-      );
-      this.metaColorSchemeValue = null;
+        try {
+            const { afterClose } = { ...this.options, ...overrideOptions };
+            afterClose?.();
+        } catch (e) {
+            Logger.Error(e);
+        }
     }
 
-    try {
-      const { afterClose } = { ...this.options, ...overrideOptions };
-      afterClose?.();
-    } catch (e) {
-      Logger.Error(e);
+    private getNewIframe(
+        overrideOptions: Partial<
+            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+        > = {}
+    ): HTMLIFrameElement {
+        const {
+            plugin_id,
+            public_key,
+            affiliate_user_id,
+            billing_cycle,
+            coupon,
+            currency,
+            disable_licenses_selector,
+            hide_billing_cycles,
+            hide_coupon,
+            id,
+            image,
+            is_payment_method_update,
+            license_key,
+            licenses,
+            maximize_discounts,
+            name,
+            plan_id,
+            pricing_id,
+            sandbox,
+            title,
+            trial,
+            user_email,
+            user_firstname,
+            user_lastname,
+            language,
+            locale,
+            user_token,
+        } = { ...this.options, ...overrideOptions };
+
+        const queryParams: Record<string, any> = {
+            plugin_id,
+            public_key,
+            affiliate_user_id,
+            billing_cycle,
+            coupon,
+            currency,
+            disable_licenses_selector,
+            hide_billing_cycles,
+            hide_coupon,
+            id,
+            image,
+            is_payment_method_update,
+            license_key,
+            licenses,
+            maximize_discounts,
+            name,
+            plan_id,
+            pricing_id,
+            title,
+            trial,
+            user_email,
+            user_firstname,
+            user_lastname,
+            language,
+            locale,
+            user_token,
+            mode: 'dialog',
+            guid: this.guid,
+        };
+
+        if (sandbox && sandbox.ctx && sandbox.token) {
+            queryParams.s_ctx_ts = sandbox.ctx;
+            queryParams.sandbox = sandbox.token;
+        }
+
+        // Create the iFrame
+        const src = `${this.baseUrl}/?${buildFreemiusQueryFromOptions(
+            queryParams
+        )}#${encodeURIComponent(document.location.href)}`;
+
+        const iFrame = document.createElement('iframe');
+        iFrame.id = this.iFrameId;
+        iFrame.setAttribute('allowTransparency', 'true');
+        iFrame.src = src;
+        iFrame.setAttribute('width', '100%');
+        iFrame.setAttribute('height', '100%');
+        iFrame.setAttribute(
+            'style',
+            'background: rgba(0,0,0,0.003); border: 0 none transparent;'
+        );
+        iFrame.setAttribute('frameborder', '0');
+
+        return iFrame;
     }
-  }
 
-  private getNewIframe(
-    overrideOptions: Partial<
-      Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-    > = {}
-  ): HTMLIFrameElement {
-    const {
-      plugin_id,
-      public_key,
-      affiliate_user_id,
-      billing_cycle,
-      coupon,
-      currency,
-      disable_licenses_selector,
-      hide_billing_cycles,
-      hide_coupon,
-      id,
-      image,
-      is_payment_method_update,
-      license_key,
-      licenses,
-      maximize_discounts,
-      name,
-      plan_id,
-      pricing_id,
-      sandbox,
-      title,
-      trial,
-      user_email,
-      user_firstname,
-      user_lastname,
-      language,
-      locale,
-      user_token,
-    } = { ...this.options, ...overrideOptions };
-
-    const queryParams: Record<string, any> = {
-      plugin_id,
-      public_key,
-      affiliate_user_id,
-      billing_cycle,
-      coupon,
-      currency,
-      disable_licenses_selector,
-      hide_billing_cycles,
-      hide_coupon,
-      id,
-      image,
-      is_payment_method_update,
-      license_key,
-      licenses,
-      maximize_discounts,
-      name,
-      plan_id,
-      pricing_id,
-      title,
-      trial,
-      user_email,
-      user_firstname,
-      user_lastname,
-      language,
-      locale,
-      user_token,
-      mode: 'dialog',
-      guid: this.guid,
-    };
-
-    if (sandbox && sandbox.ctx && sandbox.token) {
-      queryParams.s_ctx_ts = sandbox.ctx;
-      queryParams.sandbox = sandbox.token;
-    }
-
-    // Create the iFrame
-    const src = `${this.baseUrl}/?${buildFreemiusQueryFromOptions(
-      queryParams
-    )}#${encodeURIComponent(document.location.href)}`;
-
-    const iFrame = document.createElement('iframe');
-    iFrame.id = this.iFrameId;
-    iFrame.setAttribute('allowTransparency', 'true');
-    iFrame.src = src;
-    iFrame.setAttribute('width', '100%');
-    iFrame.setAttribute('height', '100%');
-    iFrame.setAttribute(
-      'style',
-      'background: rgba(0,0,0,0.003); border: 0 none transparent;'
-    );
-    iFrame.setAttribute('frameborder', '0');
-
-    return iFrame;
-  }
-
-  private getStyle(): string {
-    return `#${this.iFrameId} {
+    private getStyle(): string {
+        return `#${this.iFrameId} {
 			z-index: ${MAX_ZINDEX - 1};
 			background: rgba(0,0,0,0.003);
 			border: 0 none transparent;
@@ -316,5 +316,5 @@ export class CheckoutPopup implements ICheckoutPopup {
 		#${this.iFrameId}.show {
 			visibility: visible;
 		}`;
-  }
+    }
 }

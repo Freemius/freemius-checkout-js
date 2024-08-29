@@ -2,60 +2,60 @@ import { MAX_ZINDEX } from '../../utils/ops';
 import { IStyle } from '../style';
 
 export interface ILoader {
-  show(): ILoader;
+    show(): ILoader;
 
-  hide(): ILoader;
+    hide(): ILoader;
 }
 
 export class Loader implements ILoader {
-  private readonly loaderElement: HTMLDivElement;
+    private readonly loaderElement: HTMLDivElement;
 
-  private isOpen: boolean = false;
+    private isOpen: boolean = false;
 
-  private loaderElementId: string;
+    private loaderElementId: string;
 
-  constructor(
-    private readonly style: IStyle,
-    imageUrl: string,
-    altText: string = 'Loading Freemius Checkout'
-  ) {
-    this.loaderElementId = `fs-loader-${this.style.guid}`;
+    constructor(
+        private readonly style: IStyle,
+        imageUrl: string,
+        altText: string = 'Loading Freemius Checkout'
+    ) {
+        this.loaderElementId = `fs-loader-${this.style.guid}`;
 
-    this.loaderElement = document.createElement('div');
-    this.loaderElement.id = this.loaderElementId;
-    this.loaderElement.innerHTML = `<img src="${imageUrl}" alt="${altText}" />`;
+        this.loaderElement = document.createElement('div');
+        this.loaderElement.id = this.loaderElementId;
+        this.loaderElement.innerHTML = `<img src="${imageUrl}" alt="${altText}" />`;
 
-    this.style.addStyle(this.getStyle());
-  }
-
-  public show(): Loader {
-    if (this.isOpen) {
-      return this;
+        this.style.addStyle(this.getStyle());
     }
 
-    this.loaderElement.classList.add('show');
-    document.body.appendChild(this.loaderElement);
+    public show(): Loader {
+        if (this.isOpen) {
+            return this;
+        }
 
-    this.isOpen = true;
+        this.loaderElement.classList.add('show');
+        document.body.appendChild(this.loaderElement);
 
-    return this;
-  }
+        this.isOpen = true;
 
-  public hide(): Loader {
-    if (!this.isOpen) {
-      return this;
+        return this;
     }
 
-    this.loaderElement.classList.remove('show');
-    document.body.removeChild(this.loaderElement);
+    public hide(): Loader {
+        if (!this.isOpen) {
+            return this;
+        }
 
-    this.isOpen = false;
+        this.loaderElement.classList.remove('show');
+        document.body.removeChild(this.loaderElement);
 
-    return this;
-  }
+        this.isOpen = false;
 
-  private getStyle(): string {
-    return `#${this.loaderElementId} {
+        return this;
+    }
+
+    private getStyle(): string {
+        return `#${this.loaderElementId} {
 			display: none;
 			position: fixed;
 			z-index: ${MAX_ZINDEX - 1};
@@ -87,5 +87,5 @@ export class Loader implements ILoader {
 			border-radius: 50%;
 			box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
 		}`;
-  }
+    }
 }

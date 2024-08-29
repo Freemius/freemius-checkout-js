@@ -1,10 +1,10 @@
-import type { Options } from 'tsup';
+import { defineConfig } from 'tsup';
 
-export const tsup: Options = {
-	entryPoints: ['src/lib/checkout.ts'],
-	format: ['esm', 'cjs', 'iife'],
-	globalName: 'FSCheckout',
-	dts: true,
-	minify: true,
-	outDir: 'lib',
-};
+export default defineConfig({
+  entry: ['src/lib/checkout.ts'],
+  format: ['esm', 'cjs', 'iife'],
+  globalName: 'FSCheckout',
+  dts: true,
+  minify: true,
+  outDir: 'lib',
+});

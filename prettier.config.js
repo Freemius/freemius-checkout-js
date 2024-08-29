@@ -5,9 +5,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-module.exports = {
+export default {
 	useTabs: false,
-	tabWidth: 2,
+	tabWidth: 4,
 	semi: true,
 	singleQuote: true,
 	trailingComma: 'es5',
