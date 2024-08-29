@@ -8,8 +8,8 @@
 		"serve": "vite preview",
 		"lint": "eslint ./src",
 		"build:lib": "tsup",
-		"deploysite": "yarn build && netlify deploy --dir=dist --prod",
-		"prepublish": "yarn build:lib"
+		"deploysite": "npm run build && netlify deploy --dir=dist --prod",
+		"prepublish": "npm run build:lib"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.14.0",
