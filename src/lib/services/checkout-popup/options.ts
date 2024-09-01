@@ -7,9 +7,7 @@
  */
 export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
 
-export interface CheckoutPopupOptions {
-    //#region URL Query Parameters
-
+export interface CheckoutPopupParams {
     /**
      * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
      */
@@ -43,6 +41,7 @@ export interface CheckoutPopupOptions {
      * An optional string to override the checkout’s subtitle.
      *
      * @default "You’re one step closer to our {{ planTitle }} features"
+     * @deprecated
      */
     subtitle?: string;
     /**
@@ -190,11 +189,9 @@ export interface CheckoutPopupOptions {
         ctx: string;
         token: string;
     };
+}
 
-    //#endregion
-
-    //#region Events
-
+export interface CheckoutPopupEvents {
     /**
      * A callback handler that will execute once a user closes the checkout by
      * clicking the close icon. This handler only executes when the checkout is
@@ -238,6 +235,13 @@ export interface CheckoutPopupOptions {
      * checkout iFrame is shown, not on global exit intent.
      */
     onExitIntent?: () => void;
+}
 
-    //#endregion
+export interface CheckoutPopupOptions
+    extends CheckoutPopupParams,
+        CheckoutPopupEvents {
+    /**
+     * Accept any arbitrary key-value pair to be passed to the checkout.
+     */
+    [key: string]: any;
 }

@@ -8,9 +8,9 @@ export interface PostmanEvents {
      */
     on: (type: string, callback: ListenerCallback) => void;
     /**
-     * Add event listener on message and execute only once when event matches.
+     * Add event listener to the type, but only once. If flush is true, then it will remove any existing listeners.
      */
-    one: (type: string, callback: ListenerCallback, flush: boolean) => void;
+    one: (type: string, callback: ListenerCallback, flush?: boolean) => void;
     /**
      * Send a postMessage event to an iFrame. This is written specifically to how
      * freemius iFrames expects messages.
@@ -31,7 +31,7 @@ export function postman(
 ): null | PostmanEvents {
     const target = iFrame.contentWindow;
     const targetUrl = iFrame.src;
-    const callbacks: { [type: string]: ListenerCallback[] } = {};
+    const callbacks: Record<string, ListenerCallback[]> = {};
 
     if (!target || !targetUrl) {
         return null;
@@ -64,6 +64,7 @@ export function postman(
         ) {
             try {
                 const parsedData = JSON.parse(event.data);
+
                 if (
                     typeof parsedData === 'object' &&
                     parsedData.type &&
@@ -86,15 +87,18 @@ export function postman(
             if (!callbacks[type]) {
                 callbacks[type] = [];
             }
+
             callbacks[type].push(callback);
         },
-        one(type, callback, flush) {
-            if (flush === true) {
+        one(type, callback, flush = false) {
+            if (flush) {
                 delete callbacks[type];
             }
+
             if (callbacks[type]) {
                 return;
             }
+
             this.on(type, callback);
         },
         destroy() {

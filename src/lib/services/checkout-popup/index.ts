@@ -16,6 +16,9 @@ export interface ICheckoutPopup {
     close(): ICheckoutPopup;
 }
 
+/**
+ * @todo - Break this and create a separate iFrameService class.
+ */
 export class CheckoutPopup implements ICheckoutPopup {
     private attachedIFrame: {
         iFrame: HTMLIFrameElement;
@@ -90,6 +93,8 @@ export class CheckoutPopup implements ICheckoutPopup {
     public close(): ICheckoutPopup {
         // Send the close signal to the checkout popup, Freemium might do some things like showing FOMO etc.
         this.attachedIFrame?.postmanEvent?.post('close', null);
+
+        this.loader.hide();
 
         return this;
     }
@@ -239,6 +244,7 @@ export class CheckoutPopup implements ICheckoutPopup {
             language,
             locale,
             user_token,
+            subtitle,
         } = { ...this.options, ...overrideOptions };
 
         const queryParams: Record<string, any> = {
@@ -268,8 +274,10 @@ export class CheckoutPopup implements ICheckoutPopup {
             language,
             locale,
             user_token,
+            subtitle,
             mode: 'dialog',
             guid: this.guid,
+            _fs_checkout: true,
         };
 
         if (sandbox && sandbox.ctx && sandbox.token) {
@@ -293,6 +301,10 @@ export class CheckoutPopup implements ICheckoutPopup {
             'background: rgba(0,0,0,0.003); border: 0 none transparent;'
         );
         iFrame.setAttribute('frameborder', '0');
+
+        if (process.env.NODE_ENV === 'test') {
+            iFrame.setAttribute('data-testid', `fs-checkout-page-${this.guid}`);
+        }
 
         return iFrame;
     }

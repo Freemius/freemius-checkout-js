@@ -1,6 +1,7 @@
 import { MAX_ZINDEX } from '../../utils/ops';
 import { Logger } from '../logger';
 import { IStyle } from '../style';
+import { isExitAttempt } from '../../utils/ops';
 
 export interface IExitIntent {
     attach(onExit: () => void): IExitIntent;
@@ -42,11 +43,11 @@ export class ExitIntent implements IExitIntent {
         const delay = 300;
 
         const mouseLeaveHandler = (event: MouseEvent) => {
-            if (!this.isExitAttempt(event)) {
+            if (!isExitAttempt(event)) {
                 return;
             }
 
-            delayTimer = setTimeout(() => {
+            delayTimer = window.setTimeout(() => {
                 try {
                     onExit();
                 } catch (e) {
@@ -70,6 +71,7 @@ export class ExitIntent implements IExitIntent {
                 clearTimeout(delayTimer);
                 delayTimer = null;
             }
+
             html.removeEventListener('mouseleave', mouseLeaveHandler);
             html.removeEventListener('mouseenter', mouseEnterHandler);
         };
@@ -87,14 +89,6 @@ export class ExitIntent implements IExitIntent {
         this.clearExitIntentListener?.();
 
         return this;
-    }
-
-    private isExitAttempt(event: MouseEvent) {
-        if (event.pageY > 20) {
-            return false;
-        }
-
-        return true;
     }
 
     private getStyle(): string {
