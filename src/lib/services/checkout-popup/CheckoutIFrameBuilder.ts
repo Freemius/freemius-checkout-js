@@ -1,5 +1,5 @@
 import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
-import { MAX_ZINDEX } from '../../utils/ops';
+import { isQueryItemInValid, MAX_ZINDEX } from '../../utils/ops';
 import { CheckoutIFrame } from './CheckoutIFrame';
 import { IStyle } from '../style';
 
@@ -40,69 +40,19 @@ export class CheckoutIFrameBuilder {
     }
 
     private getQueryParams(options: CheckoutPopupOptions): Record<string, any> {
-        const {
-            plugin_id,
-            public_key,
-            affiliate_user_id,
-            billing_cycle,
-            coupon,
-            currency,
-            disable_licenses_selector,
-            hide_billing_cycles,
-            hide_coupon,
-            id,
-            image,
-            is_payment_method_update,
-            license_key,
-            licenses,
-            maximize_discounts,
-            name,
-            plan_id,
-            pricing_id,
-            sandbox,
-            title,
-            trial,
-            user_email,
-            user_firstname,
-            user_lastname,
-            language,
-            locale,
-            user_token,
-            subtitle,
-        } = options;
-
         const queryParams: Record<string, any> = {
-            plugin_id,
-            public_key,
-            affiliate_user_id,
-            billing_cycle,
-            coupon,
-            currency,
-            disable_licenses_selector,
-            hide_billing_cycles,
-            hide_coupon,
-            id,
-            image,
-            is_payment_method_update,
-            license_key,
-            licenses,
-            maximize_discounts,
-            name,
-            plan_id,
-            pricing_id,
-            title,
-            trial,
-            user_email,
-            user_firstname,
-            user_lastname,
-            language,
-            locale,
-            user_token,
-            subtitle,
             mode: 'dialog',
             guid: this.style.guid,
             _fs_checkout: true,
         };
+
+        Object.entries(options).forEach(([key, value]) => {
+            if (!isQueryItemInValid(value)) {
+                queryParams[key] = value;
+            }
+        });
+
+        const { sandbox } = options;
 
         if (sandbox && sandbox.ctx && sandbox.token) {
             queryParams.s_ctx_ts = sandbox.ctx;

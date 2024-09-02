@@ -49,23 +49,31 @@ export function getIsFlashingBrowser(): boolean {
     return isFlashingBrowser;
 }
 
-export function getQueryValueFromItem(item: any): string | null {
-    if (
+export function isQueryItemInValid(item: any): boolean {
+    return (
         typeof item === 'undefined' ||
         typeof item === 'function' ||
         (typeof item === 'object' && item !== null)
-    ) {
+    );
+}
+
+export function getQueryValueFromItem(item: any): string | null {
+    if (isQueryItemInValid(item)) {
         return null;
     }
+
     if (item === null) {
         return 'null';
     }
+
     if (item === true) {
         return '1';
     }
+
     if (item === false) {
         return '0';
     }
+
     return encodeURIComponent(item)
         .replace(/!/g, '%21')
         .replace(/'/g, '%27')
