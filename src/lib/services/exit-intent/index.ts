@@ -3,12 +3,16 @@ import { Logger } from '../logger';
 import { IStyle } from '../style';
 import { isExitAttempt } from '../../utils/ops';
 
+type ExitIntentListener = () => void;
+
 export interface IExitIntent {
-    attach(onExit: () => void): IExitIntent;
+    attach(...listeners: ExitIntentListener[]): IExitIntent;
 
     isAttached(): boolean;
 
     detach(): IExitIntent;
+
+    addListener(...listeners: ExitIntentListener[]): void;
 }
 
 export class ExitIntent implements IExitIntent {
@@ -17,6 +21,8 @@ export class ExitIntent implements IExitIntent {
     private exitIntentDiv: HTMLDivElement | null = null;
 
     private clearExitIntentListener: (() => void) | null = null;
+
+    private listeners: ExitIntentListener[] = [];
 
     constructor(private readonly style: IStyle) {
         this.exitIntentId = `fs-exit-intent-${this.style.guid}`;
@@ -28,7 +34,15 @@ export class ExitIntent implements IExitIntent {
         return null !== this.exitIntentDiv;
     }
 
-    public attach(onExit: () => void): IExitIntent {
+    public addListener(...listeners: ExitIntentListener[]): void {
+        this.listeners.push(...listeners);
+    }
+
+    public attach(...listeners: ExitIntentListener[]): IExitIntent {
+        if (listeners) {
+            this.addListener(...listeners);
+        }
+
         if (this.isAttached()) {
             return this;
         }
@@ -49,7 +63,7 @@ export class ExitIntent implements IExitIntent {
 
             delayTimer = window.setTimeout(() => {
                 try {
-                    onExit();
+                    this.fireListeners();
                 } catch (e) {
                     Logger.Error(e);
                 }
@@ -89,6 +103,12 @@ export class ExitIntent implements IExitIntent {
         this.clearExitIntentListener?.();
 
         return this;
+    }
+
+    private fireListeners() {
+        this.listeners.forEach((listener) => {
+            listener();
+        });
     }
 
     private getStyle(): string {

@@ -23,7 +23,7 @@ import type { CheckoutOptions } from './types';
 import { IStyle, Style } from './services/style';
 import { ILoader, Loader } from './services/loader';
 import { CheckoutPopup, ICheckoutPopup } from './services/checkout-popup';
-import { CheckoutPopupOptions } from './services/checkout-popup/options';
+import { CheckoutPopupOptions } from './contracts/CheckoutPopupOptions';
 import { ExitIntent, IExitIntent } from './services/exit-intent';
 export type { PostmanEvents, CheckoutOptions };
 

@@ -5,7 +5,7 @@ import { createHydratedMock } from 'ts-auto-mock';
 import {
     CheckoutPopupOptions,
     CheckoutPopupParams,
-} from './services/checkout-popup/options';
+} from './contracts/CheckoutPopupOptions';
 import { getQueryValueFromItem } from './utils/ops';
 
 describe('CheckoutPopup', () => {
