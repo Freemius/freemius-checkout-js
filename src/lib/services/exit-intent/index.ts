@@ -1,19 +1,8 @@
 import { MAX_ZINDEX } from '../../utils/ops';
 import { Logger } from '../logger';
-import { IStyle } from '../style';
 import { isExitAttempt } from '../../utils/ops';
-
-type ExitIntentListener = () => void;
-
-export interface IExitIntent {
-    attach(...listeners: ExitIntentListener[]): IExitIntent;
-
-    isAttached(): boolean;
-
-    detach(): IExitIntent;
-
-    addListener(...listeners: ExitIntentListener[]): void;
-}
+import { ExitIntentListener, IExitIntent } from '../../contracts/IExitIntent';
+import { IStyle } from '../../contracts/IStyle';
 
 export class ExitIntent implements IExitIntent {
     private readonly exitIntentId: string;

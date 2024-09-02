@@ -25,6 +25,12 @@ export interface PostmanEvents {
     destroy: () => void;
 }
 
+/**
+ * @todo Refactor to a class and a factory function and publish under `@freemius/postman`.
+ *
+ * @param iFrame
+ * @param sourceUrl
+ */
 export function postman(
     iFrame: HTMLIFrameElement,
     sourceUrl: string

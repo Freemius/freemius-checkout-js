@@ -1,11 +1,6 @@
 import { MAX_ZINDEX } from '../../utils/ops';
-import { IStyle } from '../style';
-
-export interface ILoader {
-    show(): ILoader;
-
-    hide(): ILoader;
-}
+import { ILoader } from '../../contracts/ILoader';
+import { IStyle } from '../../contracts/IStyle';
 
 export class Loader implements ILoader {
     private readonly loaderElement: HTMLDivElement;

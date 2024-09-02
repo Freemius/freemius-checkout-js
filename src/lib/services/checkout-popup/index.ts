@@ -1,21 +1,11 @@
 import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
-import { ILoader } from '../loader';
-import { IExitIntent } from '../exit-intent';
-import { IStyle } from '../style';
 import { CheckoutIFrameBuilder } from './CheckoutIFrameBuilder';
 import { CheckoutIFrame } from './CheckoutIFrame';
+import { ILoader } from '../../contracts/ILoader';
+import { IExitIntent } from '../../contracts/IExitIntent';
+import { IStyle } from '../../contracts/IStyle';
 
-export interface ICheckoutPopup {
-    open(
-        overrideOptions?: Partial<
-            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
-        >
-    ): ICheckoutPopup;
-    isOpen(): boolean;
-    close(): ICheckoutPopup;
-}
-
-export class CheckoutPopup implements ICheckoutPopup {
+export class CheckoutPopup {
     private checkoutIFrameBuilder: CheckoutIFrameBuilder;
 
     private checkoutIFrame: CheckoutIFrame | null = null;
@@ -44,7 +34,7 @@ export class CheckoutPopup implements ICheckoutPopup {
         overrideOptions?: Partial<
             Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
         >
-    ): ICheckoutPopup {
+    ): CheckoutPopup {
         if (this.isOpen()) {
             return this;
         }
@@ -69,7 +59,7 @@ export class CheckoutPopup implements ICheckoutPopup {
         return this;
     }
 
-    public close(): ICheckoutPopup {
+    public close(): CheckoutPopup {
         this.checkoutIFrame?.close();
 
         return this;

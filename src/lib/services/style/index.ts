@@ -1,21 +1,6 @@
 import { getIsFlashingBrowser } from '../../checkout';
 import { isSsr } from '../../utils/ops';
-
-export interface IStyle {
-    readonly isFlashingBrowser: boolean;
-
-    readonly guid: string;
-
-    addStyle(style: string): void;
-    attach(): IStyle;
-    remove(): IStyle;
-
-    disableBodyScroll(): void;
-    enableBodyScroll(): void;
-
-    disableMetaColorScheme(): void;
-    enableMetaColorScheme(): void;
-}
+import { IStyle } from '../../contracts/IStyle';
 
 export class Style implements IStyle {
     private readonly styleElement: HTMLStyleElement;

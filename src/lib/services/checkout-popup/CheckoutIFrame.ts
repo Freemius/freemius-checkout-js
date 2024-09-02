@@ -2,7 +2,7 @@ import { postman, PostmanEvents } from '../postman';
 import { CheckoutPopupEvents } from '../../contracts/CheckoutPopupOptions';
 import { buildFreemiusQueryFromOptions } from '../../utils/ops';
 import { Logger } from '../logger';
-import { IExitIntent } from '../exit-intent';
+import { IExitIntent } from '../../contracts/IExitIntent';
 
 export class CheckoutIFrame {
     private postman: PostmanEvents | null = null;

@@ -1,7 +1,7 @@
 import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
 import { isQueryItemInValid, MAX_ZINDEX } from '../../utils/ops';
 import { CheckoutIFrame } from './CheckoutIFrame';
-import { IStyle } from '../style';
+import { IStyle } from '../../contracts/IStyle';
 
 export class CheckoutIFrameBuilder {
     private readonly iFrameID: string;

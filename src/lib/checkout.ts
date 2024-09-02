@@ -8,23 +8,16 @@ import {
     isSsr,
 } from './utils/ops';
 import { Logger } from './services/logger';
-
-export {
-    buildFreemiusQueryFromOptions,
-    generateUID,
-    getIsFlashingBrowser,
-    isExitAttempt,
-    MAX_ZINDEX,
-    Logger,
-    postman,
-};
 import type { PostmanEvents } from './services/postman';
 import type { CheckoutOptions } from './types';
-import { IStyle, Style } from './services/style';
-import { ILoader, Loader } from './services/loader';
-import { CheckoutPopup, ICheckoutPopup } from './services/checkout-popup';
+import { Style } from './services/style';
+import { Loader } from './services/loader';
+import { CheckoutPopup } from './services/checkout-popup';
 import { CheckoutPopupOptions } from './contracts/CheckoutPopupOptions';
-import { ExitIntent, IExitIntent } from './services/exit-intent';
+import { ExitIntent } from './services/exit-intent';
+import { ILoader } from './contracts/ILoader';
+import { IExitIntent } from './contracts/IExitIntent';
+import { IStyle } from './contracts/IStyle';
 export type { PostmanEvents, CheckoutOptions };
 
 export class FSCheckout {
@@ -36,7 +29,7 @@ export class FSCheckout {
 
     private loader?: ILoader;
 
-    private checkoutPopup?: ICheckoutPopup;
+    private checkoutPopup?: CheckoutPopup;
 
     private exitIntent?: IExitIntent;
 
@@ -131,3 +124,13 @@ export class FSCheckout {
         return this.guid;
     }
 }
+
+export {
+    buildFreemiusQueryFromOptions,
+    generateUID,
+    getIsFlashingBrowser,
+    isExitAttempt,
+    MAX_ZINDEX,
+    Logger,
+    postman,
+};
