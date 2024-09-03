@@ -1,5 +1,6 @@
 {
-  "name": "freemius-checkout-js",
+  "name": "@freemius/checkout",
+  "private": false,
   "description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
   "version": "1.3.0",
   "scripts": {
@@ -51,13 +52,13 @@
   },
   "types": "./lib/checkout.d.ts",
   "author": {
-    "name": "Swashata Ghosh",
-    "email": "swashata4u@gmail.com",
-    "url": "https://www.wpeform.io"
+    "name": "Freemius Inc",
+    "email": "contact@freemius.com",
+    "url": "https://freemius.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/swashata/freemius-checkout-js.git"
+    "url": "https://github.com/Freemius/freemius-checkout-js.git"
   },
   "keywords": [
     "freemius",
@@ -65,6 +66,6 @@
     "checkout"
   ],
   "homepage": "https://fs-checkout-js.netlify.app/",
-  "bugs": "https://github.com/swashata/freemius-checkout-js/issues",
+  "bugs": "https://github.com/Freemius/freemius-checkout-js/issues",
   "type": "module"
 }

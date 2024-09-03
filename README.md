@@ -1,61 +1,144 @@
-# FREEMIUS CHECKOUT JAVASCRIPT CLIENT
+# FREEMIUS CHECKOUT JAVASCRIPT SDK
 
-[![npm version](https://badge.fury.io/js/freemius-checkout-js.svg)](https://badge.fury.io/js/freemius-checkout-js)
-![NPM Downloads](https://img.shields.io/npm/dw/freemius-checkout-js)
-[![Twitter](https://img.shields.io/twitter/follow/swashata.svg?style=social&label=@swashata)](https://twitter.com/swashata)
+[![npm version](https://badge.fury.io/js/@freemius%2Fcheckout.svg)](https://badge.fury.io/js/@freemius%2Fcheckout)
+![NPM Downloads](https://img.shields.io/npm/dw/@freemius/checkout)
+[![Twitter](https://img.shields.io/twitter/follow/freemius.svg?style=social&label=@freemius)](https://twitter.com/freemius)
 
-Freemius Checkout JS, without jQuery or other dependencies, written in
-TypeScript as ES Modules.
+## Todos
 
-**Why?**
+-   [ ] Adjust the main export from `FSCheckout` to `Checkout`.
+-   [ ] Use the new `timestamp` and `sandbox_token` for testing with Sandbox.
+-   [ ] Create and publish the backward compatible adaptor.
 
-The JavaScript library Freemius provides depends on jQuery. This works good if
-your website already has dependency on jQuery, but becomes a liability
-otherwise.
+## Usage Guide
 
-Also the official checkout js supports older IE versions, which aren't needed
-anymore (at-least for my own use-case).
+Here's a simple example to get you started.
 
-So I started developing this lightweight JS library which would
+```html
+<select id="licenses">
+    <option value="1" selected="selected">Single Site License</option>
+    <option value="2">2-Site License</option>
+    <option value="unlimited">Unlimited Sites License</option>
+</select>
+<button id="purchase">Buy Button</button>
 
-1. Support all original APIs from the official JS library.
-2. Work on all evergreen browsers.
-3. Be tiny (less than 4KB gzipped) in size.
+<script
+    type="text/javascript"
+    src="https://checkout.freemius.com/js/v2/"
+></script>
 
-## Installation
+<script type="text/javascript">
+    const handler = new FS.Checkout({
+        plugin_id: '9885',
+        plan_id: '16634',
+        public_key: 'pk_ccca7be7fa43aec791448b43c6266',
+        image: 'https://your-plugin-site.com/logo-100x100.png',
+    });
 
-The recommended way to install is through
-[npm](https://www.npmjs.com/package/freemius-checkout-js).
+    document.querySelector('#purchase').addEventListener('click', (e) => {
+        handler.open({
+            name: 'My Awesome Plugin',
+            licenses: document.querySelector('#licenses').value,
+            // You can consume the response for after purchase logic.
+            purchaseCompleted: function (response) {
+                // The logic here will be executed immediately after the purchase confirmation.
+                // alert(response.user.email);
+            },
+            success: function (response) {
+                // The logic here will be executed after the customer closes the checkout, after a successful purchase.
+                // alert(response.user.email);
+            },
+        });
 
-```bash
-npm i freemius-checkout-js
-# If using yarn
-yarn add freemius-checkout-js
+        e.preventDefault();
+    });
+</script>
 ```
 
-## Quick Usage
+Please find detailed guides below.
+
+> **NOTE**: If you're migrating from the old checkout JS, please see the
+> [migration guide](#migration-guide-from-the-old-checkout-js).
+
+### Using hosted CDN
+
+To use the hosted CDN, simply include the script tag in your HTML.
+
+```html
+<script
+    type="text/javascript"
+    src="https://checkout.freemius.com/js/v2/"
+></script>
+```
+
+This will add the global `FS.Checkout` class which you can instantiate.
+
+You can also load the script using the `async` or `defer` attribute on the
+script tag. Note, however, that with asynchronous loading any API calls will
+have to be made only after the script execution has finished. For that you'll
+need to hook to `DOMContentLoaded` event or use `window.onload`.
+
+```html
+<script
+    type="text/javascript"
+    src="https://checkout.freemius.com/js/v2/"
+    async
+    defer
+></script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const handler = new FS.Checkout({
+            plugin_id: '1234',
+            public_key: 'pk_xxxx',
+        });
+
+        handler.open({
+            // plan
+            plan_id: 9999,
+            // number of sites
+            licenses: 1,
+            // billing cycles
+            billing_cycle: 'annual',
+        });
+    });
+</script>
+```
+
+### Using NPM Package
+
+You can also use the official
+[npm](https://www.npmjs.com/package/@freemius/checkout) package.
+
+```bash
+npm i @freemius/checkout
+# If using yarn
+yarn add @freemius/checkout
+```
+
+Once installed you can import the package and use it in your project.
 
 ```js
-import { FSCheckout } from 'freemius-checkout-js';
+import { Checkout } from '@freemius/checkout';
 
 // instantiate
-const fsCheckout = new FSCheckout({
-  plugin_id: 0001,
-  public_key: 'pk_xxxx',
+const handler = new Checkout({
+    plugin_id: '1234',
+    public_key: 'pk_xxxx',
 });
 
 // Call the API
 document.querySelector('#mybutton').addEventListener('click', (e) => {
-  e.preventDefault();
-  // call the open method
-  fsCheckout.open({
-    // plan
-    plan_id: 9999,
-    // number of sites
-    licenses: 1,
-    // billing cycles
-    billing_cycle: 'annual',
-  });
+    e.preventDefault();
+    // call the open method
+    handler.open({
+        // plan
+        plan_id: 9999,
+        // number of sites
+        licenses: 1,
+        // billing cycles
+        billing_cycle: 'annual',
+    });
 });
 ```
 
@@ -63,236 +146,67 @@ document.querySelector('#mybutton').addEventListener('click', (e) => {
 
 Both the constructor and the `open` method accepts the following set of options.
 
+All the
+[official options](https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/)
+are supported here, along with some additional options.
+
 ```ts
-export interface CheckoutOptions {
-  /**
-   * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
-   */
-  plugin_id: number;
-  /**
-   * Require product public key.
-   */
-  public_key: string;
-  /**
-   * An optional ID to set the id attribute of the checkout’s <body> HTML element.
-   * This argument is particularly useful if you have multiple checkout instances
-   * that need to have a slightly different design or visibility of UI components.
-   * You can assign a unique ID for each instance and customize it differently
-   * using the CSS stylesheet that you can attach through the
-   * PLANS -> CUSTOMIZATION in the Developer Dashboard.
-   */
-  id?: string;
-  /**
-   * An optional string to override the product’s title.
-   *
-   * @default "Defaults to the product’s title set within the Freemius dashboard."
-   */
-  name?: string;
-  /**
-   * An optional string to override the checkout’s title when buying a new license.
-   *
-   * @default "Great selection, {{ firstName }}!"
-   */
-  title?: string;
-  /**
-   * An optional string to override the checkout’s subtitle.
-   *
-   * @default "You’re one step closer to our {{ planTitle }} features"
-   */
-  subtitle?: string;
-  /**
-   * An optional icon that loads at the checkout and will override the product’s
-   * icon uploaded to the Freemius Dashboard. Use a secure path to the image
-   * over HTTPS. While the checkout will remain PCI compliant,
-   * credit-card automatic prefill by the browser will not work.
-   *
-   * @default "product's image set within the Freemius dashboard"
-   */
-  image?: string;
-  /**
-   * The ID of the plan that will load with the checkout. When selling multiple
-   * plans you can set the param when calling the open() method.
-   *
-   * @default "1st paid plan"
-   */
-  plan_id?: number;
-  /**
-   * A multi-site licenses prices that will load immediately with the checkout.
-   * A developer-friendly param that can be used instead of the pricing_id.
-   * To specify unlimited licenses prices, use one of the following
-   * values: 0, null, or 'unlimited'.
-   *
-   * @default 1
-   */
-  licenses?: number;
-  /**
-   * Set this param to true if you like to disable the licenses selector when
-   * the product is sold with multiple license activation options.
-   *
-   * @default false
-   */
-  disable_licenses_selector?: boolean;
-  /**
-   * Use the `licenses` param instead. An optional ID of the exact multi-site
-   * license prices that will load once the checkout opened.
-   *
-   * @default "plan’s single-site prices ID"
-   */
-  pricing_id?: number;
-  /**
-   * An optional billing cycle that will be auto selected when the checkout is opened.
-   * Can be one of the following values: 'monthly', 'annual', 'lifetime'.
-   *
-   * @default 'annual'
-   */
-  billing_cycle?: 'monthly' | 'annual' | 'lifetime';
-  /**
-   * Set this param to `true` if you like to hide the billing cycles selector
-   * when the product is sold in multiple billing frequencies.
-   *
-   * @default false
-   */
-  hide_billing_cycles?: boolean;
-  /**
-   * One of the following 3-chars currency codes (ISO 4217): 'usd', 'eur', 'gbp'.
-   *
-   * @default 'usd'
-   */
-  currency?: 'usd' | 'eur' | 'gbp';
-  /**
-   * An optional coupon code to be automatically applied on the checkout
-   * immediately when opened.
-   */
-  coupon?: string;
-  /**
-   * Set this param to true if you pre-populate a coupon and like to hide the
-   * coupon code and coupon input field from the user.
-   *
-   * @default false
-   */
-  hide_coupon?: boolean;
-  /**
-   * Set this param to false when selling a bundle and you want the discounts
-   * to be based on the closest licenses quota and billing cycle from the child
-   * products. Unlike the default discounts calculation which is maximized by
-   * basing the discounts on the child products single-site prices.
-   *
-   * @default true
-   */
-  maximize_discounts?: boolean;
-  /**
-   * When set to true, it will open the checkout in a trial mode and the trial
-   * type (free vs. paid) will be based on the plan’s configuration. This will
-   * only work if you’ve activated the Free Trial functionality in the plan
-   * configuration. If you configured the plan to support a trial that doesn’t
-   * require a payment method, you can also open the checkout in a trial mode
-   * that requires a payment method by setting the value to 'paid'.
-   *
-   * @default false
-   */
-  trial?: boolean | 'free' | 'paid';
-  /**
-   * An optional param to pre-populate a license key for license renewal,
-   * license extension and more.
-   */
-  license_key?: string;
-  /**
-   * An optional param to load the checkout for a payment method update.
-   * When set to `true`, the license_key param must be set and associated with
-   * a non-canceled subscription.
-   *
-   * @default false
-   */
-  is_payment_method_update?: boolean;
-  /**
-   * An optional string to prefill the buyer’s email address.
-   */
-  user_email?: string;
-  /**
-   * An optional string to prefill the buyer’s first name.
-   */
-  user_firstname?: string;
-  /**
-   * An optional string to prefill the buyer’s last name.
-   */
-  user_lastname?: string;
-  /**
-   * An optional user ID to associate purchases generated through the checkout
-   * with their affiliate account.
-   */
-  affiliate_user_id?: number;
-  // SANDBOX
-  /**
-   * If you would like the dialog to open in sandbox mode,
-   */
-  sandbox?: {
-    ctx: string;
-    token: string;
-  };
-  // EVENT HANDLERS
-  /**
-   * A callback handler that will execute once a user closes the checkout by
-   * clicking the close icon. This handler only executes when the checkout is
-   * running in a dialog mode.
-   */
-  cancel?: () => void;
-  /**
-   * An after successful purchase/subscription completion callback handler.
-   *
-   * Notice: When the user subscribes to a recurring billing plan, this method
-   * will execute upon a successful subscription creation. It doesn’t guarantee
-   * that the subscription’s initial payment was processed successfully as well.
-   */
-  purchaseCompleted?: (data: Record<string, any> | null) => void;
-  /**
-   * An optional callback handler, similar to purchaseCompleted. The main
-   * difference is that this callback will only execute after the user clicks
-   * the “Got It”” button that appears in the after purchase screen as a
-   * declaration that they successfully received the after purchase email.
-   * This callback is obsolete when the checkout is running in a 'dashboard' mode
-   */
-  success?: (
-    data: { purchase: Record<string, any> } | Record<string, any> | null
-  ) => void;
-  /**
-   * An optional callback handler for advanced tracking, which will be called on
-   * multiple checkout events such as updates in the currency, billing cycle,
-   * licenses #, etc.
-   */
-  track?: (event: string, data: Record<string, any> | null) => void;
-  /**
-   * Optional callback to execute when the iFrame opens.
-   */
-  afterOpen?: () => void;
-  /**
-   * An optional callback to execute when the iFrame closes.
-   */
-  afterClose?: () => void;
-  /**
-   * Optional callback to trigger on exit intent. This is called only when the
-   * checkout iFrame is shown, not on global exit intent.
-   */
-  onExitIntent?: () => void;
+interface AdditionalCheckoutOptions {
+    /**
+     * Optional callback to execute when the iFrame opens.
+     *
+     * @new
+     */
+    afterOpen?: () => void;
+
+    /**
+     * An optional callback to execute when the iFrame closes.
+     *
+     * @new
+     */
+    afterClose?: () => void;
+    /**
+     * Optional callback to trigger on exit intent. This is called only when the
+     * checkout iFrame is shown, not on global exit intent.
+     *
+     * @new
+     */
+    onExitIntent?: () => void;
+
+    /**
+     * If you would like the dialog to open in sandbox mode,
+     */
+    sandbox?: {
+        ctx: string;
+        token: string;
+    };
 }
 ```
 
-As you can see, all the
-[official options](https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/)
-are supported here, along with some additional options. For testing with sandbox
-API, see the [relevant section](#testing-with-sandbox).
+For testing with sandbox API, see the [relevant section](#testing-with-sandbox).
 
 ### Instantiate the class
 
-The main class exported by the package is `FSCheckout`. You simply import it and
-create an instance.
+The main class exported by the package is `Checkout`. For the hosted CDN it is
+available under the global `FS` namespace.
 
 ```js
-import { FSCheckout } from 'freemius-checkout-js';
+const handler = new FS.Checkout({
+    plugin_id: '1234',
+    public_key: 'pk_xxxx',
+});
+```
+
+If you're using the package from npm, you simply import it and create an
+instance.
+
+```js
+import { Checkout } from 'freemius-checkout-js';
 
 // instantiate
-const fsCheckout = new FSCheckout({
-  plugin_id: 0001,
-  public_key: 'pk_xxxx',
+const handler = new Checkout({
+    plugin_id: '0001',
+    public_key: 'pk_xxxx',
 });
 ```
 
@@ -304,66 +218,32 @@ supplied during instantiation.
 Now you can simply call the `open` method to show the checkout popup.
 
 ```js
-fsCheckout.open();
+handler.open();
 ```
 
 You can also pass additional options
 
 ```js
-fsCheckout.open({
-  // plan
-  plan_id: 9999,
-  // number of sites
-  licenses: 1,
-  // billing cycles
-  billing_cycle: 'annual',
+handler.open({
+    // plan
+    plan_id: 9999,
+    // number of sites
+    licenses: 1,
+    // billing cycles
+    billing_cycle: 'annual',
 });
 ```
 
 This is useful when you have multiple checkouts related to different plans,
 billing cycles, licenses, trials etc.
 
-See the
-[source code of the demo](https://github.com/swashata/freemius-checkout-js/blob/main/src/main.ts)
-to learn more.
+See the [source code of the demo](./src/main.ts) to learn more.
 
 To close the popup programmatically, call the `close` method.
 
 ```js
-fsCheckout.close();
+handle.close();
 ```
-
-## Using without NPM
-
-Use the unpkg CDN or
-[download the file](https://unpkg.com/freemius-checkout-js@latest/lib/checkout.global.js).
-
-```html
-<script
-  src="https://unpkg.com/freemius-checkout-js@latest/lib/checkout.global.js"
-  type="text/javascript"
-></script>
-```
-
-Now in your document, the library will be available under `FSCheckout` global
-variable.
-
-```js
-const fsCheckout = new FSCheckout.FSCheckout({
-  plugin_id: 0001,
-  public_key: 'pk_xxxx',
-});
-fsCheckout.open({
-  // plan
-  plan_id: 9999,
-  // number of sites
-  licenses: 1,
-  // billing cycles
-  billing_cycle: 'annual',
-});
-```
-
-**NOTE**: The class is available under `FSCheckout.FSCheckout`.
 
 ## Use with React
 
@@ -374,25 +254,27 @@ are available in
 **checkout.ts**
 
 ```tsx
-import { FSCheckout, CheckoutOptions } from 'freemius-checkout-js';
+import { Checkout, CheckoutOptions } from '@freemius/checkout';
 import { useState, useEffect } from 'react';
+
 export const checkoutConfig: CheckoutOptions = {
-  plugin_id: process.env.REACT_APP_PLUGIN_ID as string,
-  public_key: process.env.REACT_APP_PUBLIC_KEY as string,
+    plugin_id: process.env.REACT_APP_PLUGIN_ID as string,
+    public_key: process.env.REACT_APP_PUBLIC_KEY as string,
 };
-export function useFsCheckout() {
-  // create a FSCheckout instance once
-  const [fsCheckout] = useState<FSCheckout>(
-    () => new FSCheckout(checkoutConfig)
-  );
-  useEffect(() => {
-    // close and destroy the DOM related stuff on unmount
-    return () => {
-      fsCheckout.close();
-      fsCheckout.destroy();
-    };
-  }, [fsCheckout]);
-  return fsCheckout;
+
+export function useFSCheckout() {
+    // create a Checkout instance once
+    const [fsCheckout] = useState<Checkout>(() => new Checkout(checkoutConfig));
+
+    useEffect(() => {
+        // close and destroy the DOM related stuff on unmount
+        return () => {
+            fsCheckout.close();
+            fsCheckout.destroy();
+        };
+    }, [fsCheckout]);
+
+    return fsCheckout;
 }
 ```
 
@@ -402,38 +284,47 @@ Now we use in our component.
 
 ```tsx
 import React from 'react';
-import { useFsCheckout } from './checkout.ts';
+import { useFSCheckout } from './checkout.ts';
 
 export default function App() {
-  const fsCheckout = useFsCheckout();
+    const fsCheckout = useFSCheckout();
 
-  return (
-    <button
-      onClick={(e) => {
-        e.preventDefault();
-        fsCheckout.open({
-          plan_id: 1234,
-          licenses: 1,
-          billing_cycle: 'annual',
-          success: (data) => {
-            console.log(data);
-          },
-        });
-      }}
-    >
-      Buy Plan
-    </button>
-  );
+    return (
+        <button
+            onClick={(e) => {
+                e.preventDefault();
+                fsCheckout.open({
+                    plan_id: 1234,
+                    licenses: 1,
+                    billing_cycle: 'annual',
+                    success: (data) => {
+                        console.log(data);
+                    },
+                });
+            }}
+        >
+            Buy Plan
+        </button>
+    );
 }
 ```
 
 ## Setup Local Development Environment
 
-Close the repository. Copy `.env.sample` to `.env.local` and enter plugin id and
-public key as specified in the file. Run the command
+To work on the repository itself, please do the followings:
+
+1. Make sure you have latest Node.js LTS installed.
+2. Clone the repository.
+3. Copy `.env.sample` to `.env.local` and enter plugin id and public key as
+   specified in the file.
+
+Now run the following commands:
 
 ```bash
-yarn dev
+# install dependencies
+npm ci
+# Run the development server
+npm run dev
 ```
 
 and it should spin up the server. Make sure to change the ID of plans in the
@@ -445,35 +336,78 @@ learn about how `.env` files are handled.
 
 To get the sandbox token and ctx, follow the steps:
 
-1. Make sure you are running the development mode of freemius with secret key in
-   your local instance.
-1. Go to the Upgrade page of your freemius plugin (make sure you are running the
-   free version so you have access to the upgrade page.)
-1. Click to upgrade to any plan. The goal is to access the checkout page from
-   WordPress Admin.
-1. Now view page source and search for the word `sandbox`.
-1. You should find something like this string
-   `sandbox=xxxxxxxx&s_ctx_ts=00000000`.
+1. Go to the Developer Dashboard.
+2. Under Plans click on the "Get Checkout Code" button.
+3. Go to the Sandbox tab.
+4. Copy the `sandbox_token` and `timestamp` values.
 
 The value of `sandbox` is token and value of `s_ctx_ts` is ctx. So for the above
 value, the configuration would look like
 
 ```js
 const config = {
-  // ...
-  sandbox: {
-    token: 'xxxxxxxx',
-    ctx: '00000000',
-  },
+    // ...
+    sandbox: {
+        token: 'xxxxxxxx',
+        ctx: '00000000',
+    },
 };
 ```
 
 **NOTICE**: Use this only during development and never publish the token and
 context. In this repository we use the `.env` file for storing sandbox data.
 
-## DISCLAIMER
+## Migration guide from the old checkout JS
 
-This project is not directly associated with [Freemius](https://freemius.com/).
-I needed a JavaScript library for the checkout without jQuery dependency, hence
-I made this. This is used in my website [WPEForm.io](https://www.wpeform.io)
-which is a No-Code WordPress Form Builder plugin.
+If you've been using the old `checkout.freemius.com/checkout.min.js` script then
+this guide is for you. We have introduced a compatibility layer using which you
+can very easily migrate to the new checkout JS.
+
+In your code, where you do
+
+```html
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://checkout.freemius.com/checkout.min.js"></script>
+```
+
+1. Remove the jQuery script tag if you aren't using jQuery.
+2. Replace the checkout script with the new one.
+
+```html
+<script src="https://checkout.freemius.com/js/v2/migrate/"></script>
+```
+
+Now all your existing code should work as is.
+
+```js
+const handler = FS.Checkout.configure({
+    plugin_id: '1234',
+    plan_id: '5678',
+    public_key: 'pk_ccca7be7fa43aec791448b43c6266',
+    image: 'https://your-plugin-site.com/logo-100x100.png',
+});
+
+document.querySelector('#purchase').addEventListener('click', (e) => {
+    handler.open({
+        name: 'My Awesome Plugin',
+        licenses: document.querySelector('#licenses').value,
+        // You can consume the response for after purchase logic.
+        purchaseCompleted: function (response) {
+            // The logic here will be executed immediately after the purchase confirmation.
+            // alert(response.user.email);
+        },
+        success: function (response) {
+            // The logic here will be executed after the customer closes the checkout, after a successful purchase.
+            // alert(response.user.email);
+        },
+    });
+
+    e.preventDefault();
+});
+```
+
+Please note that because of the singleton pattern of the old checkout JS, we do
+recommend using the new API directly. The compatibility layer is only for quick
+migration. With the singleton pattern, every time you call the `configure` the
+original option will be overridden. While managing multiple checkouts, this can
+lead to confusion.

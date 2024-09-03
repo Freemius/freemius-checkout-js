@@ -181,6 +181,10 @@ export interface CheckoutPopupParams {
      * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/#user_token_in_checkout_new
      */
     user_token?: string;
+    /**
+     * Set this parameter to true to make the user details (name and email) readonly. This is useful for SaaS integration where you are loading the user email and their first and last name from your own DB.
+     */
+    readonly_user?: boolean;
     // SANDBOX
     /**
      * If you would like the dialog to open in sandbox mode,
@@ -211,7 +215,7 @@ export interface CheckoutPopupEvents {
      * difference is that this callback will only execute after the user clicks
      * the “Got It”” button that appears in the after purchase screen as a
      * declaration that they successfully received the after purchase email.
-     * This callback is obsolete when the checkout is running in a 'dashboard' mode
+     * This callback is obsolete when the checkout is running in a 'dashboard' mode.
      */
     success?: (
         data: { purchase: Record<string, any> } | Record<string, any> | null
