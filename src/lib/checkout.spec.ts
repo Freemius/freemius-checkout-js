@@ -186,6 +186,4 @@ describe('CheckoutPopup', () => {
             expect(iFrame.src).toContain(`${key}=`);
         });
     });
-
-    test.todo('should open automatically if the cart is present in the URL');
 });

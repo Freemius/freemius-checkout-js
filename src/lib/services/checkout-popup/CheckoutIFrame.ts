@@ -4,37 +4,39 @@ import { buildFreemiusQueryFromOptions } from '../../utils/ops';
 import { Logger } from '../logger';
 import { IExitIntent } from '../../contracts/IExitIntent';
 
+type EventListener = () => void;
+
 export class CheckoutIFrame {
     private postman: PostmanEvents | null = null;
+
     private readonly iFrame: HTMLIFrameElement;
+
+    private readonly loadedEventListeners: Set<EventListener> = new Set();
+
+    private readonly closedEventListeners: Set<EventListener> = new Set();
 
     constructor(
         private readonly baseUrl: string,
-        queryParams: Record<string, any>,
+        queryParams: Record<string, string>,
         iFrameID: string,
         private readonly visibleClass: string,
         private readonly checkoutEvents: CheckoutPopupEvents
     ) {
-        // Create the iFrame
-        const src = `${baseUrl}/?${buildFreemiusQueryFromOptions(
-            queryParams
-        )}#${encodeURIComponent(document.location.href)}`;
-
-        const iFrame = document.createElement('iframe');
-        iFrame.id = iFrameID;
-        iFrame.src = src;
-
-        this.iFrame = iFrame;
-    }
-
-    attach(onLoad?: () => void, onClose?: () => void) {
-        this.attachIFrame();
-        this.addEventListeners(onLoad, onClose);
+        this.iFrame = this.attachIFrame(baseUrl, queryParams, iFrameID);
+        this.addEventListeners();
     }
 
     close() {
         // Send the close signal to the checkout popup, Freemium might do some things like showing FOMO etc.
         this.postman?.post('close', null);
+    }
+
+    onClosed(callback: EventListener) {
+        this.closedEventListeners.add(callback);
+    }
+
+    onLoaded(callback: EventListener) {
+        this.loadedEventListeners.add(callback);
     }
 
     addToExitIntent(exitIntent: IExitIntent) {
@@ -44,25 +46,39 @@ export class CheckoutIFrame {
         });
     }
 
-    private attachIFrame() {
-        this.iFrame.setAttribute('allowTransparency', 'true');
-        this.iFrame.setAttribute('width', '100%');
-        this.iFrame.setAttribute('height', '100%');
-        this.iFrame.setAttribute(
+    private attachIFrame(
+        baseUrl: string,
+        queryParams: Record<string, string>,
+        iFrameID: string
+    ): HTMLIFrameElement {
+        const src = `${baseUrl}/?${buildFreemiusQueryFromOptions(
+            queryParams
+        )}#${encodeURIComponent(document.location.href)}`;
+
+        const iFrame = document.createElement('iframe');
+        iFrame.id = iFrameID;
+        iFrame.src = src;
+
+        iFrame.setAttribute('allowTransparency', 'true');
+        iFrame.setAttribute('width', '100%');
+        iFrame.setAttribute('height', '100%');
+        iFrame.setAttribute(
             'style',
             'background: rgba(0,0,0,0.003); border: 0 none transparent;'
         );
-        this.iFrame.setAttribute('frameborder', '0');
+        iFrame.setAttribute('frameborder', '0');
 
-        // @todo - Remove this and update the tests.
+        // @todo - Remove this and update the tests to query by ID instead.
         if (process.env.NODE_ENV === 'test') {
-            this.iFrame.setAttribute('data-testid', this.iFrame.id);
+            iFrame.setAttribute('data-testid', iFrame.id);
         }
 
-        document.body.appendChild(this.iFrame);
+        document.body.appendChild(iFrame);
+
+        return iFrame;
     }
 
-    private addEventListeners(onLoad?: () => void, onClose?: () => void) {
+    private addEventListeners() {
         const {
             success,
             purchaseCompleted,
@@ -83,7 +99,7 @@ export class CheckoutIFrame {
                     Logger.Error(e);
                 }
 
-                onClose?.();
+                this.dispatchOnClosed();
                 this.removeIFrameAndPostman();
                 afterClose?.();
             },
@@ -111,7 +127,7 @@ export class CheckoutIFrame {
                     Logger.Error(e);
                 }
 
-                onClose?.();
+                this.dispatchOnClosed();
                 this.removeIFrameAndPostman();
                 afterClose?.();
             },
@@ -129,7 +145,7 @@ export class CheckoutIFrame {
         this.postman?.one(
             'loaded',
             () => {
-                onLoad?.();
+                this.dispatchOnLoaded();
 
                 this.iFrame?.classList.add(this.visibleClass);
 
@@ -149,5 +165,17 @@ export class CheckoutIFrame {
         this.postman = null;
 
         this.iFrame.remove();
+
+        // Reset the event listeners
+        this.closedEventListeners.clear();
+        this.loadedEventListeners.clear();
+    }
+
+    private dispatchOnLoaded() {
+        this.loadedEventListeners.forEach((listener) => listener());
+    }
+
+    private dispatchOnClosed() {
+        this.closedEventListeners.forEach((listener) => listener());
     }
 }

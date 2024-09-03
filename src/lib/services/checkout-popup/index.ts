@@ -49,10 +49,8 @@ export class CheckoutPopup {
         this.checkoutIFrame =
             this.checkoutIFrameBuilder.create(overrideOptions);
 
-        this.checkoutIFrame.attach(
-            this.onLoad.bind(this),
-            this.onClose.bind(this)
-        );
+        this.checkoutIFrame.onLoaded(this.onLoaded.bind(this));
+        this.checkoutIFrame.onClosed(this.onClosed.bind(this));
 
         this.checkoutIFrame.addToExitIntent(this.exitIntent);
 
@@ -65,11 +63,11 @@ export class CheckoutPopup {
         return this;
     }
 
-    private onLoad() {
+    private onLoaded() {
         this.loader.hide();
     }
 
-    private onClose() {
+    private onClosed() {
         this.checkoutIFrame = null;
 
         this.loader.hide();

@@ -18,24 +18,31 @@ import { ExitIntent } from './services/exit-intent';
 import { ILoader } from './contracts/ILoader';
 import { IExitIntent } from './contracts/IExitIntent';
 import { IStyle } from './contracts/IStyle';
+import { Cart } from './services/cart';
 export type { PostmanEvents, CheckoutOptions };
 
 export class FSCheckout {
-    private options: CheckoutOptions = { plugin_id: 0, public_key: '' };
+    private readonly options: CheckoutOptions = {
+        plugin_id: 0,
+        public_key: '',
+    };
 
-    private guid: string;
+    private readonly guid: string;
 
-    public style?: IStyle;
+    public readonly style?: IStyle;
 
-    private loader?: ILoader;
+    private readonly loader?: ILoader;
 
-    private checkoutPopup?: CheckoutPopup;
+    private readonly checkoutPopup?: CheckoutPopup;
 
-    private exitIntent?: IExitIntent;
+    private readonly exitIntent?: IExitIntent;
+
+    private readonly cart?: Cart;
 
     constructor(
         options: CheckoutOptions,
-        private readonly baseUrl: string = 'https://checkout.freemius.com'
+        private readonly baseUrl: string = 'https://checkout.freemius.com',
+        recoverCart: boolean = true
     ) {
         if (!options.plugin_id) {
             throw new Error('Must provide a plugin_id to options.');
@@ -71,6 +78,12 @@ export class FSCheckout {
         );
 
         this.style.attach();
+
+        this.cart = new Cart(new URL(window.location.href));
+
+        if (recoverCart) {
+            this.recoverCart();
+        }
     }
 
     /**
@@ -122,6 +135,16 @@ export class FSCheckout {
 
     public getGuid() {
         return this.guid;
+    }
+
+    private recoverCart() {
+        if (
+            this.cart?.hasCart() &&
+            this.cart?.matchesPluginID(this.options.plugin_id)
+        ) {
+            const checkoutOptions = this.cart.getCheckoutOptions();
+            this.open(checkoutOptions);
+        }
     }
 }
 
