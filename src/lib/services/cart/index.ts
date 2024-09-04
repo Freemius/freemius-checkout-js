@@ -71,13 +71,10 @@ export class Cart {
 
         // Return all query params that starts with __fs_
         const fsParams: Record<string, any> = {};
-        const plusRegex = new RegExp('\\+', 'g');
 
         searchParams.forEach((value, key) => {
             if (key.startsWith('__fs_')) {
-                fsParams[key] = decodeURIComponent(
-                    value.replace(plusRegex, ' ')
-                );
+                fsParams[key] = value;
             }
         });
 

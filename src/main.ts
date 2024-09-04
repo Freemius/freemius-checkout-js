@@ -16,6 +16,7 @@ const fsCheckout = new FSCheckout(
         language: 'auto-beta',
         user_token: import.meta.env.VITE_USER_TOKEN as string,
     },
+    true,
     import.meta.env.VITE_CHECKOUT_BASE_URL ?? undefined
 );
 

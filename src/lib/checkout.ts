@@ -41,8 +41,8 @@ export class FSCheckout {
 
     constructor(
         options: CheckoutOptions,
-        private readonly baseUrl: string = 'https://checkout.freemius.com',
-        recoverCart: boolean = true
+        recoverCart: boolean = true,
+        private readonly baseUrl: string = 'https://checkout.freemius.com'
     ) {
         if (!options.plugin_id) {
             throw new Error('Must provide a plugin_id to options.');

@@ -6,6 +6,8 @@
 import type { Config } from 'jest';
 
 const config: Config = {
+    // Until jest supports prettier v3.
+    prettierPath: null,
     // All imported modules in your tests should be mocked automatically
     // automock: false,
 
