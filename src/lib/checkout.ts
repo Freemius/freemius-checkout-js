@@ -29,7 +29,7 @@ export class Checkout {
 
     private readonly exitIntent?: IExitIntent;
 
-    private readonly cart?: Cart;
+    public readonly cart?: Cart;
 
     constructor(
         options: CheckoutOptions,

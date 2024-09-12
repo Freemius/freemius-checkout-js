@@ -2,13 +2,16 @@
   "name": "@freemius/checkout",
   "private": false,
   "description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
-  "version": "1.3.0",
+  "version": "1.0.0-alpha.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "lint": "eslint ./src",
-    "build:lib": "vite build --config vite.module.config.ts",
+    "build:module": "vite build --config vite.module.config.ts",
+    "build:global": "vite build --config vite.global.config.ts",
+    "build:adapter": "vite build --config vite.adapter.config.ts",
+    "build:lib": "npm run build:module && npm run build:global && npm run build:adapter",
     "deploysite": "npm run build && netlify deploy --dir=dist --prod",
     "prepublish": "npm run build:lib",
     "test": "jest",
@@ -32,7 +35,6 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "ts-patch": "^3.2.1",
-    "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2",
@@ -44,15 +46,15 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "./lib/checkout.cjs",
-  "module": "./lib/checkout.js",
+  "main": "./lib/module/checkout.cjs",
+  "module": "./lib/module/checkout.js",
   "exports": {
     ".": {
-      "import": "./lib/checkout.js",
-      "require": "./lib/checkout.cjs"
+      "import": "./lib/module/checkout.js",
+      "require": "./lib/module/checkout.cjs"
     }
   },
-  "types": "./lib/checkout.d.ts",
+  "types": "./lib/module/checkout.d.ts",
   "author": {
     "name": "Freemius Inc",
     "email": "contact@freemius.com",

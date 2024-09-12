@@ -4,7 +4,8 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
     build: {
-        outDir: 'lib',
+        target: 'es2020',
+        outDir: 'lib/module',
         lib: {
             entry: resolve(__dirname, './src/index.ts'),
             formats: ['es', 'cjs'],
