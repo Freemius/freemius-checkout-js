@@ -237,7 +237,7 @@ handler.open({
 This is useful when you have multiple checkouts related to different plans,
 billing cycles, licenses, trials etc.
 
-See the [source code of the demo](./src/main.ts) to learn more.
+See the [source code of the demo](./src/test.ts) to learn more.
 
 To close the popup programmatically, call the `close` method.
 

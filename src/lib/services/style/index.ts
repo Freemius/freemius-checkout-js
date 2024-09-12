@@ -1,5 +1,4 @@
-import { getIsFlashingBrowser } from '../../checkout';
-import { isSsr } from '../../utils/ops';
+import { isSsr, getIsFlashingBrowser } from '../../utils/ops';
 import { IStyle } from '../../contracts/IStyle';
 
 export class Style implements IStyle {

@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/dom';
-import { FSCheckout } from './checkout';
+import { Checkout } from './checkout';
 import { sendMockedCanceledEvent } from '../../tests/utils';
 import { createHydratedMock } from 'ts-auto-mock';
 import {
@@ -10,7 +10,7 @@ import { getQueryValueFromItem } from './utils/ops';
 
 describe('CheckoutPopup', () => {
     test('should open and close the checkout popup', () => {
-        const checkout = new FSCheckout({
+        const checkout = new Checkout({
             plugin_id: 1,
             public_key: 'pk_12345678',
             loadingImageAlt: 'Loading Freemius Checkout',
@@ -44,7 +44,7 @@ describe('CheckoutPopup', () => {
     });
 
     test('overrides the options with the open method', () => {
-        const checkout = new FSCheckout({
+        const checkout = new Checkout({
             plugin_id: 1,
             public_key: 'pk_12345678',
             loadingImageAlt: 'Loading Freemius Checkout',
@@ -71,7 +71,7 @@ describe('CheckoutPopup', () => {
         document.documentElement.scrollTop = 100;
         document.documentElement.scrollLeft = 100;
 
-        const checkout = new FSCheckout({
+        const checkout = new Checkout({
             plugin_id: 1,
             public_key: 'pk_12345678',
         });
@@ -95,7 +95,7 @@ describe('CheckoutPopup', () => {
 
         document.head.appendChild(metaColorSchemeElement);
 
-        const checkout = new FSCheckout({
+        const checkout = new Checkout({
             plugin_id: 1,
             public_key: 'pk_12345678',
         });
@@ -119,7 +119,7 @@ describe('CheckoutPopup', () => {
             },
         });
 
-        const checkout = new FSCheckout(mockedOption);
+        const checkout = new Checkout(mockedOption);
         checkout.open();
 
         const guid = checkout.getGuid();
@@ -151,7 +151,7 @@ describe('CheckoutPopup', () => {
             foo: 'bar',
         };
 
-        const checkout = new FSCheckout(option);
+        const checkout = new Checkout(option);
         checkout.open();
 
         const guid = checkout.getGuid();
@@ -168,7 +168,7 @@ describe('CheckoutPopup', () => {
     test('passes all internal parameters', () => {
         const internals = ['mode', 'guid', '_fs_checkout'];
 
-        const checkout = new FSCheckout({
+        const checkout = new Checkout({
             plugin_id: 1,
             public_key: 'pk_123456',
         });

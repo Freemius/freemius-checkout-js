@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "lint": "eslint ./src",
-    "build:lib": "tsup",
+    "build:lib": "vite build --config vite.module.config.ts",
     "deploysite": "npm run build && netlify deploy --dir=dist --prod",
     "prepublish": "npm run build:lib",
     "test": "jest",
@@ -20,6 +20,7 @@
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
+    "ajv": "^8.17.1",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",
@@ -34,7 +35,8 @@
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.2.1"
   },
   "license": "MIT",
   "files": [
@@ -42,12 +44,12 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "./lib/checkout.js",
-  "module": "./lib/checkout.mjs",
+  "main": "./lib/checkout.cjs",
+  "module": "./lib/checkout.js",
   "exports": {
     ".": {
-      "import": "./lib/checkout.mjs",
-      "require": "./lib/checkout.js"
+      "import": "./lib/checkout.js",
+      "require": "./lib/checkout.cjs"
     }
   },
   "types": "./lib/checkout.d.ts",

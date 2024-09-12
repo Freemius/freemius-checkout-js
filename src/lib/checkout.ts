@@ -1,12 +1,4 @@
-import { postman } from './services/postman';
-import {
-    buildFreemiusQueryFromOptions,
-    generateUID,
-    getIsFlashingBrowser,
-    isExitAttempt,
-    MAX_ZINDEX,
-    isSsr,
-} from './utils/ops';
+import { generateUID, isSsr } from './utils/ops';
 import { Logger } from './services/logger';
 import type { PostmanEvents } from './services/postman';
 import type { CheckoutOptions } from './types';
@@ -21,7 +13,7 @@ import { IStyle } from './contracts/IStyle';
 import { Cart } from './services/cart';
 export type { PostmanEvents, CheckoutOptions };
 
-export class FSCheckout {
+export class Checkout {
     private readonly options: CheckoutOptions = {
         plugin_id: 0,
         public_key: '',
@@ -147,13 +139,3 @@ export class FSCheckout {
         }
     }
 }
-
-export {
-    buildFreemiusQueryFromOptions,
-    generateUID,
-    getIsFlashingBrowser,
-    isExitAttempt,
-    MAX_ZINDEX,
-    Logger,
-    postman,
-};
