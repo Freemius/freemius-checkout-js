@@ -1,5 +1,5 @@
 import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
-import { isQueryItemInValid, MAX_ZINDEX } from '../../utils/ops';
+import { isQueryItemInvalid, MAX_ZINDEX } from '../../utils/ops';
 import { CheckoutIFrame } from './CheckoutIFrame';
 import { IStyle } from '../../contracts/IStyle';
 
@@ -47,7 +47,7 @@ export class CheckoutIFrameBuilder {
         };
 
         Object.entries(options).forEach(([key, value]) => {
-            if (!isQueryItemInValid(value)) {
+            if (!isQueryItemInvalid(value)) {
                 queryParams[key] = value;
             }
         });

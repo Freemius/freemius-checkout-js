@@ -1,4 +1,4 @@
-import { generateUID, isSsr } from './utils/ops';
+import { generateGuid, isSsr } from './utils/ops';
 import { Logger } from './services/logger';
 import type { PostmanEvents } from './services/postman';
 import type { CheckoutOptions } from './types';
@@ -44,7 +44,7 @@ export class Checkout {
         }
 
         this.options = options;
-        this.guid = generateUID();
+        this.guid = generateGuid();
 
         if (isSsr()) {
             return;

@@ -86,38 +86,25 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    document.querySelector('#plan-1')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        fsCheckout.open({
-            plan_id: Number.parseInt(
-                import.meta.env.VITE_PLAN_ONE as string,
-                10
-            ),
-            ...getLicensesAndFrequency(),
-            ...getEventLoggers(),
-        });
-    });
-    document.querySelector('#plan-2')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        fsCheckout.open({
-            plan_id: Number.parseInt(
-                import.meta.env.VITE_PLAN_TWO as string,
-                10
-            ),
-            ...getLicensesAndFrequency(),
-            ...getEventLoggers(),
-        });
-    });
-    document.querySelector('#plan-3')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        fsCheckout.open({
-            plan_id: Number.parseInt(
-                import.meta.env.VITE_PLAN_THREE as string,
-                10
-            ),
-            ...getLicensesAndFrequency(),
-            ...getEventLoggers(),
-        });
+    const plans = {
+        '#plan-1': import.meta.env.VITE_PLAN_ONE as string,
+        '#plan-2': import.meta.env.VITE_PLAN_TWO as string,
+        '#plan-3': import.meta.env.VITE_PLAN_THREE as string,
+    };
+
+    Object.entries(plans).forEach(([selector, planId]) => {
+        if (!planId) {
+            document.querySelector(selector)?.remove();
+        } else {
+            document.querySelector(selector)?.addEventListener('click', (e) => {
+                e.preventDefault();
+                fsCheckout.open({
+                    plan_id: Number.parseInt(planId, 10),
+                    ...getLicensesAndFrequency(),
+                    ...getEventLoggers(),
+                });
+            });
+        }
     });
 
     console.log(

@@ -6,24 +6,29 @@
 export const MAX_ZINDEX = 2147483647;
 
 /**
- * Generate a random UID for use in freemius checkout. This is a simple
- * implementation and is not as robust as nanoid or shortid, but it gets the
- * job done and is very small.
- *
- * @link https://stackoverflow.com/a/6248722/2754557
- *
- * @returns A random UID.
+ * Generates a random GUID. It has the original implementation of the legacy Freemius Checkout for backward compatibility.
  */
-export function generateUID() {
-    // I generate the UID from two parts here
-    // to ensure the random number provide enough bits.
-    const firstPart = (Math.random() * 46656) | 0;
-    const firstPartStr = `000${firstPart.toString(36)}`.slice(-3);
+export function generateGuid() {
+    const _s4 = function () {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    };
 
-    const secondPart = (Math.random() * 46656) | 0;
-    const secondPartStr = `000${secondPart.toString(36)}`.slice(-3);
-
-    return firstPartStr + secondPartStr;
+    return (
+        _s4() +
+        _s4() +
+        '-' +
+        _s4() +
+        '-' +
+        _s4() +
+        '-' +
+        _s4() +
+        '-' +
+        _s4() +
+        _s4() +
+        _s4()
+    );
 }
 
 export function getIsFlashingBrowser(): boolean {
@@ -49,7 +54,7 @@ export function getIsFlashingBrowser(): boolean {
     return isFlashingBrowser;
 }
 
-export function isQueryItemInValid(item: any): boolean {
+export function isQueryItemInvalid(item: any): boolean {
     return (
         typeof item === 'undefined' ||
         typeof item === 'function' ||
@@ -58,7 +63,7 @@ export function isQueryItemInValid(item: any): boolean {
 }
 
 export function getQueryValueFromItem(item: any): string | null {
-    if (isQueryItemInValid(item)) {
+    if (isQueryItemInvalid(item)) {
         return null;
     }
 
@@ -89,6 +94,7 @@ export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
     Object.keys(options).forEach((key) => {
         const item = options[key];
         const value = getQueryValueFromItem(item);
+
         if (value !== null) {
             query.push(`${key}=${value}`);
         }

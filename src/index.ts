@@ -1,7 +1,7 @@
 export { postman } from './lib/services/postman';
 export {
     buildFreemiusQueryFromOptions,
-    generateUID,
+    generateGuid,
     getIsFlashingBrowser,
     isExitAttempt,
     MAX_ZINDEX,

@@ -1,42 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="color-scheme" content="dark" />
-    <title>Freemius Checkout JS - Without jQuery or other dependencies</title>
-  </head>
-  <body>
-    <div id="app">
-      <p>
-        <label for="site">Number of Sites</label>
-      </p>
-      <p>
-        <select name="site" id="site">
-          <option value="1" selected>Single</option>
-          <option value="2">2 Sites</option>
-          <option value="5">5 Sites</option>
-          <option value="10">10 Sites</option>
-        </select>
-      </p>
-      <p>
-        <label for="frequency">Billing Frequency</label>
-      </p>
-      <p>
-        <select name="frequency" id="frequency">
-          <option value="annual">Yearly</option>
-          <option value="monthly">Monthly</option>
-          <option value="lifetime">Lifetime</option>
-        </select>
-      </p>
-      <p>
-        <button id="plan-1">PLAN 1</button>
-        <button id="plan-2">PLAN 2</button>
-        <button id="plan-3">PLAN 3</button>
-      </p>
-			<p>Check Browser DevTool for more information</p>
-    </div>
-    <script type="module" src="/src/test.ts"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="dark" />
+        <title>
+            Freemius Checkout JS - Without jQuery or other dependencies
+        </title>
+    </head>
+    <body>
+        <div id="app">
+            <p>
+                <label for="site">Number of Licenses</label>
+            </p>
+            <p>
+                <select name="site" id="site">
+                    <option value="1" selected>Single</option>
+                    <option value="5">5 Sites</option>
+                    <option value="0">Unlimited Sites</option>
+                </select>
+            </p>
+            <p style="font-size: 10px; font-style: italic">
+                Some licenses may not be available for all plans
+            </p>
+            <p>
+                <label for="frequency">Billing Frequency</label>
+            </p>
+            <p>
+                <select name="frequency" id="frequency">
+                    <option value="annual">Yearly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="lifetime">Lifetime</option>
+                </select>
+            </p>
+            <p>
+                <button id="plan-1">Buy Starter</button>
+                <button id="plan-2">Buy Professional</button>
+                <button id="plan-3">Buy Business</button>
+            </p>
+            <p>Check Browser DevTool for more information</p>
+        </div>
+        <script type="module" src="/src/demo.ts"></script>
+    </body>
 </html>
