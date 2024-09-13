@@ -1,6 +1,6 @@
 name: CI
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   prettier:
@@ -22,10 +22,14 @@ jobs:
         run: npm run lint
 
   test:
-    name: Tests
+    name: Build & Tests
     runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: true
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
+      - name: Build
+        run: npm run build:lib
       - name: Run tests
-        run: npm run build:lib && npm test
+        run: npm test
