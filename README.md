@@ -4,11 +4,16 @@
 ![NPM Downloads](https://img.shields.io/npm/dw/@freemius/checkout)
 [![Twitter](https://img.shields.io/twitter/follow/freemius.svg?style=social&label=@freemius)](https://twitter.com/freemius)
 
-## Todos
-
--   [ ] Adjust the main export from `FSCheckout` to `Checkout`.
--   [ ] Use the new `timestamp` and `sandbox_token` for testing with Sandbox.
--   [ ] Create and publish the backward compatible adaptor.
+-   [Usage Guide](#usage-guide)
+    -   [Using hosted CDN](#using-hosted-cdn)
+    -   [Using NPM Package](#using-npm-package)
+-   [API](#api)
+    -   [Instantiate the class](#instantiate-the-class)
+    -   [Calling the method](#calling-the-method)
+-   [Use with React](#use-with-react)
+-   [Testing with Sandbox](#testing-with-sandbox)
+-   [Migration guide from the old checkout JS](#migration-guide-from-the-old-checkout-js)
+-   [Contributing](#contributing)
 
 ## Usage Guide
 
@@ -277,7 +282,6 @@ export function useFSCheckout() {
     useEffect(() => {
         // close and destroy the DOM related stuff on unmount
         return () => {
-            fsCheckout.close();
             fsCheckout.destroy();
         };
     }, [fsCheckout]);
@@ -316,29 +320,6 @@ export default function App() {
     );
 }
 ```
-
-## Setup Local Development Environment
-
-To work on the repository itself, please do the followings:
-
-1. Make sure you have latest Node.js LTS installed.
-2. Clone the repository.
-3. Copy `.env.sample` to `.env.local` and enter plugin id and public key as
-   specified in the file.
-
-Now run the following commands:
-
-```bash
-# install dependencies
-npm ci
-# Run the development server
-npm run dev
-```
-
-and it should spin up the server. Make sure to change the ID of plans in the
-`.env.local` file. See
-[vite documentation](https://vitejs.dev/guide/env-and-mode.html#env-files) to
-learn about how `.env` files are handled.
 
 ## Testing with Sandbox
 
@@ -419,3 +400,8 @@ recommend using the new API directly. The compatibility layer is only for quick
 migration. With the singleton pattern, every time you call the `configure` the
 original option will be overridden. While managing multiple checkouts, this can
 lead to confusion.
+
+## Contributing
+
+We welcome contributions! Please see the
+[contribution guide](./CONTRIBUTING.md).

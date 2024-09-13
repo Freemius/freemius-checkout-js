@@ -15,7 +15,9 @@
     "deploysite": "npm run build && netlify deploy --dir=dist --prod",
     "prepublish": "npm run build:lib",
     "test": "jest",
-    "prepare": "ts-patch install -s"
+    "prepare": "ts-patch install -s",
+    "prettier:check": "prettier --check ./src ./tests ./cypress",
+    "prettier:write": "prettier --write ./src ./tests ./cypress"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
