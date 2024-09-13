@@ -4,7 +4,7 @@
         "noEmit": true,
         // be explicit about types included
         // to avoid clashing with Jest types
-        "types": ["cypress", "node"]
+        "types": ["cypress", "node", "vite/client"]
     },
     "include": ["../node_modules/cypress", "./**/*.ts", "../cypress.config.ts"],
     "exclude": ["jest", "../dist", "../lib"]
