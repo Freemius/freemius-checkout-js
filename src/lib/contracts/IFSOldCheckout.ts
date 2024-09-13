@@ -1,15 +1,14 @@
 import { CheckoutOptions } from '../types';
-import { Checkout } from '../checkout';
 
 export interface IFSOldCheckout {
     /**
      * Configure context plugin.
      */
-    configure: (options: CheckoutOptions) => Checkout;
+    configure: (options: CheckoutOptions, baseUrl?: string) => IFSOldCheckout;
     /**
      * Open checkout.
      */
-    open: (options: CheckoutOptions) => void;
+    open: (options?: Partial<CheckoutOptions>) => void;
     /**
      * Close checkout.
      */
@@ -18,4 +17,9 @@ export interface IFSOldCheckout {
      * Resets the existing options.
      */
     clearOptions: () => void;
+
+    /**
+     * Get the guid of the checkout.
+     */
+    getGuid: () => string;
 }

@@ -15,7 +15,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noImplicitReturns": true,
-        "types": ["@testing-library/jest-dom", "node"],
+        "types": ["jest", "@testing-library/jest-dom", "node"],
         "plugins": [
             {
                 "transform": "ts-auto-mock/transformer",
@@ -25,6 +25,13 @@
         "rootDir": ".",
         "allowJs": true
     },
-    "include": ["src", "tests"],
-    "exclude": ["node_modules", "dist", "lib"]
+    "include": ["src", "tests", "cypress"],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "lib",
+        "./cypress.config.ts",
+        "cypress",
+        "**/*.cy.ts"
+    ]
 }

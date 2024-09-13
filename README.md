@@ -76,7 +76,7 @@ This will add the global `FS.Checkout` class which you can instantiate.
 You can also load the script using the `async` or `defer` attribute on the
 script tag. Note, however, that with asynchronous loading any API calls will
 have to be made only after the script execution has finished. For that you'll
-need to hook to `DOMContentLoaded` event or use `window.onload`.
+need to hook to `load` event of `window` or use `window.onload`.
 
 ```html
 <script
@@ -87,7 +87,7 @@ need to hook to `DOMContentLoaded` event or use `window.onload`.
 ></script>
 
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', () => {
         const handler = new FS.Checkout({
             plugin_id: '1234',
             public_key: 'pk_xxxx',
@@ -180,6 +180,14 @@ interface AdditionalCheckoutOptions {
         ctx: string;
         token: string;
     };
+    /**
+     * The URL of the image to display while the checkout is loading. By default a loading indicator from Freemius will be used.
+     */
+    loadingImageUrl?: string;
+    /**
+     * The alt text for the loading image. By default 'Loading Freemius Checkout' will be used.
+     */
+    loadingImageAlt?: string;
 }
 ```
 

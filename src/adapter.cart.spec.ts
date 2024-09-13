@@ -6,6 +6,7 @@
 import { screen } from '@testing-library/dom';
 import './adapter';
 import { IFSOldCheckout } from './lib/contracts/IFSOldCheckout';
+import { sendMockedCanceledEvent } from '../tests/utils';
 
 describe('Adapter with Cart', () => {
     test('recovers cart belonging to the same plugin with a singleton', () => {
@@ -32,5 +33,21 @@ describe('Adapter with Cart', () => {
         expect(
             screen.queryByTestId(`fs-checkout-page-${guid}`)
         ).toBeInTheDocument();
+
+        sendMockedCanceledEvent();
+
+        expect(
+            screen.queryByTestId(`fs-checkout-page-${guid}`)
+        ).not.toBeInTheDocument();
+
+        // Call the configure again, it shouldn't recover the cart.
+        (window.FS.Checkout as IFSOldCheckout).configure({
+            plugin_id: 2,
+            public_key: 'pk_123456',
+        });
+
+        expect(
+            screen.queryByTestId(`fs-checkout-page-${guid}`)
+        ).not.toBeInTheDocument();
     });
 });

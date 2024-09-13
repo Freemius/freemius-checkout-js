@@ -1,6 +1,6 @@
 import './adapter';
-import { Checkout } from '.';
 import { IFSOldCheckout } from './lib/contracts/IFSOldCheckout';
+import { screen } from '@testing-library/dom';
 
 describe('adapter', () => {
     test('exposes FS global variable', () => {
@@ -24,6 +24,31 @@ describe('adapter', () => {
         });
 
         expect(handlerOne).toBe(handlerTwo);
-        expect(handlerOne).toBeInstanceOf(Checkout);
+    });
+
+    test('everytime configure is called, the original option is held when opening', () => {
+        const handlerOne = (window.FS.Checkout as IFSOldCheckout).configure({
+            plugin_id: 123,
+            public_key: '123',
+            plan_id: 123,
+        });
+
+        (window.FS.Checkout as IFSOldCheckout).configure({
+            plugin_id: 456,
+            public_key: '456',
+            plan_id: 456,
+        });
+
+        (window.FS.Checkout as IFSOldCheckout).open();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${handlerOne.getGuid()}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(iFrame.src).toContain('plan_id=456');
+        expect(iFrame.src).toContain('plugin_id=456');
+        expect(iFrame.src).toContain('public_key=456');
     });
 });

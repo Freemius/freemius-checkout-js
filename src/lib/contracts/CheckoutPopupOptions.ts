@@ -7,6 +7,25 @@
  */
 export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
 
+export type CheckoutTrackingEvent =
+    | 'email-updated'
+    | 'exit-intent-promotion-ended'
+    | 'licenses-inc'
+    | 'licenses-dec'
+    | 'billing-cycle-updated'
+    | 'currency-changed'
+    | 'cooling-off-waiver-toggled'
+    | 'coupon-updated'
+    | 'complete'
+    | 'exit-intent-shown'
+    | 'exit-intent-discount-applied'
+    | 'exit-intent-canceled'
+    | 'paypal-express-checkout'
+    | 'paypal'
+    | 'cc'
+    | 'load'
+    | 'review-order';
+
 export interface CheckoutPopupParams {
     /**
      * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
@@ -225,7 +244,10 @@ export interface CheckoutPopupEvents {
      * multiple checkout events such as updates in the currency, billing cycle,
      * licenses #, etc.
      */
-    track?: (event: string, data: Record<string, any> | null) => void;
+    track?: (
+        event: CheckoutTrackingEvent | string,
+        data: Record<string, any> | null
+    ) => void;
     /**
      * Optional callback to execute when the iFrame opens.
      */

@@ -68,10 +68,7 @@ export class CheckoutIFrame {
         );
         iFrame.setAttribute('frameborder', '0');
 
-        // @todo - Remove this and update the tests to query by ID instead.
-        if (process.env.NODE_ENV === 'test') {
-            iFrame.setAttribute('data-testid', iFrame.id);
-        }
+        iFrame.setAttribute('data-testid', iFrame.id);
 
         document.body.appendChild(iFrame);
 
