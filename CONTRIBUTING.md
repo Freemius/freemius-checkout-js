@@ -11,11 +11,10 @@ contribution process. 🎉
 -   [How Can I Contribute?](#how-can-i-contribute)
     -   [Issues](#issues)
     -   [Pull Requests (PRs)](#pull-requests)
-    -   [Discussions](#discussions)
+    -   [Feature Request](#feature-request)
 -   [Development Workflow](#development-workflow)
 -   [Style Guide](#style-guide)
     -   [Prettier Configuration](#prettier-configuration)
--   [License](#license)
 
 ## Code of Conduct
 
@@ -58,11 +57,11 @@ We encourage you to contribute to the codebase by submitting a pull request
     - We will review the PR as soon as possible. You may be asked to make
       revisions based on feedback.
 
-### Discussions
+### Feature Request
 
 We welcome ideas and discussions! If you'd like to talk about future
 improvements, ideas for new features, or general questions, feel free to start a
-[discussion](https://github.com/Freemius/freemius-checkout-js/discussions).
+[feature request](https://freemius.nolt.io/).
 
 ## Development Workflow
 
