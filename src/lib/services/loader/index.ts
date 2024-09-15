@@ -50,7 +50,7 @@ export class Loader implements ILoader {
     }
 
     private getStyle(): string {
-        return `#${this.loaderElementId} {
+        return /*@fs-css-minify*/ `#${this.loaderElementId} {
 			display: none;
 			position: fixed;
 			z-index: ${MAX_ZINDEX - 1};

@@ -79,7 +79,7 @@ export class Style implements IStyle {
     }
 
     private getBasicStyle(): string {
-        return `body.${this.bodyScrollDisableClassName} {
+        return /*@fs-css-minify*/ `body.${this.bodyScrollDisableClassName} {
 			overflow: hidden !important;
 		}`;
     }

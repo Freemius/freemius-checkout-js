@@ -56,3 +56,6 @@ class FSOldCheckout implements IFSOldCheckout {
 }
 
 window.FS.Checkout = new FSOldCheckout();
+
+// @note - This export is needed so that vite library compiler wraps the code in a function (iife)
+export { FSOldCheckout };

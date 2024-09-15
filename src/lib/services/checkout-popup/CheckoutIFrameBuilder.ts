@@ -63,7 +63,7 @@ export class CheckoutIFrameBuilder {
     }
 
     private getStyle(): string {
-        return `#${this.iFrameID} {
+        return /*@fs-css-minify*/ `#${this.iFrameID} {
 			z-index: ${MAX_ZINDEX - 1};
 			background: rgba(0,0,0,0.003);
 			border: 0 none transparent;

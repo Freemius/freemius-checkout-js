@@ -101,7 +101,7 @@ export class ExitIntent implements IExitIntent {
     }
 
     private getStyle(): string {
-        return `#${this.exitIntentId} {
+        return /*@fs-css-minify*/ `#${this.exitIntentId} {
 			z-index: ${MAX_ZINDEX};
 			border: 0;
 			background: transparent;

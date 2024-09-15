@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { minifyInlineCSS } from './src/lib/utils/vite-plugins';
 
 export default defineConfig({
     build: {
@@ -12,5 +13,7 @@ export default defineConfig({
             name: '__FSCheckoutAdapterInternal__',
             fileName: () => `checkout.js`,
         },
+        sourcemap: false,
     },
+    plugins: [minifyInlineCSS],
 });

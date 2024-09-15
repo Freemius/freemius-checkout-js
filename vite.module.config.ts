@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import dts from 'vite-plugin-dts';
+import { minifyInlineCSS } from './src/lib/utils/vite-plugins';
 
 export default defineConfig({
     build: {
@@ -11,11 +12,13 @@ export default defineConfig({
             formats: ['es', 'cjs'],
             fileName: 'checkout',
         },
+        sourcemap: false,
     },
     plugins: [
         dts({
             insertTypesEntry: true,
             exclude: ['tests'],
         }),
+        minifyInlineCSS,
     ],
 });
