@@ -1,0 +1,21 @@
+name: Build and Attach Files to Release
+
+on:
+  release:
+    types: [ published ] # Trigger when a release is published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./github/actions/setup-node
+      - name: Build
+        run: npm run build:lib
+      - name: Rename files
+        run: mv lib/adapter/checkout.js lib/adapter/adapter.js && mv lib/global/checkout.js lib/global/global.js
+      - name: Upload adapter.js
+        run: gh release upload ${{ github.event.release.tag_name }} lib/adapter/adapter.js --clobber
+      - name: Upload global.js
+        run: gh release upload ${{ github.event.release.tag_name }} lib/global/global.js --clobber
