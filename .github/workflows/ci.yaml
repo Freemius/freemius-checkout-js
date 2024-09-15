@@ -1,10 +1,10 @@
-name: Lint and Test
+name: ✨ Lint and Test ✨
 
 on: [ push ]
 
 jobs:
   prettier:
-    name: Prettier Formatting
+    name: 🎨 Prettier Formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,7 +13,7 @@ jobs:
         run: npm run prettier:check
 
   eslint:
-    name: ESLint
+    name: 🔍 ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         run: npm run lint
 
   test:
-    name: Build & Tests
+    name: 🏗 Build & Tests
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: true
