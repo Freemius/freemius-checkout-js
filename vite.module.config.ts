@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import dts from 'vite-plugin-dts';
-import { minifyInlineCSS } from './src/lib/utils/vite-plugins';
+import { minifyInlineCSS } from './src/lib/utils/vite';
 
 export default defineConfig({
     build: {

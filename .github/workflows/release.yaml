@@ -17,16 +17,17 @@ jobs:
       - uses: ./.github/actions/setup-node
       - name: 🏗 Build
         run: npm run build:lib
-      - name: ✏️ Rename files
-        run: mv lib/adapter/checkout.js lib/adapter/adapter.js && mv lib/global/checkout.js lib/global/global.js
-        shell: bash
-      - name: 📦 Package adapter.js
-        run: gh release upload ${{ github.event.release.tag_name }} lib/adapter/adapter.js --clobber
+      - name: 📦 Package checkout.adapter.js
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} lib/adapter/checkout.adapter.js --clobber
+          gh release upload ${{ github.event.release.tag_name }} lib/adapter/checkout.adapter.js.map --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
-      - name: 📦 Package global.js
-        run: gh release upload ${{ github.event.release.tag_name }} lib/global/global.js --clobber
+      - name: 📦 Package checkout.global.js
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} lib/global/checkout.global.js --clobber
+          gh release upload ${{ github.event.release.tag_name }} lib/global/checkout.global.js.map --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
