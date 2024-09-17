@@ -1,19 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import { minifyInlineCSS } from './src/lib/utils/vite-plugins';
+import { createConfig } from './src/lib/utils/vite';
 
-export default defineConfig({
-    build: {
-        outDir: 'lib/global',
-        target: 'es2015',
-        lib: {
-            entry: resolve(__dirname, './src/global.ts'),
-            formats: ['iife'],
-            // @note - The build will not expose this variable because the file itself doesn't export anything, but we just need to give it a name anyway for the tooling.
-            name: '__FSCheckoutGlobalInternal__',
-            fileName: () => `checkout.js`,
-        },
-        sourcemap: false,
-    },
-    plugins: [minifyInlineCSS],
-});
+export default defineConfig(
+    createConfig(resolve(__dirname, './src/global.ts'), 'global', __dirname)
+);
