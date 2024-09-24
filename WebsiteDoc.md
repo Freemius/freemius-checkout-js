@@ -10,7 +10,7 @@ offers 3 multi-site prices:
 
 <button id="purchase">Buy Button</button>
 
-<script src="https://checkout.freemius.com/js/v2/"></script>
+<script src="https://checkout.freemius.com/js/v1/"></script>
 <script>
     const handler = new FS.Checkout({
         plugin_id: '<productID>',
