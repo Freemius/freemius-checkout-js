@@ -29,7 +29,7 @@ Here's a simple example to get you started.
 
 <script
     type="text/javascript"
-    src="https://checkout.freemius.com/js/v2/"
+    src="https://checkout.freemius.com/js/v1/"
 ></script>
 
 <script type="text/javascript">
@@ -72,7 +72,7 @@ To use the hosted CDN, simply include the script tag in your HTML.
 ```html
 <script
     type="text/javascript"
-    src="https://checkout.freemius.com/js/v2/"
+    src="https://checkout.freemius.com/js/v1/"
 ></script>
 ```
 
@@ -86,7 +86,7 @@ need to hook to `load` event of `window` or use `window.onload`.
 ```html
 <script
     type="text/javascript"
-    src="https://checkout.freemius.com/js/v2/"
+    src="https://checkout.freemius.com/js/v1/"
     async
     defer
 ></script>
@@ -363,7 +363,7 @@ In your code, where you do
 2. Replace the checkout script with the new one.
 
 ```html
-<script src="https://checkout.freemius.com/js/v2/migrate/"></script>
+<script src="https://checkout.freemius.com/js/v1/legacy/"></script>
 ```
 
 Now all your existing code should work as is.
