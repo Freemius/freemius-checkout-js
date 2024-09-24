@@ -1,0 +1,33 @@
+name: Build and Attach Files to Release
+
+on:
+  release:
+    types: [ published ] # Trigger when a release is published
+
+# Make sure the GITHUB_TOKEN has permission to upload to our releases
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - name: 🏗 Build
+        run: npm run build:lib
+      - name: 📦 Package checkout.adapter.js
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} lib/adapter/checkout.adapter.js --clobber
+          gh release upload ${{ github.event.release.tag_name }} lib/adapter/checkout.adapter.js.map --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+      - name: 📦 Package checkout.global.js
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} lib/global/checkout.global.js --clobber
+          gh release upload ${{ github.event.release.tag_name }} lib/global/checkout.global.js.map --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash

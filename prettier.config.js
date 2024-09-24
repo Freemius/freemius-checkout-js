@@ -5,13 +5,12 @@
  * https://opensource.org/licenses/MIT
  */
 
-module.exports = {
-	useTabs: false,
-	tabWidth: 2,
-	semi: true,
-	singleQuote: true,
-	trailingComma: 'es5',
-	bracketSpacing: true,
-	jsxBracketSameLine: false,
-	proseWrap: 'always',
+export default {
+    useTabs: false,
+    tabWidth: 4,
+    semi: true,
+    singleQuote: true,
+    trailingComma: 'es5',
+    bracketSpacing: true,
+    proseWrap: 'always',
 };

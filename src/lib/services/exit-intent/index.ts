@@ -1,104 +1,107 @@
 import { MAX_ZINDEX } from '../../utils/ops';
 import { Logger } from '../logger';
-import { IStyle } from '../style';
-
-export interface IExitIntent {
-  attach(onExit: () => void): IExitIntent;
-
-  isAttached(): boolean;
-
-  detach(): IExitIntent;
-}
+import { isExitAttempt } from '../../utils/ops';
+import { ExitIntentListener, IExitIntent } from '../../contracts/IExitIntent';
+import { IStyle } from '../../contracts/IStyle';
 
 export class ExitIntent implements IExitIntent {
-  private readonly exitIntentId: string;
+    private readonly exitIntentId: string;
 
-  private exitIntentDiv: HTMLDivElement | null = null;
+    private exitIntentDiv: HTMLDivElement | null = null;
 
-  private clearExitIntentListener: (() => void) | null = null;
+    private clearExitIntentListener: (() => void) | null = null;
 
-  constructor(private readonly style: IStyle) {
-    this.exitIntentId = `fs-exit-intent-${this.style.guid}`;
+    private listeners: ExitIntentListener[] = [];
 
-    this.style.addStyle(this.getStyle());
-  }
+    constructor(private readonly style: IStyle) {
+        this.exitIntentId = `fs-exit-intent-${this.style.guid}`;
 
-  public isAttached(): boolean {
-    return null !== this.exitIntentDiv;
-  }
-
-  public attach(onExit: () => void): IExitIntent {
-    if (this.isAttached()) {
-      return this;
+        this.style.addStyle(this.getStyle());
     }
 
-    // add the exitIntent Div
-    this.exitIntentDiv = document.createElement('div');
-    this.exitIntentDiv.id = this.exitIntentId;
-    document.body.appendChild(this.exitIntentDiv);
+    public isAttached(): boolean {
+        return null !== this.exitIntentDiv;
+    }
 
-    const html = document.documentElement;
-    let delayTimer: number | null = null;
-    const delay = 300;
+    public addListener(...listeners: ExitIntentListener[]): void {
+        this.listeners.push(...listeners);
+    }
 
-    const mouseLeaveHandler = (event: MouseEvent) => {
-      if (!this.isExitAttempt(event)) {
-        return;
-      }
-
-      delayTimer = setTimeout(() => {
-        try {
-          onExit();
-        } catch (e) {
-          Logger.Error(e);
+    public attach(...listeners: ExitIntentListener[]): IExitIntent {
+        if (listeners) {
+            this.addListener(...listeners);
         }
-      }, delay);
-    };
 
-    const mouseEnterHandler = () => {
-      if (delayTimer) {
-        clearTimeout(delayTimer);
-        delayTimer = null;
-      }
-    };
+        if (this.isAttached()) {
+            return this;
+        }
 
-    html.addEventListener('mouseleave', mouseLeaveHandler);
-    html.addEventListener('mouseenter', mouseEnterHandler);
+        // add the exitIntent Div
+        this.exitIntentDiv = document.createElement('div');
+        this.exitIntentDiv.id = this.exitIntentId;
+        document.body.appendChild(this.exitIntentDiv);
 
-    this.clearExitIntentListener = () => {
-      if (delayTimer) {
-        clearTimeout(delayTimer);
-        delayTimer = null;
-      }
-      html.removeEventListener('mouseleave', mouseLeaveHandler);
-      html.removeEventListener('mouseenter', mouseEnterHandler);
-    };
+        const html = document.documentElement;
+        let delayTimer: number | null = null;
+        const delay = 300;
 
-    return this;
-  }
+        const mouseLeaveHandler = (event: MouseEvent) => {
+            if (!isExitAttempt(event)) {
+                return;
+            }
 
-  public detach(): IExitIntent {
-    if (!this.isAttached()) {
-      return this;
+            delayTimer = window.setTimeout(() => {
+                try {
+                    this.fireListeners();
+                } catch (e) {
+                    Logger.Error(e);
+                }
+            }, delay);
+        };
+
+        const mouseEnterHandler = () => {
+            if (delayTimer) {
+                clearTimeout(delayTimer);
+                delayTimer = null;
+            }
+        };
+
+        html.addEventListener('mouseleave', mouseLeaveHandler);
+        html.addEventListener('mouseenter', mouseEnterHandler);
+
+        this.clearExitIntentListener = () => {
+            if (delayTimer) {
+                clearTimeout(delayTimer);
+                delayTimer = null;
+            }
+
+            html.removeEventListener('mouseleave', mouseLeaveHandler);
+            html.removeEventListener('mouseenter', mouseEnterHandler);
+        };
+
+        return this;
     }
 
-    this.exitIntentDiv?.remove();
-    this.exitIntentDiv = null;
-    this.clearExitIntentListener?.();
+    public detach(): IExitIntent {
+        if (!this.isAttached()) {
+            return this;
+        }
 
-    return this;
-  }
+        this.exitIntentDiv?.remove();
+        this.exitIntentDiv = null;
+        this.clearExitIntentListener?.();
 
-  private isExitAttempt(event: MouseEvent) {
-    if (event.pageY > 20) {
-      return false;
+        return this;
     }
 
-    return true;
-  }
+    private fireListeners() {
+        this.listeners.forEach((listener) => {
+            listener();
+        });
+    }
 
-  private getStyle(): string {
-    return `#${this.exitIntentId} {
+    private getStyle(): string {
+        return /*@fs-css-minify*/ `#${this.exitIntentId} {
 			z-index: ${MAX_ZINDEX};
 			border: 0;
 			background: transparent;
@@ -111,5 +114,5 @@ export class ExitIntent implements IExitIntent {
 			width: 100%;
 			top: 0;
 		}`;
-  }
+    }
 }

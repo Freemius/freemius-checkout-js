@@ -1,64 +1,98 @@
-import { getIsFlashingBrowser } from '../../checkout';
-import { isSsr } from '../../utils/ops';
-
-export interface IStyle {
-  readonly isFlashingBrowser: boolean;
-
-  readonly guid: string;
-
-  addStyle(style: string): void;
-  attach(): IStyle;
-  remove(): IStyle;
-
-  disableBodyScroll(): void;
-  enableBodyScroll(): void;
-}
+import { isSsr, getIsFlashingBrowser } from '../../utils/ops';
+import { IStyle } from '../../contracts/IStyle';
 
 export class Style implements IStyle {
-  private readonly styleElement: HTMLStyleElement;
+    private readonly styleElement: HTMLStyleElement;
 
-  private readonly bodyScrollDisableClassName: string;
+    private readonly bodyScrollDisableClassName: string;
 
-  readonly isFlashingBrowser: boolean;
+    readonly isFlashingBrowser: boolean;
 
-  constructor(public readonly guid: string) {
-    this.bodyScrollDisableClassName = `is-fs-checkout-open-${this.guid}`;
+    private overflow: { x: number; y: number } = { x: 0, y: 0 };
 
-    this.styleElement = document.createElement('style');
-    this.styleElement.textContent += this.getBasicStyle();
+    private metaColorSchemeValue: string | null = null;
+    private readonly metaColorSchemeElement: HTMLMetaElement | null = null;
 
-    this.isFlashingBrowser =
-      getIsFlashingBrowser() ||
-      (!isSsr() && !!document.querySelector('#___gatsby'));
-  }
+    constructor(public readonly guid: string) {
+        this.bodyScrollDisableClassName = `is-fs-checkout-open-${this.guid}`;
 
-  addStyle(style: string): void {
-    this.styleElement.textContent += style;
-  }
+        this.styleElement = document.createElement('style');
+        this.styleElement.textContent += this.getBasicStyle();
 
-  public attach(): Style {
-    document.head.appendChild(this.styleElement);
+        this.isFlashingBrowser =
+            getIsFlashingBrowser() ||
+            (!isSsr() && !!document.querySelector('#___gatsby'));
 
-    return this;
-  }
+        this.metaColorSchemeElement = document.head.querySelector(
+            'meta[name="color-scheme"]'
+        );
+    }
 
-  public remove(): Style {
-    document.head.removeChild(this.styleElement);
+    addStyle(style: string): void {
+        this.styleElement.textContent += style;
+    }
 
-    return this;
-  }
+    public attach(): Style {
+        document.head.appendChild(this.styleElement);
 
-  public disableBodyScroll() {
-    document.body.classList.add(this.bodyScrollDisableClassName);
-  }
+        return this;
+    }
 
-  public enableBodyScroll() {
-    document.body.classList.remove(this.bodyScrollDisableClassName);
-  }
+    public remove(): Style {
+        document.head.removeChild(this.styleElement);
 
-  private getBasicStyle(): string {
-    return `body.${this.bodyScrollDisableClassName} {
+        return this;
+    }
+
+    public disableBodyScroll() {
+        this.backupScrollPosition();
+
+        document.body.classList.add(this.bodyScrollDisableClassName);
+    }
+
+    public enableBodyScroll() {
+        document.body.classList.remove(this.bodyScrollDisableClassName);
+
+        this.restoreScrollPosition();
+    }
+
+    public disableMetaColorScheme() {
+        // Backup the current meta color scheme value.
+        if (this.metaColorSchemeElement) {
+            this.metaColorSchemeValue =
+                this.metaColorSchemeElement.getAttribute('content');
+
+            this.metaColorSchemeElement.setAttribute('content', 'light');
+        }
+    }
+
+    public enableMetaColorScheme() {
+        // Restore the meta color scheme value.
+        if (this.metaColorSchemeElement && this.metaColorSchemeValue) {
+            this.metaColorSchemeElement.setAttribute(
+                'content',
+                this.metaColorSchemeValue
+            );
+
+            this.metaColorSchemeValue = null;
+        }
+    }
+
+    private getBasicStyle(): string {
+        return /*@fs-css-minify*/ `body.${this.bodyScrollDisableClassName} {
 			overflow: hidden !important;
 		}`;
-  }
+    }
+
+    private backupScrollPosition() {
+        this.overflow = {
+            x: document.documentElement.scrollTop,
+            y: document.documentElement.scrollLeft,
+        };
+    }
+
+    private restoreScrollPosition() {
+        document.documentElement.scrollTop = this.overflow.x;
+        document.documentElement.scrollLeft = this.overflow.y;
+    }
 }
