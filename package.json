@@ -2,7 +2,7 @@
   "name": "@freemius/checkout",
   "private": false,
   "description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-beta.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -65,7 +65,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Freemius/freemius-checkout-js.git"
+    "url": "git+https://github.com/Freemius/freemius-checkout-js.git"
   },
   "keywords": [
     "freemius",
