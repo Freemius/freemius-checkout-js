@@ -110,9 +110,11 @@ export interface CheckoutPopupParams {
      */
     billing_cycle?: 'monthly' | 'annual' | 'lifetime';
     /**
+     * This has been deprecated and removed in phase2 Checkout, with the introduction of show_upsells.
      * Set this param to `true` if you like to hide the billing cycles selector
      * when the product is sold in multiple billing frequencies.
      *
+     * @deprecated
      * @default false
      */
     hide_billing_cycles?: boolean;
@@ -135,11 +137,14 @@ export interface CheckoutPopupParams {
      */
     hide_coupon?: boolean;
     /**
+     * This has been deprecated in favor of bundle_discount introduced in phase2 Checkout.
+     * 
      * Set this param to false when selling a bundle and you want the discounts
      * to be based on the closest licenses quota and billing cycle from the child
      * products. Unlike the default discounts calculation which is maximized by
      * basing the discounts on the child products single-site prices.
      *
+     * @deprecated
      * @default true
      */
     maximize_discounts?: boolean;
@@ -212,6 +217,114 @@ export interface CheckoutPopupParams {
         ctx: string;
         token: string;
     };
+    /**
+     * Specify the layout of the form on a larger screen.
+     * @default null
+     */
+    layout?: 'vertical' | 'horizontal' | null;
+
+    /**
+     * Specifies the position of the form in horizontal layout.
+     * @default 'left'
+     */
+    form_position?: 'left' | 'right';
+
+    /**
+     * If set to true, the Checkout dialog will take the entire screen when opened.
+     * @default false
+     */
+    fullscreen?: boolean;
+
+    /**
+     * Whether or not showing the upsell toggles.
+     */
+    show_upsells?: boolean;
+
+    /**
+     * Whether or not showing featured reviews in the checkout.
+     */
+    show_reviews?: boolean;
+
+    /**
+     * When showing the review UI in the checkout, you can specify which review you want to show with its ID.
+     */
+    review_id?: number;
+
+    /**
+     * Whether or not showing Refund Policy UI in the checkout.
+     * @default false
+     */
+    show_refund_badge?: boolean;
+
+    /**
+     * Use the parameter to position the refund policy badge when showing the form in horizontal layout.
+     * @default 'dynamic'
+     */
+    refund_policy_position?: 'below_form' | 'below_breakdown' | 'dynamic';
+
+    /**
+     * Determines whether the annual discount will be shown in the checkout.
+     * @default true
+     */
+    annual_discount?: boolean;
+
+    /**
+     * Switching to the monthly billing cycle is disabled when the Checkout is loaded with annual billing cycle. Use this parameter to show it.
+     * @default false
+     */
+    show_monthly_switch?: boolean;
+
+    /**
+     * Determines whether the multi-site discount will be shown.
+     * @default 'auto'
+     */
+    multisite_discount?: true | false | 'auto';
+
+    /**
+     * Determines whether the bundle discount will be shown.
+     * @default 'maximize'
+     */
+    bundle_discount?: true | false | 'maximize';
+
+    /**
+     * Set it to false to hide the inline currency selector from the "Today's Total" line.
+     * @default true
+     */
+    show_inline_currency_selector?: boolean;
+
+    /**
+     * When the checkout is loaded in page you can specify a cancel URL to be used for the back button.
+     */
+    cancel_url?: string;
+
+    /**
+     * If you want to use any other icon image, please specify the link to the icon using this parameter.
+     */
+    cancel_icon?: string;
+
+    /**
+     * When set to true, a small line mentioning the total renewal price per billing cycle will shown below the total.
+     * @default false
+     */
+    always_show_renewals_amount?: boolean;
+
+    /**
+     * Determines whether the products in a bundle appear as hidden by default. Is applicable only to bundles.
+     * @default true
+     */
+    is_bundle_collapsed?: boolean;
+
+    /**
+     * Set this param to true if you like to entirely hide the 3rd row in the header with the license selector.
+     * @default false
+     */
+    hide_licenses?: boolean;
+
+    /**
+     * Default currency to use when 'currency' is set to 'auto'.
+     * @default 'usd'
+     */
+    default_currency?: 'usd' | 'eur' | 'gbp';
 }
 
 export interface CheckoutPopupEvents {
