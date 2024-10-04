@@ -406,18 +406,25 @@ document.querySelector('#another-purchase-button').addEventListener('click', (e)
 
 
 ### Migration adapter (not recommended)
-We also have introduced a compatibility layer which you can use
+We also have introduced a compatibility layer which you can use as a quick path
 to migrate to the new checkout JS without making any changes to your checkout code.
 
-In your code, look for the checkout script:
+However, please note the following limitations to this approach:
+
+- it may stop working in a future version.
+- it's not possible to open two different checkouts on the page. 
+
+#### Instructions:
+
+1. Look for the checkout script:
 
 ```html
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://checkout.freemius.com/checkout.min.js"></script>
 ```
 
-1. Remove the jQuery script tag if you aren't using jQuery.
-2. Replace the checkout script with the new one.
+2. Remove the jQuery script tag if you aren't using jQuery.
+3. Replace the checkout script with the new one.
 
 ```html
 <script src="https://checkout.freemius.com/js/v1/legacy/"></script>
@@ -451,12 +458,6 @@ document.querySelector('#purchase').addEventListener('click', (e) => {
     e.preventDefault();
 });
 ```
-
-Please note that because of the singleton pattern of the old checkout JS, we do
-recommend using the new API directly. The compatibility layer is only for quick
-migration and it may stop working in a future version. Addiitonally, with the 
-legacy script it's not possible to open two different checkouts on the page. 
-Every time `configure` is called the original option will be overridden.
 
 ## Contributing
 
