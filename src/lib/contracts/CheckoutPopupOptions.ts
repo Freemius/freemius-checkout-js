@@ -138,7 +138,7 @@ export interface CheckoutPopupParams {
     hide_coupon?: boolean;
     /**
      * This has been deprecated in favor of bundle_discount introduced in phase2 Checkout.
-     * 
+     *
      * Set this param to false when selling a bundle and you want the discounts
      * to be based on the closest licenses quota and billing cycle from the child
      * products. Unlike the default discounts calculation which is maximized by
