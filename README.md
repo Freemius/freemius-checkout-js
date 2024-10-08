@@ -16,7 +16,8 @@
 
 ## Usage Guide
 
-Here's a simple example to get you started.
+Here's a simple example to get you started. This example assumes you're using some bundler like vite or webpack to manage your app.
+
 
 Install the official
 [npm](https://www.npmjs.com/package/@freemius/checkout) package.
@@ -27,41 +28,32 @@ npm i @freemius/checkout
 yarn add @freemius/checkout
 ```
 
-```html
-<select id="licenses">
-    <option value="1" selected="selected">Single Site License</option>
-    <option value="2">2-Site License</option>
-    <option value="unlimited">Unlimited Sites License</option>
-</select>
-<button id="purchase">Buy Button</button>
+In your app:
 
-<script type="module">
+```javascript
 import { Checkout } from '@freemius/checkout';
 
 const handler = new Checkout({
-    plugin_id: '9885',
-    plan_id: '16634',
-    public_key: 'pk_ccca7be7fa43aec791448b43c6266',
-    image: 'https://your-plugin-site.com/logo-100x100.png',
+  plugin_id: '311',
+  public_key: 'pk_a42d2ee6de0b31c389d5d11e36211',
 });
 
 document.querySelector('#purchase').addEventListener('click', (e) => {
-    e.preventDefault();
-    
-    handler.open({
-        name: 'My Awesome Plugin',
-        licenses: document.querySelector('#licenses').value,
-        purchaseCompleted: (response) => {
-            // The logic here will be executed immediately after the purchase confirmation.
-            // console.log(response.user.email);
-        },
-        success: (response) => {
-            // The logic here will be executed after the customer closes the checkout, after a successful purchase.
-            // console.log(response.user.email);
-        },
-    });
+  e.preventDefault();
+  
+  const licensesElement = document.querySelector('#licenses');
+  
+  handler.open({
+    name: 'My Awesome Plugin',
+    licenses: licensesElement.value,
+    purchaseCompleted: (response) => {
+      console.log('Purchase completed:', response);
+    },
+    success: (response) => {
+      console.log('Checkout closed after successful purchase:', response);
+    },
+  });
 });
-</script>
 ```
 
 Please find detailed guides below.
@@ -406,13 +398,15 @@ document.querySelector('#another-purchase-button').addEventListener('click', (e)
 
 
 ### Migration adapter (not recommended)
+
 We also have introduced a compatibility layer which you can use as a quick path
 to migrate to the new checkout JS without making any changes to your checkout code.
 
 However, please note the following limitations to this approach:
 
 - it may stop working in a future version.
-- it's not possible to open two different checkouts on the page. 
+- it has a singleton pattern which can get confusing when configuring for multiple products on the same page.
+- using the adapter will add extra bytes.
 
 #### Instructions:
 
