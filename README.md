@@ -453,6 +453,28 @@ document.querySelector('#purchase').addEventListener('click', (e) => {
 });
 ```
 
+If you've been using the FS.Checkout singleton interface like
+
+```js
+FS.Checkout.open({ 
+    plugin_id: 'x', 
+    // ...
+});
+```
+
+Then you will need to adjust your code to call the methods on the instance instead of the singleton.
+
+```js
+const handler = new FS.Checkout({
+    plugin_id: 'x',
+    // ...
+});
+
+handler.open({
+    // ...
+});
+```
+
 ## Contributing
 
 We welcome contributions! Please see the
