@@ -252,7 +252,6 @@ export interface CheckoutPopupParams {
      */
     layout?: 'vertical' | 'horizontal' | null;
 
-
     /**
      * Specifies the position of the form in horizontal layout.
      * @default 'left'
