@@ -31,10 +31,12 @@ export interface CheckoutPopupParams {
      * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
      */
     plugin_id: number | string;
+
     /**
      * Require product public key.
      */
     public_key: string;
+
     /**
      * An optional ID to set the id attribute of the checkout’s <body> HTML element.
      * This argument is particularly useful if you have multiple checkout instances
@@ -44,18 +46,21 @@ export interface CheckoutPopupParams {
      * PLANS -> CUSTOMIZATION in the Developer Dashboard.
      */
     id?: string;
+
     /**
      * An optional string to override the product’s title.
      *
      * @default "Defaults to the product’s title set within the Freemius dashboard."
      */
     name?: string;
+
     /**
      * An optional string to override the checkout’s title when buying a new license.
      *
      * @default "Great selection, {{ firstName }}!"
      */
     title?: string;
+
     /**
      * An optional string to override the checkout’s subtitle.
      *
@@ -63,6 +68,7 @@ export interface CheckoutPopupParams {
      * @deprecated
      */
     subtitle?: string;
+
     /**
      * An optional icon that loads at the checkout and will override the product’s
      * icon uploaded to the Freemius Dashboard. Use a secure path to the image
@@ -72,6 +78,7 @@ export interface CheckoutPopupParams {
      * @default "product's image set within the Freemius dashboard"
      */
     image?: string;
+
     /**
      * The ID of the plan that will load with the checkout. When selling multiple
      * plans you can set the param when calling the open() method.
@@ -79,6 +86,7 @@ export interface CheckoutPopupParams {
      * @default "1st paid plan"
      */
     plan_id?: number | string;
+
     /**
      * A multi-site licenses prices that will load immediately with the checkout.
      * A developer-friendly param that can be used instead of the pricing_id.
@@ -88,6 +96,7 @@ export interface CheckoutPopupParams {
      * @default 1
      */
     licenses?: number;
+
     /**
      * Set this param to true if you like to disable the licenses selector when
      * the product is sold with multiple license activation options.
@@ -95,6 +104,7 @@ export interface CheckoutPopupParams {
      * @default false
      */
     disable_licenses_selector?: boolean;
+
     /**
      * Use the `licenses` param instead. An optional ID of the exact multi-site
      * license prices that will load once the checkout opened.
@@ -102,6 +112,7 @@ export interface CheckoutPopupParams {
      * @default "plan’s single-site prices ID"
      */
     pricing_id?: number | string;
+
     /**
      * An optional billing cycle that will be auto selected when the checkout is opened.
      * Can be one of the following values: 'monthly', 'annual', 'lifetime'.
@@ -109,24 +120,30 @@ export interface CheckoutPopupParams {
      * @default 'annual'
      */
     billing_cycle?: 'monthly' | 'annual' | 'lifetime';
+
     /**
+     * This has been deprecated and removed in phase2 Checkout, with the introduction of show_upsells.
      * Set this param to `true` if you like to hide the billing cycles selector
      * when the product is sold in multiple billing frequencies.
      *
+     * @deprecated
      * @default false
      */
     hide_billing_cycles?: boolean;
+
     /**
      * One of the following 3-chars currency codes (ISO 4217): 'usd', 'eur', 'gbp'.
      *
      * @default 'usd'
      */
     currency?: 'usd' | 'eur' | 'gbp';
+
     /**
      * An optional coupon code to be automatically applied on the checkout
      * immediately when opened.
      */
     coupon?: string;
+
     /**
      * Set this param to true if you pre-populate a coupon and like to hide the
      * coupon code and coupon input field from the user.
@@ -134,15 +151,20 @@ export interface CheckoutPopupParams {
      * @default false
      */
     hide_coupon?: boolean;
+
     /**
+     * This has been deprecated in favor of bundle_discount introduced in phase2 Checkout.
+     *
      * Set this param to false when selling a bundle and you want the discounts
      * to be based on the closest licenses quota and billing cycle from the child
      * products. Unlike the default discounts calculation which is maximized by
      * basing the discounts on the child products single-site prices.
      *
+     * @deprecated
      * @default true
      */
     maximize_discounts?: boolean;
+
     /**
      * When set to true, it will open the checkout in a trial mode and the trial
      * type (free vs. paid) will be based on the plan’s configuration. This will
@@ -154,11 +176,13 @@ export interface CheckoutPopupParams {
      * @default false
      */
     trial?: boolean | 'free' | 'paid';
+
     /**
      * An optional param to pre-populate a license key for license renewal,
      * license extension and more.
      */
     license_key?: string;
+
     /**
      * An optional param to load the checkout for a payment method update.
      * When set to `true`, the license_key param must be set and associated with
@@ -167,43 +191,52 @@ export interface CheckoutPopupParams {
      * @default false
      */
     is_payment_method_update?: boolean;
+
     /**
      * An optional string to prefill the buyer’s email address.
      */
     user_email?: string;
+
     /**
      * An optional string to prefill the buyer’s first name.
      */
     user_firstname?: string;
+
     /**
      * An optional string to prefill the buyer’s last name.
      */
     user_lastname?: string;
+
     /**
      * An optional user ID to associate purchases generated through the checkout
      * with their affiliate account.
      */
     affiliate_user_id?: number;
+
     /**
      * An optional locale to override the checkout’s language.
      */
     language?: CheckoutLocaleValue;
+
     /**
      * An optional locale to override the checkout’s language.
      *
      * @see `language`
      */
     locale?: CheckoutLocaleValue;
+
     /**
      * An optional token which if present, would pre-populate the checkout with user’s personal and billing data (for example, the name, email, country, vat ID etc).
      *
      * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/#user_token_in_checkout_new
      */
     user_token?: string;
+
     /**
      * Set this parameter to true to make the user details (name and email) readonly. This is useful for SaaS integration where you are loading the user email and their first and last name from your own DB.
      */
     readonly_user?: boolean;
+
     // SANDBOX
     /**
      * If you would like the dialog to open in sandbox mode,
@@ -212,6 +245,115 @@ export interface CheckoutPopupParams {
         ctx: string;
         token: string;
     };
+
+    /**
+     * Specify the layout of the form on a larger screen.
+     * @default null
+     */
+    layout?: 'vertical' | 'horizontal' | null;
+
+    /**
+     * Specifies the position of the form in horizontal layout.
+     * @default 'left'
+     */
+    form_position?: 'left' | 'right';
+
+    /**
+     * If set to true, the Checkout dialog will take the entire screen when opened.
+     * @default false
+     */
+    fullscreen?: boolean;
+
+    /**
+     * Whether or not showing the upsell toggles.
+     */
+    show_upsells?: boolean;
+
+    /**
+     * Whether or not showing featured reviews in the checkout.
+     */
+    show_reviews?: boolean;
+
+    /**
+     * When showing the review UI in the checkout, you can specify which review you want to show with its ID.
+     */
+    review_id?: number;
+
+    /**
+     * Whether or not showing Refund Policy UI in the checkout.
+     * @default false
+     */
+    show_refund_badge?: boolean;
+
+    /**
+     * Use the parameter to position the refund policy badge when showing the form in horizontal layout.
+     * @default 'dynamic'
+     */
+    refund_policy_position?: 'below_form' | 'below_breakdown' | 'dynamic';
+
+    /**
+     * Determines whether the annual discount will be shown in the checkout.
+     * @default true
+     */
+    annual_discount?: boolean;
+
+    /**
+     * Switching to the monthly billing cycle is disabled when the Checkout is loaded with annual billing cycle. Use this parameter to show it.
+     * @default false
+     */
+    show_monthly_switch?: boolean;
+
+    /**
+     * Determines whether the multi-site discount will be shown.
+     * @default 'auto'
+     */
+    multisite_discount?: true | false | 'auto';
+
+    /**
+     * Determines whether the bundle discount will be shown.
+     * @default 'maximize'
+     */
+    bundle_discount?: true | false | 'maximize';
+
+    /**
+     * Set it to false to hide the inline currency selector from the "Today's Total" line.
+     * @default true
+     */
+    show_inline_currency_selector?: boolean;
+
+    /**
+     * When the checkout is loaded in page you can specify a cancel URL to be used for the back button.
+     */
+    cancel_url?: string;
+
+    /**
+     * If you want to use any other icon image, please specify the link to the icon using this parameter.
+     */
+    cancel_icon?: string;
+
+    /**
+     * When set to true, a small line mentioning the total renewal price per billing cycle will shown below the total.
+     * @default false
+     */
+    always_show_renewals_amount?: boolean;
+
+    /**
+     * Determines whether the products in a bundle appear as hidden by default. Is applicable only to bundles.
+     * @default true
+     */
+    is_bundle_collapsed?: boolean;
+
+    /**
+     * Set this param to true if you like to entirely hide the 3rd row in the header with the license selector.
+     * @default false
+     */
+    hide_licenses?: boolean;
+
+    /**
+     * Default currency to use when 'currency' is set to 'auto'.
+     * @default 'usd'
+     */
+    default_currency?: 'usd' | 'eur' | 'gbp';
 }
 
 export interface CheckoutPopupEvents {
