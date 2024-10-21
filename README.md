@@ -16,11 +16,12 @@
 
 ## Usage Guide
 
-Here's a simple example to get you started. This example assumes you're using some bundler like vite or webpack to manage your app.
+Here's a simple example to get you started. This example assumes you're using
+some bundler like [vite](https://vite.dev/) or
+[webpack](https://webpack.js.org/) to manage your app.
 
-
-Install the official
-[npm](https://www.npmjs.com/package/@freemius/checkout) package.
+Install the official [npm](https://www.npmjs.com/package/@freemius/checkout)
+package.
 
 ```bash
 npm i @freemius/checkout
@@ -28,40 +29,51 @@ npm i @freemius/checkout
 yarn add @freemius/checkout
 ```
 
-In your app:
+In your app, given the HTML:
+
+```html
+<select id="licenses">
+    <option value="1" selected="selected">Single Site License</option>
+    <option value="2">2-Site License</option>
+    <option value="unlimited">Unlimited Sites License</option>
+</select>
+<button id="purchase">Buy Button</button>
+```
+
+We can now write the JavaScript code to handle the purchase.
 
 ```javascript
 import { Checkout } from '@freemius/checkout';
 
+function getSelectedLicenses() {
+    return document.querySelector('#licenses').value;
+}
+
 const handler = new Checkout({
-  plugin_id: '311',
-  public_key: 'pk_a42d2ee6de0b31c389d5d11e36211',
+    plugin_id: '311',
+    public_key: 'pk_a42d2ee6de0b31c389d5d11e36211',
 });
 
 document.querySelector('#purchase').addEventListener('click', (e) => {
-  e.preventDefault();
-  
-  const licensesElement = document.querySelector('#licenses');
-  
-  handler.open({
-    name: 'My Awesome Plugin',
-    licenses: licensesElement.value,
-    purchaseCompleted: (response) => {
-      console.log('Purchase completed:', response);
-    },
-    success: (response) => {
-      console.log('Checkout closed after successful purchase:', response);
-    },
-  });
+    e.preventDefault();
+
+    handler.open({
+        name: 'My Awesome Plugin',
+        licenses: getSelectedLicenses(),
+        purchaseCompleted: (response) => {
+            console.log('Purchase completed:', response);
+        },
+        success: (response) => {
+            console.log('Checkout closed after successful purchase:', response);
+        },
+    });
 });
 ```
 
-Please find detailed guides below.
+Please find detailed guides [below](#api).
 
 > **NOTE**: If you're migrating from the old checkout JS, please see the
 > [migration guide](#migration-guide).
-
-
 
 ### Using hosted CDN
 
@@ -157,7 +169,8 @@ interface AdditionalCheckoutOptions {
 }
 ```
 
-For testing with the sandbox API, see the [relevant section](#testing-with-sandbox).
+For testing with the sandbox API, see the
+[relevant section](#testing-with-sandbox).
 
 ### Instantiate the class
 
@@ -171,8 +184,7 @@ const handler = new FS.Checkout({
 });
 ```
 
-If you're using the package from npm, simply import it and create an
-instance.
+If you're using the package from npm, simply import it and create an instance.
 
 ```js
 import { Checkout } from 'freemius-checkout-js';
@@ -223,7 +235,7 @@ handle.close();
 
 We will make a small react hook. Here we assume the `plugin_id` and `public_key`
 are available in
-[some environment variable](https://create-react-app.dev/docs/adding-custom-environment-variables/).
+[some environment variable](https://vite.dev/guide/env-and-mode).
 
 **checkout.ts**
 
@@ -232,8 +244,8 @@ import { Checkout, CheckoutOptions } from '@freemius/checkout';
 import { useState, useEffect } from 'react';
 
 export const checkoutConfig: CheckoutOptions = {
-    plugin_id: process.env.REACT_APP_PLUGIN_ID as string,
-    public_key: process.env.REACT_APP_PUBLIC_KEY as string,
+    plugin_id: import.meta.env.VITE_FS_PLUGIN_ID as string,
+    public_key: import.meta.env.VITE_FS_PUBLIC_KEY as string,
 };
 
 export function useFSCheckout() {
@@ -310,40 +322,28 @@ context. In this repository we use the `.env` file for storing sandbox data.
 ## Migration guide
 
 1. Look for the following scripts:
-
-```html
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://checkout.freemius.com/checkout.min.js"></script>
-```
-
+    ```html
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://checkout.freemius.com/checkout.min.js"></script>
+    ```
 2. Remove the jQuery script tag if you aren't using jQuery.
 3. Replace the checkout script with the new one.
-
-```html
-<script src="https://checkout.freemius.com/js/v1/"></script>
-```
-
+    ```html
+    <script src="https://checkout.freemius.com/js/v1/"></script>
+    ```
 4. Change `FS.Checkout.configure()` to `new FS.Checkout()`:
 
-```js
-// Legacy checkout code
-const handler = FS.Checkout.configure({
-    plugin_id: '1234',
-    plan_id: '5678',
-    public_key: 'pk_ccca7be7fa43aec791448b43c6266',
-    image: 'https://your-plugin-site.com/logo-100x100.png',
-});
-```
-
-```js
-// New checkout code
-const handler = new FS.Checkout({
-    plugin_id: '1234',
-    plan_id: '5678',
-    public_key: 'pk_ccca7be7fa43aec791448b43c6266',
-    image: 'https://your-plugin-site.com/logo-100x100.png',
-});
-```
+    ```diff
+    - // Legacy checkout code
+    - const handler = FS.Checkout.configure({
+    + // New checkout code
+    + const handler = new FS.Checkout({
+        plugin_id: '1234',
+        plan_id: '5678',
+        public_key: 'pk_ccca7be7fa43aec791448b43c6266',
+        image: 'https://your-plugin-site.com/logo-100x100.png',
+    });
+    ```
 
 The rest of the code will continue to work exactly as it is with no changes.
 
@@ -351,7 +351,7 @@ The rest of the code will continue to work exactly as it is with no changes.
 document.querySelector('#purchase').addEventListener('click', (e) => {
     handler.open({
         name: 'My Awesome Plugin',
-        licenses: document.querySelector('#licenses').value,
+        licenses: getSelectedLicenses(),
         // You can consume the response for after purchase logic.
         purchaseCompleted: function (response) {
             // The logic here will be executed immediately after the purchase confirmation.
@@ -366,7 +366,9 @@ document.querySelector('#purchase').addEventListener('click', (e) => {
     e.preventDefault();
 });
 ```
-Note: If you need to add a checkout for a different configuration on the same page, just create a new checkout:
+
+Note: If you need to add a checkout for a different configuration on the same
+page, just create a new checkout:
 
 ```js
 const anotherHandler = new FS.Checkout({
@@ -380,49 +382,72 @@ const anotherHandler = new FS.Checkout({
 Now you can add another event listener that opens the new checkout:
 
 ```js
-document.querySelector('#another-purchase-button').addEventListener('click', (e) => {
-    anotherHandler.open({
-        name: 'My Awesome Plugin',
-        licenses: document.querySelector('#licenses').value,
-        purchaseCompleted: function (response) {
-            //...
-         },
-        success: function (response) {
-            //...
-        },
-    });
+document
+    .querySelector('#another-purchase-button')
+    .addEventListener('click', (e) => {
+        anotherHandler.open({
+            name: 'My Awesome Plugin',
+            licenses: getSelectedLicenses(),
+            purchaseCompleted: function (response) {
+                //...
+            },
+            success: function (response) {
+                //...
+            },
+        });
 
-    e.preventDefault();
+        e.preventDefault();
+    });
+```
+
+If you've been using the FS.Checkout singleton interface like
+
+```js
+FS.Checkout.open({
+    plugin_id: 'x',
+    // ...
 });
 ```
 
+Then you will need to adjust your code to call the methods on the instance
+instead of the singleton.
+
+```js
+const handler = new FS.Checkout({
+    plugin_id: 'x',
+    // ...
+});
+
+handler.open({
+    // ...
+});
+```
 
 ### Migration adapter (not recommended)
 
 We also have introduced a compatibility layer which you can use as a quick path
-to migrate to the new checkout JS without making any changes to your checkout code.
+to migrate to the new checkout JS without making any changes to your checkout
+code.
 
 However, please note the following limitations to this approach:
 
-- it may stop working in a future version.
-- it has a singleton pattern which can get confusing when configuring for multiple products on the same page.
-- using the adapter will add extra bytes.
+-   it may stop working in a future version.
+-   it has a singleton pattern which can get confusing when configuring for
+    multiple products on the same page.
+-   using the adapter will add extra bytes.
 
 #### Instructions:
 
 1. Look for the checkout script:
-
-```html
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://checkout.freemius.com/checkout.min.js"></script>
-```
-
+    ```html
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://checkout.freemius.com/checkout.min.js"></script>
+    ```
 2. Remove the jQuery script tag if you aren't using jQuery.
 3. Replace the checkout script with the new one.
-
-```html
-<script src="https://checkout.freemius.com/js/v1/legacy/"></script>
-```
+    ```html
+    <script src="https://checkout.freemius.com/js/v1/legacy/"></script>
+    ```
 
 Now all your existing code should work as is.
 
@@ -437,7 +462,7 @@ const handler = FS.Checkout.configure({
 document.querySelector('#purchase').addEventListener('click', (e) => {
     handler.open({
         name: 'My Awesome Plugin',
-        licenses: document.querySelector('#licenses').value,
+        licenses: getSelectedLicenses(),
         // You can consume the response for after purchase logic.
         purchaseCompleted: function (response) {
             // The logic here will be executed immediately after the purchase confirmation.
@@ -450,28 +475,6 @@ document.querySelector('#purchase').addEventListener('click', (e) => {
     });
 
     e.preventDefault();
-});
-```
-
-If you've been using the FS.Checkout singleton interface like
-
-```js
-FS.Checkout.open({ 
-    plugin_id: 'x', 
-    // ...
-});
-```
-
-Then you will need to adjust your code to call the methods on the instance instead of the singleton.
-
-```js
-const handler = new FS.Checkout({
-    plugin_id: 'x',
-    // ...
-});
-
-handler.open({
-    // ...
 });
 ```
 
