@@ -186,4 +186,25 @@ describe('CheckoutPopup', () => {
             expect(iFrame.src).toContain(`${key}=`);
         });
     });
+
+    test('properly encodes the query parameters', () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            public_key: 'pk_123456',
+            license_key: 'sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw',
+        });
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(
+            new URL(iFrame.src).searchParams.get('license_key')
+        ).toMatchInlineSnapshot(`"sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw"`);
+    });
 });
