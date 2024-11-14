@@ -1,8 +1,8 @@
 import { CheckoutOptions, CheckoutPopupEvents } from '../../src';
 
 export const initOptions: CheckoutOptions = {
-    plugin_id: Number.parseInt(
-        (import.meta.env.VITE_PLUGIN_ID as string) ?? '0',
+    product_id: Number.parseInt(
+        (import.meta.env.VITE_PRODUCT_ID as string) ?? '0',
         10
     ),
     public_key: import.meta.env.VITE_PUBLIC_KEY as string,

@@ -296,22 +296,41 @@ export default function App() {
 
 ## Testing with the Sandbox
 
-To get the sandbox token and ctx, follow the steps:
+This sample code uses PHP to generate the token and timestamp but you can 
+use the same approach in any server-side environment which will protect 
+the secret key.
 
 1. Go to the Developer Dashboard.
 2. Under Plans click on the "Get Checkout Code" button.
 3. Go to the Sandbox tab.
-4. Copy the `sandbox_token` and `timestamp` values.
+4. Copy the code to generate the `sandbox_token` and `timestamp` values and 
+output them for the Javascript to use.
 
-The value of `sandbox` is token and value of `s_ctx_ts` is ctx. So for the above
-value, the configuration would look like
+Example:
+
+```PHP
+<?php
+$plugin_id         = 1; // Change to your product ID
+$plugin_public_key = 'pk_00001'; // Your public key
+$plugin_secret_key = 'sk_00001'; // Your secret key
+$timestamp         = time();
+
+$sandbox_token = md5(
+    $timestamp .
+    $plugin_id .
+    $plugin_secret_key .
+    $plugin_public_key .
+    'checkout'
+);
+```
+
 
 ```js
 const config = {
     // ...
     sandbox: {
-        token: 'xxxxxxxx',
-        ctx: '00000000',
+        token: '<?php echo $sandbox_token; ?>',
+        ctx: '<?php echo $timestamp; ?>'
     },
 };
 ```
