@@ -26,6 +26,11 @@ export type CheckoutTrackingEvent =
     | 'load'
     | 'review-order';
 
+/**
+ * All known parameters for the Checkout iFrame.
+ *
+ * @internal
+ */
 export interface CheckoutPopupParams {
     /**
      * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
@@ -356,6 +361,11 @@ export interface CheckoutPopupParams {
     default_currency?: 'usd' | 'eur' | 'gbp';
 }
 
+/**
+ * All known events for the Checkout iFrame.
+ *
+ * @internal
+ */
 export interface CheckoutPopupEvents {
     /**
      * A callback handler that will execute once a user closes the checkout by
@@ -405,11 +415,16 @@ export interface CheckoutPopupEvents {
     onExitIntent?: () => void;
 }
 
+/**
+ * All options (parameters and events) required and supported by the Freemius Checkout.
+ */
 export interface CheckoutPopupOptions
     extends CheckoutPopupParams,
-        CheckoutPopupEvents {
-    /**
-     * Accept any arbitrary key-value pair to be passed to the checkout.
-     */
-    [key: string]: any;
+        CheckoutPopupEvents {}
+
+/**
+ * Accept any arbitrary key-value pair to be passed to the checkout.
+ */
+export interface CheckoutPopupArbitraryParams {
+    [key: Exclude<string, keyof CheckoutPopupOptions>]: any;
 }

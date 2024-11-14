@@ -10,7 +10,7 @@
     -   [Instantiate the class](#instantiate-the-class)
     -   [Calling the method](#calling-the-method)
 -   [Use with React](#use-with-react)
--   [Testing with Sandbox](#testing-with-sandbox)
+-   [Testing with Sandbox](#testing-with-the-sandbox)
 -   [Migration guide](#migration-guide)
 -   [Contributing](#contributing)
 
@@ -50,7 +50,7 @@ function getSelectedLicenses() {
 }
 
 const handler = new Checkout({
-    plugin_id: '311',
+    product_id: '311',
     public_key: 'pk_a42d2ee6de0b31c389d5d11e36211',
 });
 
@@ -104,7 +104,7 @@ need to hook into the `load` event of `window` or use `window.onload`.
 <script type="text/javascript">
     window.addEventListener('load', () => {
         const handler = new FS.Checkout({
-            plugin_id: '1234',
+            product_id: '1234',
             public_key: 'pk_xxxx',
         });
 
@@ -179,7 +179,7 @@ available under the global `FS` namespace.
 
 ```js
 const handler = new FS.Checkout({
-    plugin_id: '1234',
+    product_id: '1234',
     public_key: 'pk_xxxx',
 });
 ```
@@ -191,12 +191,12 @@ import { Checkout } from 'freemius-checkout-js';
 
 // instantiate
 const handler = new Checkout({
-    plugin_id: '0001',
+    product_id: '0001',
     public_key: 'pk_xxxx',
 });
 ```
 
-Note that the `plugin_id` and `public_key` are required parameters and must be
+Note that the `product_id` and `public_key` are required parameters and must be
 supplied during instantiation.
 
 ### Calling the method
@@ -233,8 +233,8 @@ handle.close();
 
 ## Use with React
 
-We will make a small react hook. Here we assume the `plugin_id` and `public_key`
-are available in
+We will make a small react hook. Here we assume the `product_id` and
+`public_key` are available in
 [some environment variable](https://vite.dev/guide/env-and-mode).
 
 **checkout.ts**
@@ -244,7 +244,7 @@ import { Checkout, CheckoutOptions } from '@freemius/checkout';
 import { useState, useEffect } from 'react';
 
 export const checkoutConfig: CheckoutOptions = {
-    plugin_id: import.meta.env.VITE_FS_PLUGIN_ID as string,
+    product_id: import.meta.env.VITE_FS_PLUGIN_ID as string,
     public_key: import.meta.env.VITE_FS_PUBLIC_KEY as string,
 };
 
@@ -347,6 +347,10 @@ context. In this repository we use the `.env` file for storing sandbox data.
 
 The rest of the code will continue to work exactly as it is with no changes.
 
+Optionally you can also change `plugin_id` to `product_id`, but we support both
+(giving preference to `product_id` if both are set) and we don't plan to remove
+it the near future.
+
 ```js
 document.querySelector('#purchase').addEventListener('click', (e) => {
     handler.open({
@@ -372,7 +376,7 @@ page, just create a new checkout:
 
 ```js
 const anotherHandler = new FS.Checkout({
-    plugin_id: '4321',
+    product_id: '4321',
     plan_id: '9876',
     public_key: 'pk_....nnn',
     image: 'https://your-plugin-site.com/logo-100x100.png',

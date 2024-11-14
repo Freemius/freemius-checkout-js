@@ -1,4 +1,4 @@
-import { Checkout, CheckoutOptions } from '.';
+import { Checkout, CheckoutOptions, CheckoutPopupOptions } from '.';
 
 import './style.css';
 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getEventLoggers(): Pick<
-        CheckoutOptions,
+        CheckoutPopupOptions,
         | 'cancel'
         | 'purchaseCompleted'
         | 'success'
