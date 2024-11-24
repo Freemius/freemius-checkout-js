@@ -417,6 +417,8 @@ export interface CheckoutPopupEvents {
 
 /**
  * All options (parameters and events) required and supported by the Freemius Checkout.
+ *
+ * @internal
  */
 export interface CheckoutPopupOptions
     extends CheckoutPopupParams,
@@ -424,6 +426,8 @@ export interface CheckoutPopupOptions
 
 /**
  * Accept any arbitrary key-value pair to be passed to the checkout.
+ *
+ * @internal
  */
 export interface CheckoutPopupArbitraryParams {
     [key: Exclude<string, keyof CheckoutPopupOptions>]: any;

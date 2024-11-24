@@ -296,15 +296,15 @@ export default function App() {
 
 ## Testing with the Sandbox
 
-This sample code uses PHP to generate the token and timestamp but you can 
-use the same approach in any server-side environment which will protect 
-the secret key.
+This sample code uses PHP to generate the token and timestamp but you can use
+the same approach in any server-side environment which will protect the secret
+key.
 
 1. Go to the Developer Dashboard.
 2. Under Plans click on the "Get Checkout Code" button.
 3. Go to the Sandbox tab.
-4. Copy the code to generate the `sandbox_token` and `timestamp` values and 
-output them for the Javascript to use.
+4. Copy the code to generate the `sandbox_token` and `timestamp` values and
+   output them for the Javascript to use.
 
 Example:
 
@@ -324,13 +324,12 @@ $sandbox_token = md5(
 );
 ```
 
-
 ```js
 const config = {
     // ...
     sandbox: {
         token: '<?php echo $sandbox_token; ?>',
-        ctx: '<?php echo $timestamp; ?>'
+        ctx: '<?php echo $timestamp; ?>',
     },
 };
 ```

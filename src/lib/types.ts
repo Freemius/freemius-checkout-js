@@ -26,6 +26,9 @@ export type CheckoutOptions = Omit<CheckoutPopupOptions, 'plugin_id'> & {
                * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
                */
               product_id: number | string;
+              /**
+               * @deprecated Use `product_id` instead.
+               */
               plugin_id?: never;
           }
         | {

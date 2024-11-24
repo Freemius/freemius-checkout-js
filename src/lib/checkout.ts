@@ -53,7 +53,7 @@ export class Checkout {
         this.options = {
             ...popupOptions,
             public_key,
-            plugin_id: plugin_id ?? product_id,
+            plugin_id: product_id ?? plugin_id,
         };
 
         this.guid = generateGuid();

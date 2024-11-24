@@ -223,4 +223,24 @@ describe('CheckoutPopup', () => {
 
         expect(new URL(iFrame.src).searchParams.get('plugin_id')).toBe('1');
     });
+
+    test('prefers product_id over plugin_id', () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            product_id: 2,
+            public_key: 'pk_123456',
+            license_key: 'sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw',
+        } as any);
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(new URL(iFrame.src).searchParams.get('plugin_id')).toBe('2');
+    });
 });
