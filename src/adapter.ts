@@ -2,7 +2,7 @@
  * Backward compatible adapter for the checkout service.
  */
 import './global';
-import { CheckoutOptions, Checkout } from '.';
+import { Checkout, CheckoutOptions } from '.';
 import { IFSOldCheckout } from './lib/contracts/IFSOldCheckout';
 
 class FSOldCheckout implements IFSOldCheckout {
@@ -38,7 +38,7 @@ class FSOldCheckout implements IFSOldCheckout {
 
         checkout.open({
             ...(this.options ?? {}),
-            ...options,
+            ...(options as Omit<CheckoutOptions, 'plugin_id' | 'product_id'>),
         });
     }
 

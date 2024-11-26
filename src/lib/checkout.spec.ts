@@ -1,11 +1,8 @@
 import { screen } from '@testing-library/dom';
-import { Checkout } from './checkout';
+import { Checkout, CheckoutOptions } from './checkout';
 import { sendMockedCanceledEvent } from '../../tests/utils';
 import { createHydratedMock } from 'ts-auto-mock';
-import {
-    CheckoutPopupOptions,
-    CheckoutPopupParams,
-} from './contracts/CheckoutPopupOptions';
+import { CheckoutPopupParams } from './contracts/CheckoutPopupOptions';
 import { getQueryValueFromItem } from './utils/ops';
 
 describe('CheckoutPopup', () => {
@@ -145,7 +142,7 @@ describe('CheckoutPopup', () => {
     });
 
     test('passes all undocumented query parameters', () => {
-        const option: CheckoutPopupOptions = {
+        const option: CheckoutOptions = {
             plugin_id: 1,
             public_key: 'pk_123456',
             foo: 'bar',
@@ -185,5 +182,65 @@ describe('CheckoutPopup', () => {
         internals.forEach((key) => {
             expect(iFrame.src).toContain(`${key}=`);
         });
+    });
+
+    test('properly encodes the query parameters', () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            public_key: 'pk_123456',
+            license_key: 'sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw',
+        });
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(
+            new URL(iFrame.src).searchParams.get('license_key')
+        ).toMatchInlineSnapshot(`"sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw"`);
+    });
+
+    test('supports product_id instead of plugin_id', () => {
+        const checkout = new Checkout({
+            product_id: 1,
+            public_key: 'pk_123456',
+            license_key: 'sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw',
+        });
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(new URL(iFrame.src).searchParams.get('plugin_id')).toBe('1');
+    });
+
+    test('prefers product_id over plugin_id', () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            product_id: 2,
+            public_key: 'pk_123456',
+            license_key: 'sk_R-5E2+%20BD:.kp*(Oq2aodhzZ1Jw',
+        } as any);
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        expect(new URL(iFrame.src).searchParams.get('plugin_id')).toBe('2');
     });
 });

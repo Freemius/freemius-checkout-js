@@ -5,7 +5,10 @@ import type { CheckoutOptions } from './types';
 import { Style } from './services/style';
 import { Loader } from './services/loader';
 import { CheckoutPopup } from './services/checkout-popup';
-import { CheckoutPopupOptions } from './contracts/CheckoutPopupOptions';
+import {
+    CheckoutPopupArbitraryParams,
+    CheckoutPopupOptions,
+} from './contracts/CheckoutPopupOptions';
 import { ExitIntent } from './services/exit-intent';
 import { ILoader } from './contracts/ILoader';
 import { IExitIntent } from './contracts/IExitIntent';
@@ -14,7 +17,8 @@ import { Cart } from './services/cart';
 export type { PostmanEvents, CheckoutOptions };
 
 export class Checkout {
-    private readonly options: CheckoutOptions = {
+    private readonly options: CheckoutPopupOptions &
+        CheckoutPopupArbitraryParams = {
         plugin_id: 0,
         public_key: '',
     };
@@ -36,14 +40,22 @@ export class Checkout {
         recoverCart: boolean = true,
         private readonly baseUrl: string = 'https://checkout.freemius.com'
     ) {
-        if (!options.plugin_id) {
-            throw new Error('Must provide a plugin_id to options.');
+        const { plugin_id, product_id, public_key, ...popupOptions } = options;
+
+        if (!plugin_id && !product_id) {
+            throw new Error('Must provide a product_id to options.');
         }
-        if (!options.public_key) {
+
+        if (!public_key) {
             throw new Error('Must provide the public_key to options.');
         }
 
-        this.options = options;
+        this.options = {
+            ...popupOptions,
+            public_key,
+            plugin_id: product_id ?? plugin_id,
+        };
+
         this.guid = generateGuid();
 
         if (isSsr()) {
@@ -54,9 +66,8 @@ export class Checkout {
 
         this.loader = new Loader(
             this.style,
-            this.options.loadingImageUrl ??
-                `${this.baseUrl}/assets/img/spinner.svg`,
-            this.options.loadingImageAlt
+            options.loadingImageUrl ?? `${this.baseUrl}/assets/img/spinner.svg`,
+            options.loadingImageAlt
         );
 
         this.exitIntent = new ExitIntent(this.style);
@@ -84,7 +95,7 @@ export class Checkout {
      */
     public open(
         options?: Partial<
-            Omit<CheckoutPopupOptions, 'plugin_id' | 'public_key'>
+            Omit<CheckoutOptions, 'plugin_id' | 'public_key' | 'product_id'>
         >
     ) {
         if (isSsr()) {

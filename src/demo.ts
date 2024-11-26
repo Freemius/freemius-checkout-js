@@ -1,11 +1,11 @@
-import { Checkout, CheckoutOptions } from '.';
+import { Checkout, CheckoutOptions, CheckoutPopupOptions } from '.';
 
 import './style.css';
 
 const fsCheckout = new Checkout(
     {
-        plugin_id: Number.parseInt(
-            (import.meta.env.VITE_PLUGIN_ID as string) ?? '0',
+        product_id: Number.parseInt(
+            (import.meta.env.VITE_PRODUCT_ID as string) ?? '0',
             10
         ),
         public_key: import.meta.env.VITE_PUBLIC_KEY as string,
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getEventLoggers(): Pick<
-        CheckoutOptions,
+        CheckoutPopupOptions,
         | 'cancel'
         | 'purchaseCompleted'
         | 'success'

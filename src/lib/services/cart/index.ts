@@ -1,4 +1,7 @@
-import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
+import {
+    CheckoutPopupArbitraryParams,
+    CheckoutPopupOptions,
+} from '../../contracts/CheckoutPopupOptions';
 import { assertNotNull } from '../../utils/ops';
 
 /**
@@ -40,10 +43,10 @@ export class Cart {
         );
     }
 
-    getCheckoutOptions(): CheckoutPopupOptions {
+    getCheckoutOptions(): CheckoutPopupOptions & CheckoutPopupArbitraryParams {
         assertNotNull(this.queryParams, Cart.NO_CART_FOUND_MESSAGE);
 
-        const params: CheckoutPopupOptions = {
+        const params: CheckoutPopupOptions & CheckoutPopupArbitraryParams = {
             plugin_id: '',
             public_key: '',
         };
