@@ -1,4 +1,5 @@
 import { Checkout, CheckoutOptions, CheckoutPopupOptions } from '.';
+import { CheckoutResponse } from './lib/contracts/CheckoutResponse';
 
 import './style.css';
 
@@ -65,13 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
             cancel() {
                 log('cancel');
             },
-            purchaseCompleted(data) {
+            purchaseCompleted(data: CheckoutResponse | null) {
                 log('purchaseCompleted', data);
             },
-            success(data) {
+            success(data: CheckoutResponse | null) {
                 log('success', data);
             },
-            track(event, data) {
+            track(event: string, data: Record<string, any> | null) {
                 log('track', event, data);
             },
             afterOpen() {
