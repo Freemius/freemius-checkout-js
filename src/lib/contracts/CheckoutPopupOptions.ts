@@ -1,8 +1,10 @@
+import { CheckoutResponse } from './CheckoutResponse';
+
 /**
  * Supported "locale" option for the checkout.
  * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/
- * 1. `auto` - The system will try to guess the language of your user by looking into the browser and then the geo-location respectively. However, this won’t select languages that are marked as AI-translated or beta for the time being.
- * 2. `auto-beta` - Same as above, but will also select a language marked as beta. When a language marked as beta is selected, the UI will also show a “BETA” tag near it.
+ * 1. `auto` - The system will try to guess the language of your user by looking into the browser and then the geo-location respectively. However, this won't select languages that are marked as AI-translated or beta for the time being.
+ * 2. `auto-beta` - Same as above, but will also select a language marked as beta. When a language marked as beta is selected, the UI will also show a "BETA" tag near it.
  * 3. Full locale code (for eg - `en_US`, `de_DE`, `fr_FR`, etc.)
  */
 export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
@@ -33,7 +35,7 @@ export type CheckoutTrackingEvent =
  */
 export interface CheckoutPopupParams {
     /**
-     * Required product ID (whether it’s a plugin, theme, add-on, bundle, or SaaS).
+     * Required product ID (whether it's a plugin, theme, add-on, bundle, or SaaS).
      */
     plugin_id: number | string;
 
@@ -43,7 +45,7 @@ export interface CheckoutPopupParams {
     public_key: string;
 
     /**
-     * An optional ID to set the id attribute of the checkout’s <body> HTML element.
+     * An optional ID to set the id attribute of the checkout's <body> HTML element.
      * This argument is particularly useful if you have multiple checkout instances
      * that need to have a slightly different design or visibility of UI components.
      * You can assign a unique ID for each instance and customize it differently
@@ -53,22 +55,21 @@ export interface CheckoutPopupParams {
     id?: string;
 
     /**
-     * An optional string to override the checkout’s title when buying a new license.
      *
      * @default "{{ productTitle }} {{ planTitle }}"
      */
     title?: string;
 
     /**
-     * An optional string to override the checkout’s subtitle.
+     * An optional string to override the checkout's subtitle.
      *
-     * @default "You’re one step closer to our {{ planTitle }} features"
+     * @default "You're one step closer to our {{ planTitle }} features"
      * @deprecated
      */
     subtitle?: string;
 
     /**
-     * An optional icon that loads at the checkout and will override the product’s
+     * An optional icon that loads at the checkout and will override the product's
      * icon uploaded to the Freemius Dashboard. Use a secure path to the image
      * over HTTPS. While the checkout will remain PCI compliant,
      * credit-card automatic prefill by the browser will not work.
@@ -107,7 +108,7 @@ export interface CheckoutPopupParams {
      * Use the `licenses` param instead. An optional ID of the exact multi-site
      * license prices that will load once the checkout opened.
      *
-     * @default "plan’s single-site prices ID"
+     * @default "plan's single-site prices ID"
      */
     pricing_id?: number | string;
 
@@ -165,9 +166,9 @@ export interface CheckoutPopupParams {
 
     /**
      * When set to true, it will open the checkout in a trial mode and the trial
-     * type (free vs. paid) will be based on the plan’s configuration. This will
-     * only work if you’ve activated the Free Trial functionality in the plan
-     * configuration. If you configured the plan to support a trial that doesn’t
+     * type (free vs. paid) will be based on the plan's configuration. This will
+     * only work if you've activated the Free Trial functionality in the plan
+     * configuration. If you configured the plan to support a trial that doesn't
      * require a payment method, you can also open the checkout in a trial mode
      * that requires a payment method by setting the value to 'paid'.
      *
@@ -191,17 +192,17 @@ export interface CheckoutPopupParams {
     is_payment_method_update?: boolean;
 
     /**
-     * An optional string to prefill the buyer’s email address.
+     * An optional string to prefill the buyer's email address.
      */
     user_email?: string;
 
     /**
-     * An optional string to prefill the buyer’s first name.
+     * An optional string to prefill the buyer's first name.
      */
     user_firstname?: string;
 
     /**
-     * An optional string to prefill the buyer’s last name.
+     * An optional string to prefill the buyer's last name.
      */
     user_lastname?: string;
 
@@ -212,19 +213,19 @@ export interface CheckoutPopupParams {
     affiliate_user_id?: number;
 
     /**
-     * An optional locale to override the checkout’s language.
+     * An optional locale to override the checkout's language.
      */
     language?: CheckoutLocaleValue;
 
     /**
-     * An optional locale to override the checkout’s language.
+     * An optional locale to override the checkout's language.
      *
      * @see `language`
      */
     locale?: CheckoutLocaleValue;
 
     /**
-     * An optional token which if present, would pre-populate the checkout with user’s personal and billing data (for example, the name, email, country, vat ID etc).
+     * An optional token which if present, would pre-populate the checkout with user's personal and billing data (for example, the name, email, country, vat ID etc).
      *
      * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/#user_token_in_checkout_new
      */
@@ -370,20 +371,18 @@ export interface CheckoutPopupEvents {
      * An after successful purchase/subscription completion callback handler.
      *
      * Notice: When the user subscribes to a recurring billing plan, this method
-     * will execute upon a successful subscription creation. It doesn’t guarantee
-     * that the subscription’s initial payment was processed successfully as well.
+     * will execute upon a successful subscription creation. It doesn't guarantee
+     * that the subscription's initial payment was processed successfully as well.
      */
-    purchaseCompleted?: (data: Record<string, any> | null) => void;
+    purchaseCompleted?: (data: CheckoutResponse | null) => void;
     /**
      * An optional callback handler, similar to purchaseCompleted. The main
      * difference is that this callback will only execute after the user clicks
-     * the “Got It”” button that appears in the after purchase screen as a
+     * the "Got It"" button that appears in the after purchase screen as a
      * declaration that they successfully received the after purchase email.
      * This callback is obsolete when the checkout is running in a 'dashboard' mode.
      */
-    success?: (
-        data: { purchase: Record<string, any> } | Record<string, any> | null
-    ) => void;
+    success?: (data: CheckoutResponse | null) => void;
     /**
      * An optional callback handler for advanced tracking, which will be called on
      * multiple checkout events such as updates in the currency, billing cycle,

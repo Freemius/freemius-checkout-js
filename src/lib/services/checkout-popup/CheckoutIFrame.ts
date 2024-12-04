@@ -3,6 +3,7 @@ import { CheckoutPopupEvents } from '../../contracts/CheckoutPopupOptions';
 import { buildFreemiusQueryFromOptions } from '../../utils/ops';
 import { Logger } from '../logger';
 import { IExitIntent } from '../../contracts/IExitIntent';
+import { CheckoutResponse } from '../../contracts/CheckoutResponse';
 
 type EventListener = () => void;
 
@@ -91,7 +92,7 @@ export class CheckoutIFrame {
             'upgraded',
             (data) => {
                 try {
-                    success?.(data as any);
+                    success?.(data as CheckoutResponse);
                 } catch (e) {
                     Logger.Error(e);
                 }
@@ -107,7 +108,7 @@ export class CheckoutIFrame {
             'purchaseCompleted',
             (data) => {
                 try {
-                    purchaseCompleted?.(data as any);
+                    purchaseCompleted?.(data as CheckoutResponse);
                 } catch (e) {
                     Logger.Error(e);
                 }
