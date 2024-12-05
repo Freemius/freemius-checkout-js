@@ -1,5 +1,4 @@
 import { CheckoutOptions, CheckoutPopupEvents } from '../../src';
-import { CheckoutResponse } from '../../src/lib/contracts/CheckoutResponse';
 
 export const initOptions: CheckoutOptions = {
     product_id: Number.parseInt(
@@ -48,7 +47,7 @@ export const eventListeners: CheckoutPopupEvents = {
     afterClose() {
         updateEventText(EVENT_LOG.AFTER_CLOSE);
     },
-    success(data: CheckoutResponse | null) {
+    success() {
         updateEventText(EVENT_LOG.SUCCESS);
     },
     track(event) {
@@ -57,7 +56,7 @@ export const eventListeners: CheckoutPopupEvents = {
     afterOpen() {
         updateEventText(EVENT_LOG.AFTER_OPEN);
     },
-    purchaseCompleted(data: CheckoutResponse | null) {
+    purchaseCompleted() {
         updateEventText(EVENT_LOG.PURCHASE_COMPLETED);
     },
     onExitIntent() {
