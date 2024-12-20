@@ -53,16 +53,9 @@ export interface CheckoutPopupParams {
     id?: string;
 
     /**
-     * An optional string to override the product’s title.
-     *
-     * @default "Defaults to the product’s title set within the Freemius dashboard."
-     */
-    name?: string;
-
-    /**
      * An optional string to override the checkout’s title when buying a new license.
      *
-     * @default "Great selection, {{ firstName }}!"
+     * @default "{{ productTitle }} {{ planTitle }}"
      */
     title?: string;
 
