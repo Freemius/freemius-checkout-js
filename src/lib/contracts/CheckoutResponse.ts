@@ -5,7 +5,10 @@ export interface User {
     public_key: string;
     id: string;
     created: string;
-    resend_email_endpoint: string;
+    /**
+     * A special tokenized URL where you can send a POST request to re-send the license key to the buyer. The URL is valid for 24 hours only.
+     */
+    resend_email_endpoint?: string;
 }
 
 export interface Purchase {
@@ -54,6 +57,9 @@ export interface Purchase {
 }
 
 export interface CheckoutResponse {
-    purchase: Purchase;
+    /**
+     * The purchase property is present for premium purchase or paid trials only.
+     */
+    purchase?: Purchase;
     user: User;
 }
