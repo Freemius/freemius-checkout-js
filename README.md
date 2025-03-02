@@ -301,9 +301,10 @@ the same approach in any server-side environment which will protect the secret
 key.
 
 1. Go to the Developer Dashboard.
-2. Under Plans click on the "Get Checkout Code" button.
-3. Go to the Sandbox tab.
-4. Copy the code to generate the `sandbox_token` and `timestamp` values and
+2. Under Plans click on the "Get Checkout" button.
+3. Choose the "Overlay code" option.
+4. Go to the Sandbox tab.
+5. Copy the code to generate the `sandbox_token` and `timestamp` values and
    output them for the Javascript to use.
 
 Example:

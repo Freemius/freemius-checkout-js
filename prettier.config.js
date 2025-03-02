@@ -13,4 +13,12 @@ export default {
     trailingComma: 'es5',
     bracketSpacing: true,
     proseWrap: 'always',
+    overrides: [
+        {
+            files: '*package{-lock,}.json',
+            options: {
+                tabWidth: 2,
+            },
+        },
+    ],
 };
