@@ -2,10 +2,12 @@ import { CheckoutResponse } from './CheckoutResponse';
 
 /**
  * Supported "locale" option for the checkout.
- * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/
+ *
  * 1. `auto` - The system will try to guess the language of your user by looking into the browser and then the geo-location respectively. However, this won't select languages that are marked as AI-translated or beta for the time being.
  * 2. `auto-beta` - Same as above, but will also select a language marked as beta. When a language marked as beta is selected, the UI will also show a "BETA" tag near it.
  * 3. Full locale code (for eg - `en_US`, `de_DE`, `fr_FR`, etc.)
+ *
+ * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/
  */
 export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
 
@@ -119,16 +121,6 @@ export interface CheckoutPopupParams {
      * @default 'annual'
      */
     billing_cycle?: 'monthly' | 'annual' | 'lifetime';
-
-    /**
-     * This has been deprecated and removed in phase2 Checkout, with the introduction of show_upsells.
-     * Set this param to `true` if you like to hide the billing cycles selector
-     * when the product is sold in multiple billing frequencies.
-     *
-     * @deprecated
-     * @default false
-     */
-    hide_billing_cycles?: boolean;
 
     /**
      * One of the following 3-chars currency codes (ISO 4217): 'usd', 'eur', 'gbp'.
@@ -353,6 +345,17 @@ export interface CheckoutPopupParams {
      * @default 'usd'
      */
     default_currency?: 'usd' | 'eur' | 'gbp';
+
+    /**
+     * Set this parameter to show a billing cycle selector interface in the Checkout. The possible values are:
+     *
+     * - `responsive_list` – Displays billing cycles in a smart list that adapts to available space.
+     * - `dropdown` – Shows a dropdown UI, allowing buyers to select their preferred billing cycle.
+     * - `list` – Same as responsive_list but always show up vertically.
+     *
+     * By default the billing cycle selector does not show up in the UI.
+     */
+    billing_cycle_selector?: 'list' | 'responsive_list' | 'dropdown';
 }
 
 /**
