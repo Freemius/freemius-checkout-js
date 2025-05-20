@@ -10,6 +10,8 @@ export class CheckoutPopup {
 
     private checkoutIFrame: CheckoutIFrame | null = null;
 
+    private lastFocusedElement: Element | null = null;
+
     constructor(
         private readonly style: IStyle,
         private readonly exitIntent: IExitIntent,
@@ -39,6 +41,8 @@ export class CheckoutPopup {
             return this;
         }
 
+        this.backupFocusedElement();
+
         this.style.disableBodyScroll();
         this.style.disableMetaColorScheme();
 
@@ -59,6 +63,7 @@ export class CheckoutPopup {
 
     public close(): CheckoutPopup {
         this.checkoutIFrame?.close();
+        this.loader.hideImmediate();
 
         return this;
     }
@@ -74,5 +79,17 @@ export class CheckoutPopup {
         this.style.enableBodyScroll();
         this.style.enableMetaColorScheme();
         this.exitIntent.detach();
+        this.restoreFocusedElement();
+    }
+
+    private backupFocusedElement() {
+        this.lastFocusedElement = document.activeElement ?? null;
+    }
+
+    private restoreFocusedElement() {
+        if (this.lastFocusedElement) {
+            (this.lastFocusedElement as HTMLElement).focus?.();
+            this.lastFocusedElement = null;
+        }
     }
 }
