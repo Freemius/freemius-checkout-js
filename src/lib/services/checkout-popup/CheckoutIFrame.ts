@@ -1,5 +1,5 @@
 import { postman, PostmanEvents } from '../postman';
-import { CheckoutPopupEvents } from '../../contracts/CheckoutPopupOptions';
+import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
 import { buildFreemiusQueryFromOptions } from '../../utils/ops';
 import { Logger } from '../logger';
 import { IExitIntent } from '../../contracts/IExitIntent';
@@ -8,22 +8,36 @@ import { CheckoutResponse } from '../../contracts/CheckoutResponse';
 type EventListener = () => void;
 
 export class CheckoutIFrame {
+    static readonly DEFAULT_TITLE = 'Checkout';
+
     private postman: PostmanEvents | null = null;
 
     private readonly iFrame: HTMLIFrameElement;
 
+    private readonly iFrameWrapper: HTMLDivElement;
+
     private readonly loadedEventListeners: Set<EventListener> = new Set();
 
     private readonly closedEventListeners: Set<EventListener> = new Set();
+
+    static getWrapperID(iFrameID: string) {
+        return `${iFrameID}-wrapper`;
+    }
 
     constructor(
         private readonly baseUrl: string,
         queryParams: Record<string, string>,
         iFrameID: string,
         private readonly visibleClass: string,
-        private readonly checkoutEvents: CheckoutPopupEvents
+        private readonly checkoutOptions: CheckoutPopupOptions
     ) {
-        this.iFrame = this.attachIFrame(baseUrl, queryParams, iFrameID);
+        const { iFrame, iFrameWrapper } = this.attachIFrame(
+            baseUrl,
+            queryParams,
+            iFrameID
+        );
+        this.iFrame = iFrame;
+        this.iFrameWrapper = iFrameWrapper;
         this.addEventListeners();
     }
 
@@ -43,7 +57,7 @@ export class CheckoutIFrame {
     addToExitIntent(exitIntent: IExitIntent) {
         exitIntent.addListener(() => {
             this.postman?.post('exit_intent', null);
-            this.checkoutEvents.onExitIntent?.();
+            this.checkoutOptions.onExitIntent?.();
         });
     }
 
@@ -51,7 +65,7 @@ export class CheckoutIFrame {
         baseUrl: string,
         queryParams: Record<string, string>,
         iFrameID: string
-    ): HTMLIFrameElement {
+    ) {
         const src = `${baseUrl}/?${buildFreemiusQueryFromOptions(
             queryParams
         )}#${encodeURIComponent(document.location.href)}`;
@@ -71,9 +85,23 @@ export class CheckoutIFrame {
 
         iFrame.setAttribute('data-testid', iFrame.id);
 
-        document.body.appendChild(iFrame);
+        const iFrameTitle =
+            this.checkoutOptions.modal_title ?? CheckoutIFrame.DEFAULT_TITLE;
 
-        return iFrame;
+        iFrame.setAttribute('title', iFrameTitle);
+
+        const iFrameWrapper = document.createElement('div');
+        iFrameWrapper.setAttribute('role', 'dialog');
+        iFrameWrapper.setAttribute('aria-label', iFrameTitle);
+        iFrameWrapper.setAttribute('aria-modal', 'true');
+        iFrameWrapper.setAttribute('data-testid', `${iFrame.id}-wrapper`);
+        iFrameWrapper.id = CheckoutIFrame.getWrapperID(iFrameID);
+
+        iFrameWrapper.appendChild(iFrame);
+
+        document.body.appendChild(iFrameWrapper);
+
+        return { iFrame, iFrameWrapper } as const;
     }
 
     private addEventListeners() {
@@ -84,7 +112,7 @@ export class CheckoutIFrame {
             track,
             afterOpen,
             afterClose,
-        } = this.checkoutEvents;
+        } = this.checkoutOptions;
 
         this.postman = postman(this.iFrame, this.baseUrl);
 
@@ -163,6 +191,7 @@ export class CheckoutIFrame {
         this.postman = null;
 
         this.iFrame.remove();
+        this.iFrameWrapper.remove();
 
         // Reset the event listeners
         this.closedEventListeners.clear();

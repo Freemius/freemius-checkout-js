@@ -356,6 +356,11 @@ export interface CheckoutPopupParams {
      * By default the billing cycle selector does not show up in the UI.
      */
     billing_cycle_selector?: 'list' | 'responsive_list' | 'dropdown';
+
+    /**
+     * Optional title to give to the iFrame modal for accessibility purposes. It defaults to "Checkout".
+     */
+    modal_title?: string;
 }
 
 /**

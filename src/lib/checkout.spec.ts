@@ -1,4 +1,5 @@
-import { screen } from '@testing-library/dom';
+import { screen, getRoles } from '@testing-library/dom';
+import * as axe from 'axe-core';
 import { Checkout, CheckoutOptions } from './checkout';
 import { sendMockedCanceledEvent } from '../../tests/utils';
 import { createHydratedMock } from 'ts-auto-mock';
@@ -104,6 +105,35 @@ describe('CheckoutPopup', () => {
         sendMockedCanceledEvent();
 
         expect(metaColorSchemeElement.getAttribute('content')).toBe('dark');
+    });
+
+    test('restores last focused element after closing the checkout popup', () => {
+        const button = document.createElement('button');
+        button.textContent = 'Test Button';
+        document.body.appendChild(button);
+
+        const checkout = new Checkout({
+            product_id: 1,
+            public_key: 'pk_12345678',
+        });
+
+        button.addEventListener('click', () => {
+            checkout.open();
+        });
+
+        button.focus();
+        button.click();
+
+        expect(document.activeElement).toBe(button);
+
+        // Blur the button
+        button.blur();
+        expect(document.activeElement).not.toBe(button);
+
+        sendMockedCanceledEvent();
+
+        // Check if the button is focused again
+        expect(document.activeElement).toBe(button);
     });
 
     test('passes all the required internal query parameters', () => {
@@ -242,5 +272,32 @@ describe('CheckoutPopup', () => {
         expect(iFrame).toBeInTheDocument();
 
         expect(new URL(iFrame.src).searchParams.get('plugin_id')).toBe('2');
+    });
+
+    test('follows proper aria specification', async () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            public_key: 'pk_12345678',
+            loadingImageAlt: 'Loading Freemius Checkout',
+            currency: 'usd',
+            modal_title: 'Test Title',
+        });
+
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrameWrapper = screen.queryByTestId(
+            `fs-checkout-page-${guid}-wrapper`
+        ) as HTMLIFrameElement;
+
+        expect(iFrameWrapper).toHaveAttribute('aria-modal', 'true');
+        expect(iFrameWrapper).toHaveAttribute('aria-label', 'Test Title');
+
+        const results = await axe.run(iFrameWrapper);
+        expect(results.violations.length).toBe(0);
+
+        const roles = getRoles(iFrameWrapper);
+        expect(roles).toHaveProperty('dialog');
     });
 });

@@ -6,7 +6,7 @@ import { IStyle } from '../../contracts/IStyle';
 export class CheckoutIFrameBuilder {
     private readonly iFrameID: string;
 
-    static VISIBLE_CLASS: string = 'show';
+    static readonly VISIBLE_CLASS: string = 'show';
 
     constructor(
         private readonly style: IStyle,
@@ -80,6 +80,16 @@ export class CheckoutIFrameBuilder {
 		}
 		#${this.iFrameID}.${CheckoutIFrameBuilder.VISIBLE_CLASS} {
 			visibility: visible;
-		}`;
+		}
+		#${CheckoutIFrame.getWrapperID(this.iFrameID)} {
+		    z-index: ${MAX_ZINDEX - 1};
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+		}
+		`;
     }
 }
