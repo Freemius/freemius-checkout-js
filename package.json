@@ -1,7 +1,7 @@
 {
   "name": "@freemius/checkout",
   "private": false,
-  "description": "Freemius Checkout JS, without jQuery or other dependencies, written in TypeScript as ES Modules.",
+  "description": "Freemius Checkout JS, written in TypeScript as ES Modules, without any dependencies.",
   "version": "1.1.2",
   "scripts": {
     "dev": "vite",
@@ -29,9 +29,14 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/user-event": "^14.5.2",
+    "@types/cypress-dotenv": "^2.0.3",
     "@types/jest": "^29.5.12",
     "ajv": "^8.17.1",
+    "axe-core": "^4.10.3",
     "cypress": "^13.14.2",
+    "cypress-axe": "^1.6.0",
+    "cypress-dotenv": "^3.0.1",
+    "dotenv": "^16.5.0",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",
@@ -79,7 +84,7 @@
     "wordpress",
     "checkout"
   ],
-  "homepage": "https://fs-checkout-js.netlify.app/",
+  "homepage": "https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/",
   "bugs": "https://github.com/Freemius/freemius-checkout-js/issues",
   "type": "module"
 }

@@ -9,6 +9,8 @@ export class Loader implements ILoader {
 
     private loaderElementId: string;
 
+    private static readonly TRANSITION_TIME = 200;
+
     constructor(
         private readonly style: IStyle,
         imageUrl: string,
@@ -42,9 +44,22 @@ export class Loader implements ILoader {
         }
 
         this.loaderElement.classList.remove('show');
-        document.body.removeChild(this.loaderElement);
-
         this.isOpen = false;
+
+        // Use setTimeout to ensure the transition is applied before removing the element
+        setTimeout(() => {
+            this.hideImmediate();
+        }, Loader.TRANSITION_TIME);
+
+        return this;
+    }
+
+    public hideImmediate(): Loader {
+        if (this.loaderElement.parentNode) {
+            this.loaderElement.classList.remove('show');
+            this.loaderElement.parentNode.removeChild(this.loaderElement);
+            this.isOpen = false;
+        }
 
         return this;
     }
@@ -62,7 +77,7 @@ export class Loader implements ILoader {
 			bottom: 0;
 			text-align: left;
 			background: rgba(0, 0, 0, 0.6);
-			transition: opacity 200ms ease-out;
+			transition: opacity ${Loader.TRANSITION_TIME}ms ease-out;
 			will-change: opacity;
 			opacity: 0;
 		}

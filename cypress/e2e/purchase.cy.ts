@@ -18,6 +18,10 @@ describe('checkout for purchase', () => {
 
             cy.wait(100);
 
+            getIframeBody().contains('sales tax applied');
+
+            cy.wait(100);
+
             getIframeBody().contains('Review Order').click();
 
             getIframeBody().contains('Pay & Subscribe').click();
