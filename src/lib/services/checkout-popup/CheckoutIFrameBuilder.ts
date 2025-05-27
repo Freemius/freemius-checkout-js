@@ -64,32 +64,32 @@ export class CheckoutIFrameBuilder {
 
     private getStyle(): string {
         return /*@fs-css-minify*/ `#${this.iFrameID} {
-			z-index: ${MAX_ZINDEX - 1};
-			background: rgba(0,0,0,0.003);
-			border: 0 none transparent;
-			visibility: ${this.style.isFlashingBrowser ? 'hidden' : 'visible'};
-			margin: 0;
-			padding: 0;
-			position: fixed;
-			left: 0px;
-			top: 0px;
-			width: 100%;
-			height: 100%;
-			-webkit-tap-highlight-color: transparent;
-			overflow: hidden;
-		}
+            z-index: ${MAX_ZINDEX - 1};
+            background: rgba(0,0,0,0.003);
+            border: 0 none transparent;
+            visibility: ${this.style.isFlashingBrowser ? 'hidden' : 'visible'};
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
 		#${this.iFrameID}.${CheckoutIFrameBuilder.VISIBLE_CLASS} {
-			visibility: visible;
-		}
+            visibility: visible;
+        }
 		#${CheckoutIFrame.getWrapperID(this.iFrameID)} {
-		    z-index: ${MAX_ZINDEX - 1};
+            z-index: ${MAX_ZINDEX - 1};
             position: fixed;
             top: 0px;
             left: 0px;
             width: 100%;
             height: 100%;
             overflow: hidden;
-		}
+        }
 		`;
     }
 }
