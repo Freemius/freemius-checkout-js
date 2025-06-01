@@ -64,6 +64,8 @@ describe('checkout js with postmessage event', () => {
 
             getIframeBody().contains('Phone number').click();
 
+            getIframeBody().contains('sales tax applied');
+
             getIframeBody().contains('Review Order').click();
 
             cy.get('#event-log').contains('track: review-order at');

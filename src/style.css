@@ -42,3 +42,8 @@ body {
     backdrop-filter: blur(6px);
     box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.2);
 }
+
+button:focus {
+    outline: 1px solid #fff;
+    outline-offset: 2px;
+}

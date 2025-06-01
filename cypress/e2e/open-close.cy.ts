@@ -18,6 +18,8 @@ describe('checkout for basic functionality', () => {
 
             cy.get('#event-log').contains('cancel at');
             cy.get('#event-log').contains('afterClose at');
+
+            cy.focused().should('exist').should('have.id', 'buy');
         });
     });
 });
