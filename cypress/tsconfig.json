@@ -6,6 +6,11 @@
         // to avoid clashing with Jest types
         "types": ["cypress", "node", "vite/client"]
     },
-    "include": ["../node_modules/cypress", "./**/*.ts", "../cypress.config.ts"],
+    "include": [
+        "../node_modules/cypress",
+        "./**/*.ts",
+        "../cypress.config.ts",
+        "../node_modules/cypress-axe"
+    ],
     "exclude": ["jest", "../dist", "../lib"]
 }
