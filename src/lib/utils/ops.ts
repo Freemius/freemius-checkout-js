@@ -122,3 +122,13 @@ export function assertNotNull<T>(
         throw new Error(message);
     }
 }
+
+export function getBoolFromQueryParam(paramValue: string | null): boolean {
+    if (paramValue === null) {
+        return false;
+    }
+
+    const normalizedValue = paramValue.toLowerCase();
+
+    return normalizedValue === '1' || normalizedValue === 'true';
+}

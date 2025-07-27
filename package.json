@@ -2,7 +2,7 @@
   "name": "@freemius/checkout",
   "private": false,
   "description": "Freemius Checkout JS, written in TypeScript as ES Modules, without any dependencies.",
-  "version": "1.2.1",
+  "version": "1.3.0-alpha.5",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

@@ -9,9 +9,12 @@
 -   [API](#api)
     -   [Instantiate the class](#instantiate-the-class)
     -   [Calling the method](#calling-the-method)
+-   [Payment Update Flow or Dunning](#payment-update-flow-or-dunning)
 -   [Use with React](#use-with-react)
--   [Testing with Sandbox](#testing-with-the-sandbox)
+-   [Testing with the Sandbox](#testing-with-the-sandbox)
 -   [Migration guide](#migration-guide)
+    -   [Migration adapter (not recommended)](#migration-adapter-not-recommended)
+        -   [Instructions:](#instructions)
 -   [Contributing](#contributing)
 
 ## Usage Guide
@@ -231,6 +234,77 @@ To close the popup programmatically, call the `close` method.
 handle.close();
 ```
 
+## Payment Update Flow or Dunning
+
+If you've enabled
+[custom URL for the Payment Recovery Flow](https://freemius.com/help/documentation/marketing-automation/dunning-failed-payments/)
+from the Developer Dashboard, you need to call the `restoreDunningIfPresent`
+function to restore the dunning flow if it was previously initiated.
+
+```ts
+import { restoreDunningIfPresent } from '@freemius/checkout';
+
+restoreDunningIfPresent();
+```
+
+> Call `restoreDunningIfPresent()` as early as possible, typically on page load,
+> to ensure the dunning flow is restored if needed.
+
+If you are using the hosted CDN version, the dunning flow is automatically
+restored for you, so you do not need to call this function manually.
+
+### Listening for the payment method update events
+
+The `restoreDunningIfPresent` function itself can accept an optional object with
+event handlers:
+
+```ts
+import { restoreDunningIfPresent } from '@freemius/checkout';
+
+restoreDunningIfPresent({
+    track(event, data) {
+        console.log('Payment Method Update Event:', data, event);
+    },
+    success(data) {
+        console.log('Payment Method Update Success:', data);
+    },
+});
+```
+
+If you're using the hosted CDN version, then you can use the
+`paymentMethodUpdateEvents` property on the `FS` global object.
+
+For example:
+
+```js
+window.FS.paymentMethodUpdateEvents = {
+    track(event, data) {
+        console.log('Payment Method Update Event:', data, event);
+    },
+    success(data) {
+        console.log('Payment Method Update Success', data);
+    },
+};
+```
+
+All of the events from the
+[CheckoutPopupEvents](./src/lib/contracts/CheckoutPopupOptions.ts) are
+supported.
+
+Please make sure to set this property before including the CDN script.
+
+```html
+<script>
+    window.FS = window.FS || {};
+    window.FS.paymentMethodUpdateEvents = {
+        track: (...args) => {
+            console.log('Payment Method Update Event:', ...args);
+        },
+    };
+</script>
+<script src="https://checkout.freemius.com/js/v1/"></script>
+```
+
 ## Use with React
 
 We will make a small react hook. Here we assume the `product_id` and
@@ -245,7 +319,6 @@ import { useState, useEffect } from 'react';
 
 export const checkoutConfig: CheckoutOptions = {
     product_id: import.meta.env.VITE_FS_PLUGIN_ID as string,
-    public_key: import.meta.env.VITE_FS_PUBLIC_KEY as string,
 };
 
 export function useFSCheckout() {

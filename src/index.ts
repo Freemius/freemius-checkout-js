@@ -17,3 +17,4 @@ export type {
     CheckoutPopupOptions,
 } from './lib/contracts/CheckoutPopupOptions';
 export type { CheckoutOptions } from './lib/types';
+export { restoreDunningIfPresent } from './lib/dunning';
