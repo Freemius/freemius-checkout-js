@@ -2,7 +2,7 @@
   "name": "@freemius/checkout",
   "private": false,
   "description": "Freemius Checkout JS, written in TypeScript as ES Modules, without any dependencies.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -65,8 +65,14 @@
   "module": "./lib/module/checkout.js",
   "exports": {
     ".": {
-      "import": "./lib/module/checkout.js",
-      "require": "./lib/module/checkout.cjs"
+      "import": {
+        "types": "./lib/module/checkout.d.ts",
+        "default": "./lib/module/checkout.js"
+      },
+      "require": {
+        "types": "./lib/module/checkout.d.ts",
+        "default": "./lib/module/checkout.cjs"
+      }
     }
   },
   "types": "./lib/module/checkout.d.ts",
