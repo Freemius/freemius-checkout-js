@@ -1,6 +1,9 @@
 export { postman } from './lib/services/postman';
 export {
+    convertCheckoutOptionsToQueryParams,
     buildFreemiusQueryFromOptions,
+    getBoolFromQueryParam,
+    isQueryItemInvalid,
     generateGuid,
     getIsFlashingBrowser,
     isExitAttempt,

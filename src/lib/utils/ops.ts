@@ -1,3 +1,5 @@
+import { CheckoutPopupOptions } from '../../../lib/module/src';
+
 /**
  * Max value of z-index CSS property.
  *
@@ -101,6 +103,27 @@ export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
     });
 
     return query.join('&');
+}
+
+export function convertCheckoutOptionsToQueryParams(
+    options: CheckoutPopupOptions
+): Record<string, string> {
+    const queryParams: Record<string, string> = {};
+
+    Object.entries(options).forEach(([key, value]) => {
+        if (!isQueryItemInvalid(value)) {
+            queryParams[key] = value;
+        }
+    });
+
+    const { sandbox } = options;
+
+    if (sandbox && sandbox.ctx && sandbox.token) {
+        queryParams.s_ctx_ts = sandbox.ctx;
+        queryParams.sandbox = sandbox.token;
+    }
+
+    return queryParams;
 }
 
 export function isExitAttempt(event: MouseEvent) {

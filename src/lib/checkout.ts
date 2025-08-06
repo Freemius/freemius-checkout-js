@@ -102,11 +102,12 @@ export class Checkout {
     /**
      * Open the Checkout Popup. You can pass additional options to the function
      * and it will override the previously set options.
+     *
+     * @todo - Return a promise that will resolve if the purchase is completed and reject if was closed without making a purchase.
      */
     public open(
-        options?: Partial<
-            Omit<CheckoutOptions, 'plugin_id' | 'public_key' | 'product_id'>
-        >
+        options?: Partial<Omit<CheckoutPopupOptions, 'plugin_id'>> &
+            CheckoutPopupArbitraryParams
     ) {
         if (isSsr()) {
             return;

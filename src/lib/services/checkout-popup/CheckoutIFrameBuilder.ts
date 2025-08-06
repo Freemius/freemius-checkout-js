@@ -1,5 +1,8 @@
 import { CheckoutPopupOptions } from '../../contracts/CheckoutPopupOptions';
-import { isQueryItemInvalid, MAX_ZINDEX } from '../../utils/ops';
+import {
+    convertCheckoutOptionsToQueryParams,
+    MAX_ZINDEX,
+} from '../../utils/ops';
 import { CheckoutIFrame } from './CheckoutIFrame';
 import { IStyle } from '../../contracts/IStyle';
 
@@ -40,26 +43,12 @@ export class CheckoutIFrameBuilder {
     }
 
     private getQueryParams(options: CheckoutPopupOptions): Record<string, any> {
-        const queryParams: Record<string, any> = {
+        return {
             mode: 'dialog',
             guid: this.style.guid,
             _fs_checkout: true,
+            ...convertCheckoutOptionsToQueryParams(options),
         };
-
-        Object.entries(options).forEach(([key, value]) => {
-            if (!isQueryItemInvalid(value)) {
-                queryParams[key] = value;
-            }
-        });
-
-        const { sandbox } = options;
-
-        if (sandbox && sandbox.ctx && sandbox.token) {
-            queryParams.s_ctx_ts = sandbox.ctx;
-            queryParams.sandbox = sandbox.token;
-        }
-
-        return queryParams;
     }
 
     private getStyle(): string {
