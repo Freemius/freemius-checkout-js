@@ -43,6 +43,9 @@ export class CheckoutPopup {
 
         this.backupFocusedElement();
 
+        // Add style, just before the checkout popup is opened, this makes sure the system works with frameworks/libraries like react, vue etc.
+        this.style.attach();
+
         this.style.disableBodyScroll();
         this.style.disableMetaColorScheme();
 
@@ -80,6 +83,7 @@ export class CheckoutPopup {
         this.style.enableMetaColorScheme();
         this.exitIntent.detach();
         this.restoreFocusedElement();
+        this.style.remove();
     }
 
     private backupFocusedElement() {

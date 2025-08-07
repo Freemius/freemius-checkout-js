@@ -39,7 +39,10 @@ export class Style implements IStyle {
     }
 
     public remove(): Style {
-        document.head.removeChild(this.styleElement);
+        // Safely remove the style element, it could be modified by other libraries/frameworks.
+        if (document.head.contains(this.styleElement)) {
+            document.head.removeChild(this.styleElement);
+        }
 
         return this;
     }

@@ -90,8 +90,6 @@ export class Checkout {
             this.options
         );
 
-        this.style.attach();
-
         this.cart = new Cart(new URL(window.location.href));
 
         if (recoverCart) {
@@ -142,9 +140,6 @@ export class Checkout {
         }
 
         this.close();
-
-        // remove style
-        this.style?.remove();
     }
 
     public getGuid() {
