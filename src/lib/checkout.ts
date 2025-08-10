@@ -16,6 +16,9 @@ import { IStyle } from './contracts/IStyle';
 import { Cart } from './services/cart';
 export type { PostmanEvents, CheckoutOptions };
 
+const CHECKOUT_URL_PRODUCTION = 'https://checkout.freemius.com';
+const CHECKOUT_URL_TEST = 'http://checkout.freemius-local.com:8080';
+
 export class Checkout {
     private readonly options: CheckoutPopupOptions &
         CheckoutPopupArbitraryParams = {
@@ -24,6 +27,8 @@ export class Checkout {
     };
 
     private readonly guid: string;
+
+    private readonly baseUrl: string;
 
     public readonly style?: IStyle;
 
@@ -38,16 +43,14 @@ export class Checkout {
     constructor(
         options: CheckoutOptions,
         recoverCart: boolean = true,
-        private readonly baseUrl: string = 'https://checkout.freemius.com'
+        baseUrl: string | null = null
     ) {
+        this.baseUrl = baseUrl ?? CHECKOUT_URL_PRODUCTION;
+
         const { plugin_id, product_id, public_key, ...popupOptions } = options;
 
         if (!plugin_id && !product_id) {
             throw new Error('Must provide a product_id to options.');
-        }
-
-        if (!public_key) {
-            throw new Error('Must provide the public_key to options.');
         }
 
         this.options = {
@@ -61,6 +64,13 @@ export class Checkout {
         if (isSsr()) {
             return;
         }
+
+        // Override baseUrl from the window object if available.
+        this.baseUrl =
+            baseUrl ??
+            (window.FS?.__FS__IS_TEST__
+                ? CHECKOUT_URL_TEST
+                : CHECKOUT_URL_PRODUCTION);
 
         this.style = new Style(this.guid);
 
@@ -80,8 +90,6 @@ export class Checkout {
             this.options
         );
 
-        this.style.attach();
-
         this.cart = new Cart(new URL(window.location.href));
 
         if (recoverCart) {
@@ -92,11 +100,12 @@ export class Checkout {
     /**
      * Open the Checkout Popup. You can pass additional options to the function
      * and it will override the previously set options.
+     *
+     * @todo - Return a promise that will resolve if the purchase is completed and reject if was closed without making a purchase.
      */
     public open(
-        options?: Partial<
-            Omit<CheckoutOptions, 'plugin_id' | 'public_key' | 'product_id'>
-        >
+        options?: Partial<Omit<CheckoutPopupOptions, 'plugin_id'>> &
+            CheckoutPopupArbitraryParams
     ) {
         if (isSsr()) {
             return;
@@ -131,9 +140,6 @@ export class Checkout {
         }
 
         this.close();
-
-        // remove style
-        this.style?.remove();
     }
 
     public getGuid() {

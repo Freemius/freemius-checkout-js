@@ -1,6 +1,9 @@
 export { postman } from './lib/services/postman';
 export {
+    convertCheckoutOptionsToQueryParams,
     buildFreemiusQueryFromOptions,
+    getBoolFromQueryParam,
+    isQueryItemInvalid,
     generateGuid,
     getIsFlashingBrowser,
     isExitAttempt,
@@ -17,3 +20,4 @@ export type {
     CheckoutPopupOptions,
 } from './lib/contracts/CheckoutPopupOptions';
 export type { CheckoutOptions } from './lib/types';
+export { restoreDunningIfPresent } from './lib/dunning';

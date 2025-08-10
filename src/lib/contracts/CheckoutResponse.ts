@@ -45,7 +45,6 @@ export interface Purchase {
     created?: string;
     updated?: string | null;
     currency?: string;
-    license_key?: string;
     bound_payment_id?: string | null;
     subscription_id?: string | null;
     gateway_fee?: number;

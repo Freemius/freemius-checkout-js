@@ -42,9 +42,11 @@ export interface CheckoutPopupParams {
     plugin_id: number | string;
 
     /**
-     * Require product public key.
+     * Optional public key.
+     *
+     * @note - We no longer require the public key to be set, but it can still be used for backward compatibility.
      */
-    public_key: string;
+    public_key?: string;
 
     /**
      * An optional ID to set the id attribute of the checkout's <body> HTML element.
