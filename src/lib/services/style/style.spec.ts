@@ -4,21 +4,27 @@ describe('Style class', () => {
     test('can attach and detach style element', () => {
         const style = new Style('test-guid');
 
-        style.addStyle('body { background-color: red; }');
+        style.addStyle('body { background-color: rgb(255, 0, 0); }');
 
         style.attach();
 
-        expect(document.body).toHaveStyle({ 'background-color': 'red' });
+        expect(document.body).toHaveStyle({
+            'background-color': 'rgb(255, 0, 0)',
+        });
 
         style.remove();
 
-        expect(document.body).not.toHaveStyle({ 'background-color': 'red' });
+        expect(document.body).not.toHaveStyle({
+            'background-color': 'rgb(255, 0, 0)',
+        });
 
         style.attach();
 
-        style.addStyle('body { background-color: blue; }');
+        style.addStyle('body { background-color: rgb(0, 0, 255); }');
 
-        expect(document.body).toHaveStyle({ 'background-color': 'blue' });
+        expect(document.body).toHaveStyle({
+            'background-color': 'rgb(0, 0, 255)',
+        });
     });
 
     test('can disable and enable body scroll', () => {

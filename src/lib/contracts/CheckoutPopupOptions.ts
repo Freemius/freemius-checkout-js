@@ -32,8 +32,6 @@ export type CheckoutTrackingEvent =
 
 /**
  * All known parameters for the Checkout iFrame.
- *
- * @internal
  */
 export interface CheckoutPopupParams {
     /**
@@ -234,10 +232,7 @@ export interface CheckoutPopupParams {
     /**
      * If you would like the dialog to open in sandbox mode,
      */
-    sandbox?: {
-        ctx: string;
-        token: string;
-    };
+    sandbox?: { ctx: string; token: string };
 
     /**
      * Specify the layout of the form on a larger screen.
@@ -367,8 +362,6 @@ export interface CheckoutPopupParams {
 
 /**
  * All known events for the Checkout iFrame.
- *
- * @internal
  */
 export interface CheckoutPopupEvents {
     /**
@@ -419,8 +412,6 @@ export interface CheckoutPopupEvents {
 
 /**
  * All options (parameters and events) required and supported by the Freemius Checkout.
- *
- * @internal
  */
 export interface CheckoutPopupOptions
     extends CheckoutPopupParams,
@@ -428,8 +419,6 @@ export interface CheckoutPopupOptions
 
 /**
  * Accept any arbitrary key-value pair to be passed to the checkout.
- *
- * @internal
  */
 export interface CheckoutPopupArbitraryParams {
     [key: Exclude<string, keyof CheckoutPopupOptions>]: any;

@@ -1,4 +1,4 @@
-import { CheckoutPopupOptions } from '../../../lib/module/src';
+import { CheckoutPopupOptions } from '../contracts/CheckoutPopupOptions';
 
 /**
  * Max value of z-index CSS property.
