@@ -13,7 +13,7 @@ jobs:
         run: npm run prettier:check
 
   eslint:
-    name: 🔍 Link
+    name: 🔍 Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

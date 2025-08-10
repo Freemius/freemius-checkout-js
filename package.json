@@ -1,8 +1,8 @@
 {
   "name": "@freemius/checkout",
   "private": false,
-  "description": "Freemius Checkout JS, written in TypeScript as ES Modules, without any dependencies.",
-  "version": "1.3.0",
+  "description": "Zero-dependency TypeScript SDK to embed Freemius Checkout in SaaS apps: secure buy button, user_token prefill, trials, coupons, multi-currency, i18n, callbacks. ESM/CJS.",
+  "version": "1.3.1-alpha.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@microsoft/api-extractor": "^7.52.10",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/user-event": "^14.6.1",
@@ -53,8 +54,8 @@
     "ts-patch": "^3.3.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0",
-    "vite": "^7.1.1",
-    "vite-plugin-dts": "^4.5.4"
+    "unplugin-dts": "^1.0.0-beta.6",
+    "vite": "^7.1.1"
   },
   "license": "MIT",
   "files": [
@@ -64,6 +65,7 @@
   ],
   "main": "./lib/module/checkout.cjs",
   "module": "./lib/module/checkout.js",
+  "types": "./lib/module/checkout.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -76,7 +78,6 @@
       }
     }
   },
-  "types": "./lib/module/checkout.d.ts",
   "author": {
     "name": "Freemius Inc",
     "email": "contact@freemius.com",
