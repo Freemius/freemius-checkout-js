@@ -127,7 +127,7 @@ export interface CheckoutPopupParams {
      *
      * @default 'usd'
      */
-    currency?: 'usd' | 'eur' | 'gbp';
+    currency?: 'usd' | 'eur' | 'gbp' | 'auto';
 
     /**
      * An optional coupon code to be automatically applied on the checkout
@@ -339,6 +339,7 @@ export interface CheckoutPopupParams {
 
     /**
      * Default currency to use when 'currency' is set to 'auto'.
+     *
      * @default 'usd'
      */
     default_currency?: 'usd' | 'eur' | 'gbp';
