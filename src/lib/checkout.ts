@@ -120,7 +120,7 @@ export class Checkout {
         }
 
         // Open the checkout popup.
-        this.checkoutPopup?.open(options);
+        this.checkoutPopup?.open(this.withAffiliateParam(options));
     }
 
     /**
@@ -152,7 +152,45 @@ export class Checkout {
             this.cart?.matchesPluginID(this.options.plugin_id)
         ) {
             const checkoutOptions = this.cart.getCheckoutOptions();
-            this.open(checkoutOptions);
+            this.open(this.withAffiliateParam(checkoutOptions));
         }
+    }
+
+    /**
+     * Returns affiliate token from window.FS.Affiliate, if available.
+     */
+    private getAffiliateToken(): string | null {
+        try {
+            const FS: any = (window as any).FS;
+            if (
+                FS &&
+                FS.Affiliate &&
+                typeof FS.Affiliate.getToken === 'function'
+            ) {
+                return FS.Affiliate.getToken();
+            }
+        } catch (e) {}
+        return null;
+    }
+
+    /**
+     * Merge `_fs_affiliate` into options passed to CheckoutPopup.open, unless already present.
+     */
+    private withAffiliateParam(
+        options?: Partial<Omit<CheckoutPopupOptions, 'plugin_id'>> &
+            CheckoutPopupArbitraryParams
+    ) {
+        const token = this.getAffiliateToken();
+        if (!token) return options;
+
+        const out: any = { ...(options || {}) };
+        if (
+            typeof out._fs_affiliate === 'undefined' ||
+            out._fs_affiliate === null ||
+            out._fs_affiliate === ''
+        ) {
+            out._fs_affiliate = token;
+        }
+        return out as typeof options;
     }
 }

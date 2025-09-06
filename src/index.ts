@@ -9,6 +9,7 @@ export {
     isExitAttempt,
     MAX_ZINDEX,
 } from './lib/utils/ops';
+export { Affiliate } from './lib/affiliate';
 export { Logger } from './lib/services/logger';
 export { Checkout } from './lib/checkout';
 export type { ILoader } from './lib/contracts/ILoader';
