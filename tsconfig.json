@@ -23,15 +23,15 @@
             }
         ],
         "rootDir": ".",
-        "allowJs": true
+        "allowJs": true,
+        "skipLibCheck": true
     },
     "include": ["src", "tests", "cypress"],
     "exclude": [
         "node_modules",
         "dist",
-        "lib",
         "./cypress.config.ts",
-        "cypress",
-        "**/*.cy.ts"
+        "**/*.cy.ts",
+        "cypress"
     ]
 }

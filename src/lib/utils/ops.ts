@@ -1,4 +1,7 @@
-import { CheckoutPopupOptions } from '../../../lib/module/src';
+import {
+    CheckoutPopupArbitraryParams,
+    CheckoutPopupOptions,
+} from '../contracts/CheckoutPopupOptions';
 
 /**
  * Max value of z-index CSS property.
@@ -106,7 +109,7 @@ export function buildFreemiusQueryFromOptions(options: Record<string, any>) {
 }
 
 export function convertCheckoutOptionsToQueryParams(
-    options: CheckoutPopupOptions
+    options: Partial<CheckoutPopupOptions> & CheckoutPopupArbitraryParams
 ): Record<string, string> {
     const queryParams: Record<string, string> = {};
 
