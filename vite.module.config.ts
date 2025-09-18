@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite';
 import { minifyInlineCSS } from './src/lib/utils/vite';
 
 export default defineConfig({
@@ -18,6 +18,8 @@ export default defineConfig({
         dts({
             insertTypesEntry: true,
             exclude: ['tests'],
+            bundleTypes: true,
+            clearPureImport: false,
         }),
         minifyInlineCSS,
     ],

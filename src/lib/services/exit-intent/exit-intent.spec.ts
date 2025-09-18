@@ -14,11 +14,7 @@ describe('ExitIntent', () => {
         expect(exitIntent.isAttached()).toBe(true);
 
         // Fire a simulation event with a pageY of 10
-        const event = new MouseEvent('mouseleave', {
-            clientY: 10,
-        });
-        // @ts-ignore
-        event.pageY = 10;
+        const event = new MouseEvent('mouseleave', { clientY: 10 });
 
         document.documentElement.dispatchEvent(event);
 
