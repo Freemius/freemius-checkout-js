@@ -55,10 +55,30 @@ export interface Purchase {
     [key: string]: unknown;
 }
 
+export interface Trial {
+    id: string;
+    license_id: string;
+    payment_id: string | null;
+    plugin_id: string;
+    subscription_id: string | null;
+    user_id: string;
+    canceled_at: string | null;
+    converted_at: string | null;
+    created: string;
+    environment: number;
+    trial_ends_at: string;
+    updated: string | null;
+    with_payment_method: boolean;
+}
+
 export interface CheckoutResponse {
     /**
      * The purchase property is present for premium purchase or paid trials only.
      */
     purchase?: Purchase;
     user: User;
+    /**
+     * The trial property is present for free trials only.
+     */
+    trial?: Trial;
 }
