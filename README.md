@@ -4,18 +4,18 @@
 ![NPM Downloads](https://img.shields.io/npm/dw/@freemius/checkout)
 [![Twitter](https://img.shields.io/twitter/follow/freemius.svg?style=social&label=@freemius)](https://twitter.com/freemius)
 
--   [Usage Guide](#usage-guide)
-    -   [Using hosted CDN](#using-hosted-cdn)
--   [API](#api)
-    -   [Instantiate the class](#instantiate-the-class)
-    -   [Calling the method](#calling-the-method)
--   [Payment Update Flow or Dunning](#payment-update-flow-or-dunning)
--   [Use with React](#use-with-react)
--   [Testing with the Sandbox](#testing-with-the-sandbox)
--   [Migration guide](#migration-guide)
-    -   [Migration adapter (not recommended)](#migration-adapter-not-recommended)
-        -   [Instructions:](#instructions)
--   [Contributing](#contributing)
+- [Usage Guide](#usage-guide)
+    - [Using hosted CDN](#using-hosted-cdn)
+- [API](#api)
+    - [Instantiate the class](#instantiate-the-class)
+    - [Calling the method](#calling-the-method)
+- [Payment Update Flow or Dunning](#payment-update-flow-or-dunning)
+- [Use with React](#use-with-react)
+- [Testing with the Sandbox](#testing-with-the-sandbox)
+- [Migration guide](#migration-guide)
+    - [Migration adapter (not recommended)](#migration-adapter-not-recommended)
+        - [Instructions:](#instructions)
+- [Contributing](#contributing)
 
 ## Usage Guide
 
@@ -527,10 +527,10 @@ code.
 
 However, please note the following limitations to this approach:
 
--   it may stop working in a future version.
--   it has a singleton pattern which can get confusing when configuring for
-    multiple products on the same page.
--   using the adapter will add extra bytes.
+- it may stop working in a future version.
+- it has a singleton pattern which can get confusing when configuring for
+  multiple products on the same page.
+- using the adapter will add extra bytes.
 
 #### Instructions:
 

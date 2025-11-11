@@ -8,7 +8,16 @@
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>E2E Test for the Checkout Adapter Library</title>
-        <script src="/lib/adapter/checkout.adapter.js" async defer></script>
+        <script>
+            window.FS = window.FS || {};
+            window.FS.__FS__IS_TEST__ = true;
+            window.FS.paymentMethodUpdateEvents = {
+                track(...args) {
+                    console.log('Payment Method Update Event:', ...args);
+                },
+            };
+        </script>
+        <script src="/lib/adapter/checkout.adapter.js"></script>
         <script src="main.ts" type="module"></script>
     </head>
     <body>

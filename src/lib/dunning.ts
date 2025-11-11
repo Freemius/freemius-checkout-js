@@ -3,9 +3,9 @@ import { Checkout } from './checkout';
 import { Dunning } from './services/dunning';
 import { isSsr } from './utils/ops';
 
-export function restoreDunningIfPresent(
+export async function restoreDunningIfPresent(
     events?: CheckoutPopupEvents
-): Checkout | null {
+): Promise<Checkout | null> {
     if (isSsr()) {
         return null;
     }
@@ -15,7 +15,7 @@ export function restoreDunningIfPresent(
     if (dunning.hasDunning()) {
         const checkout = new Checkout(dunning.getCheckoutOptions());
 
-        checkout.open(events);
+        await checkout.open(events);
 
         return checkout;
     }
