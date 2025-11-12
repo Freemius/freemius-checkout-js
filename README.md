@@ -4,18 +4,18 @@
 ![NPM Downloads](https://img.shields.io/npm/dw/@freemius/checkout)
 [![Twitter](https://img.shields.io/twitter/follow/freemius.svg?style=social&label=@freemius)](https://twitter.com/freemius)
 
--   [Usage Guide](#usage-guide)
-    -   [Using hosted CDN](#using-hosted-cdn)
--   [API](#api)
-    -   [Instantiate the class](#instantiate-the-class)
-    -   [Calling the method](#calling-the-method)
--   [Payment Update Flow or Dunning](#payment-update-flow-or-dunning)
--   [Use with React](#use-with-react)
--   [Testing with the Sandbox](#testing-with-the-sandbox)
--   [Migration guide](#migration-guide)
-    -   [Migration adapter (not recommended)](#migration-adapter-not-recommended)
-        -   [Instructions:](#instructions)
--   [Contributing](#contributing)
+- [Usage Guide](#usage-guide)
+    - [Using hosted CDN](#using-hosted-cdn)
+- [API](#api)
+    - [Instantiate the class](#instantiate-the-class)
+    - [Calling the method](#calling-the-method)
+- [Payment Update Flow or Dunning](#payment-update-flow-or-dunning)
+- [Use with React](#use-with-react)
+- [Testing with the Sandbox](#testing-with-the-sandbox)
+- [Migration guide](#migration-guide)
+    - [Migration adapter (not recommended)](#migration-adapter-not-recommended)
+        - [Instructions:](#instructions)
+- [Contributing](#contributing)
 
 ## Usage Guide
 
@@ -226,6 +226,27 @@ handler.open({
 This is useful when you have multiple checkouts related to different plans,
 billing cycles, licenses, trials etc.
 
+Please note that the `open` method returns a `Promise` which resolves when the
+popup is actually opened. In most of the use-cases this is instant, but when you
+call the `open` when `document.body` is not yet available (for example directly
+from a script in the head), it will wait for the DOM to be ready before opening
+the popup.
+
+If you need to perform any action right after the popup is opened, you can
+`await` the promise:
+
+```js
+async function main() {
+    await handler.open({
+        plan_id: 9999,
+        licenses: 1,
+        billing_cycle: 'annual',
+    });
+
+    console.log('Checkout popup is now open');
+}
+```
+
 See the [source code of the demo](./src/demo.ts) to learn more.
 
 To close the popup programmatically, call the `close` method.
@@ -249,6 +270,9 @@ restoreDunningIfPresent();
 
 > Call `restoreDunningIfPresent()` as early as possible, typically on page load,
 > to ensure the dunning flow is restored if needed.
+
+The method returns a Promise which resolves to the `Checkout` instance if the
+dunning flow was restored, or `null` if there was no dunning flow to restore.
 
 If you are using the hosted CDN version, the dunning flow is automatically
 restored for you, so you do not need to call this function manually.
@@ -527,10 +551,10 @@ code.
 
 However, please note the following limitations to this approach:
 
--   it may stop working in a future version.
--   it has a singleton pattern which can get confusing when configuring for
-    multiple products on the same page.
--   using the adapter will add extra bytes.
+- it may stop working in a future version.
+- it has a singleton pattern which can get confusing when configuring for
+  multiple products on the same page.
+- using the adapter will add extra bytes.
 
 #### Instructions:
 

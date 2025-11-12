@@ -100,13 +100,11 @@ export class Checkout {
     /**
      * Open the Checkout Popup. You can pass additional options to the function
      * and it will override the previously set options.
-     *
-     * @todo - Return a promise that will resolve if the purchase is completed and reject if was closed without making a purchase.
      */
-    public open(
+    public async open(
         options?: Partial<Omit<CheckoutPopupOptions, 'plugin_id'>> &
             CheckoutPopupArbitraryParams
-    ) {
+    ): Promise<void> {
         if (isSsr()) {
             return;
         }
@@ -119,8 +117,23 @@ export class Checkout {
             return;
         }
 
-        // Open the checkout popup.
-        this.checkoutPopup?.open(options);
+        // @todo - The `this.checkoutPopup.open` method needs to return the promise that will resolve/reject on purchase/close.
+        if (document.body) {
+            // Open the checkout popup.
+            this.checkoutPopup?.open(options);
+        } else {
+            // In case the body is not yet available, wait for the DOM to be ready.
+            return new Promise((resolve) => {
+                document.addEventListener(
+                    'DOMContentLoaded',
+                    () => {
+                        this.checkoutPopup?.open(options);
+                        resolve();
+                    },
+                    { once: true }
+                );
+            });
+        }
     }
 
     /**

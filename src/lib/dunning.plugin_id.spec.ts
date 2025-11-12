@@ -13,8 +13,8 @@ afterEach(() => {
 });
 
 describe('Dunning', () => {
-    test('restores the dunning information from the URL', () => {
-        const checkout = restoreDunningIfPresent()!;
+    test('restores the dunning information from the URL', async () => {
+        const checkout = (await restoreDunningIfPresent())!;
 
         expect(checkout).toBeDefined();
 
@@ -38,7 +38,7 @@ describe('Dunning', () => {
         expect(src).toContain('authorization=FSLA-somesupersecretstring');
     });
 
-    test('respects the window.FS.__FS__IS_TEST__ flag when set to true', () => {
+    test('respects the window.FS.__FS__IS_TEST__ flag when set to true', async () => {
         if (!window.FS) {
             // @ts-ignore
             window.FS = {};
@@ -46,7 +46,7 @@ describe('Dunning', () => {
 
         window.FS.__FS__IS_TEST__ = true; // Set the test flag
 
-        const checkout = restoreDunningIfPresent()!;
+        const checkout = (await restoreDunningIfPresent())!;
 
         expect(checkout).toBeDefined();
 
@@ -57,7 +57,7 @@ describe('Dunning', () => {
         expect(src).toContain('http://checkout.freemius-local.com:8080');
     });
 
-    test('respects the window.FS.__FS__IS_TEST__ flag when set to false', () => {
+    test('respects the window.FS.__FS__IS_TEST__ flag when set to false', async () => {
         if (!window.FS) {
             // @ts-ignore
             window.FS = {};
@@ -65,7 +65,7 @@ describe('Dunning', () => {
 
         window.FS.__FS__IS_TEST__ = false; // Set the test flag
 
-        const checkout = restoreDunningIfPresent()!;
+        const checkout = (await restoreDunningIfPresent())!;
 
         expect(checkout).toBeDefined();
 

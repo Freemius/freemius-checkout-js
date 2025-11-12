@@ -7,8 +7,8 @@ import { screen } from '@testing-library/dom';
 import { restoreDunningIfPresent } from './dunning';
 
 describe('Dunning', () => {
-    test('restores the dunning information from the URL', () => {
-        const checkout = restoreDunningIfPresent()!;
+    test('restores the dunning information from the URL', async () => {
+        const checkout = (await restoreDunningIfPresent())!;
 
         expect(checkout).toBeDefined();
 
