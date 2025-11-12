@@ -226,6 +226,27 @@ handler.open({
 This is useful when you have multiple checkouts related to different plans,
 billing cycles, licenses, trials etc.
 
+Please note that the `open` method returns a `Promise` which resolves when the
+popup is actually opened. In most of the use-cases this is instant, but when you
+call the `open` when `document.body` is not yet available (for example directly
+from a script in the head), it will wait for the DOM to be ready before opening
+the popup.
+
+If you need to perform any action right after the popup is opened, you can
+`await` the promise:
+
+```js
+async function main() {
+    await handler.open({
+        plan_id: 9999,
+        licenses: 1,
+        billing_cycle: 'annual',
+    });
+
+    console.log('Checkout popup is now open');
+}
+```
+
 See the [source code of the demo](./src/demo.ts) to learn more.
 
 To close the popup programmatically, call the `close` method.
@@ -249,6 +270,9 @@ restoreDunningIfPresent();
 
 > Call `restoreDunningIfPresent()` as early as possible, typically on page load,
 > to ensure the dunning flow is restored if needed.
+
+The method returns a Promise which resolves to the `Checkout` instance if the
+dunning flow was restored, or `null` if there was no dunning flow to restore.
 
 If you are using the hosted CDN version, the dunning flow is automatically
 restored for you, so you do not need to call this function manually.
