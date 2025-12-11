@@ -45,14 +45,14 @@ manage your app.
     import { Checkout } from '@freemius/checkout';
 
     // Instantiate the Checkout
-    const handler = new Checkout({
+    const checkout = new Checkout({
         product_id: '123456',
     });
 
     document.querySelector('#purchase').addEventListener('click', (e) => {
         e.preventDefault();
 
-        handler.open({
+        checkout.open({
             name: 'My Awesome Product',
             licenses: getSelectedLicenses(),
             purchaseCompleted: (response) => {
