@@ -8,7 +8,7 @@ A modern, API-driven, JavaScript-based
 [checkout app for Freemius sellers](https://freemius.com/help/documentation/checkout/)
 .
 
-![Freemium Checkout app screenshot](freemius-overlay-checkout.png?raw=true)
+![Freemius Checkout app screenshot](freemius-overlay-checkout.png?raw=true)
 
 ## Usage Guide
 
