@@ -19,6 +19,9 @@ export type {
     CheckoutPopupEvents,
     CheckoutPopupOptions,
     CheckoutPopupArbitraryParams,
+    CheckoutCurrency,
+    CheckoutCurrencyWithAuto,
+    CheckoutLocaleValue,
 } from './lib/contracts/CheckoutPopupOptions';
 export type { CheckoutOptions } from './lib/types';
 export { restoreDunningIfPresent } from './lib/dunning';

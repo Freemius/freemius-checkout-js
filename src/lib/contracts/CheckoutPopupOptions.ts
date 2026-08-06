@@ -1,15 +1,31 @@
 import { CheckoutResponse } from './CheckoutResponse';
+import { LiteralUnion } from '../utils/types';
 
 /**
  * Supported "locale" option for the checkout.
  *
  * 1. `auto` - The system will try to guess the language of your user by looking into the browser and then the geo-location respectively. However, this won't select languages that are marked as AI-translated or beta for the time being.
  * 2. `auto-beta` - Same as above, but will also select a language marked as beta. When a language marked as beta is selected, the UI will also show a "BETA" tag near it.
- * 3. Full locale code (for eg - `en_US`, `de_DE`, `fr_FR`, etc.)
+ * 3. Full locale code (for eg - `en`, `de_DE`, `fr_FR`, etc.)
  *
  * @see https://freemius.com/help/documentation/selling-with-freemius/freemius-checkout-buy-button/
  */
-export type CheckoutLocaleValue = 'auto' | 'auto-beta' | string;
+export type CheckoutLocaleValue = LiteralUnion<
+    | 'en'
+    | 'es_ES'
+    | 'de_DE'
+    | 'fr_FR'
+    | 'it_IT'
+    | 'nl_NL'
+    | 'hr_HR'
+    | 'he_IL'
+    | 'pl_PL'
+    | 'ar_001'
+    | 'bn_IN'
+    | 'sr_Latn_RS'
+    | 'auto'
+    | 'auto-beta'
+>;
 
 export type CheckoutTrackingEvent =
     | 'email-updated'
@@ -29,6 +45,12 @@ export type CheckoutTrackingEvent =
     | 'cc'
     | 'load'
     | 'review-order';
+
+export type CheckoutCurrency = LiteralUnion<
+    'usd' | 'gbp' | 'eur' | 'ils' | 'aud' | 'cad' | 'pln' | 'chf' | 'rsd'
+>;
+
+export type CheckoutCurrencyWithAuto = CheckoutCurrency | 'auto';
 
 /**
  * All known parameters for the Checkout iFrame.
@@ -123,11 +145,13 @@ export interface CheckoutPopupParams {
     billing_cycle?: 'monthly' | 'annual' | 'lifetime';
 
     /**
-     * One of the following 3-chars currency codes (ISO 4217): 'usd', 'eur', 'gbp'.
+     * One of the supported 3-chars currency codes (ISO 4217) or `auto` to let the Checkout automatically detect the user's currency based on their geo-location.
+     *
+     * @link https://freemius.com/help/documentation/selling-with-freemius/multi-currency/
      *
      * @default 'usd'
      */
-    currency?: 'usd' | 'eur' | 'gbp' | 'auto';
+    currency?: CheckoutCurrencyWithAuto;
 
     /**
      * An optional coupon code to be automatically applied on the checkout
@@ -342,7 +366,7 @@ export interface CheckoutPopupParams {
      *
      * @default 'usd'
      */
-    default_currency?: 'usd' | 'eur' | 'gbp';
+    default_currency?: CheckoutCurrency;
 
     /**
      * Set this parameter to show a billing cycle selector interface in the Checkout. The possible values are:
