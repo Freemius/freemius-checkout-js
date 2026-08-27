@@ -300,4 +300,27 @@ describe('CheckoutPopup', () => {
         const roles = getRoles(iFrameWrapper);
         expect(roles).toHaveProperty('dialog');
     });
+
+    test('does not pass the loadingImageUrl and loadingImageAlt to the iframe', () => {
+        const checkout = new Checkout({
+            plugin_id: 1,
+            public_key: 'pk_12345678',
+            loadingImageUrl: 'https://example.com/loading.gif',
+            loadingImageAlt: 'Loading Freemius Checkout',
+        });
+
+        checkout.open();
+
+        const guid = checkout.getGuid();
+
+        const iFrame = screen.queryByTestId(
+            `fs-checkout-page-${guid}`
+        ) as HTMLIFrameElement;
+
+        expect(iFrame).toBeInTheDocument();
+
+        const searchParams = new URL(iFrame.src).searchParams;
+        expect(searchParams.has('loadingImageUrl')).toBe(false);
+        expect(searchParams.has('loadingImageAlt')).toBe(false);
+    });
 });

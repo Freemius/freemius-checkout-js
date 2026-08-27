@@ -47,7 +47,17 @@ export class Checkout {
     ) {
         this.baseUrl = baseUrl ?? CHECKOUT_URL_PRODUCTION;
 
-        const { plugin_id, product_id, public_key, ...popupOptions } = options;
+        /**
+         * @see types.ts for the extra options other than popupOptions that should not be passed to the CheckoutPopup constructor.
+         */
+        const {
+            plugin_id,
+            product_id,
+            public_key,
+            loadingImageAlt,
+            loadingImageUrl,
+            ...popupOptions
+        } = options;
 
         if (!plugin_id && !product_id) {
             throw new Error('Must provide a product_id to options.');
@@ -76,8 +86,8 @@ export class Checkout {
 
         this.loader = new Loader(
             this.style,
-            options.loadingImageUrl ?? `${this.baseUrl}/assets/img/spinner.svg`,
-            options.loadingImageAlt
+            loadingImageUrl ?? `${this.baseUrl}/assets/img/spinner.svg`,
+            loadingImageAlt
         );
 
         this.exitIntent = new ExitIntent(this.style);
